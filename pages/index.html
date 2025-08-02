@@ -9,14 +9,145 @@
 		<meta name="og:title" property="og:title" content="Hot Dog Clicker" />
 		<link rel="canonical" href="https://hdc.ljpprojects.org/" />
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
+        <link href="https://fonts.googleapis.com/css2?family=Playfair:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
 		<link rel="stylesheet" href="./index.css" />
 	</head>
 
 	<body>
-		<h1>Hot Dog Clicker</h1>
-		<p>Redirecting you to the correct version of Hot Dog Clicker...</p>
-		<p>if it doesn't redirect you, go to the <a href="https://hdc.ljpprojects.org/mobile">mobile version</a> or the <a href="https://hdc.ljpprojects.org/desktop">desktop version</a>.</p>
+        <nav>
+            <div>
+                <h1>Hot Dog Clicker</h1>
 
-		<script defer src="./dist/routing.js"></script>
+                <h2>Hot Dogs: <span id="clickCount">0</span></h2>
+                <h2>Hot Dogs Per Second: <span id="passive">0</span></h2>
+            </div>
+
+            <button id="hotdogButton">
+                <img
+                    src="./icons/Hotdog.svg"
+                    id="hotdogImage"
+                    alt="Hotdog"
+                    draggable="false"
+                />
+            </button>
+        </nav>
+		<main class="display">
+			<div id="store">
+				<div id="buildings">
+					<button id="bunButton">
+						<b>Bun</b>
+						<p>0.2 Hot Dogs/sec</p>
+
+						<div>
+						    <span id="bunPrice">10</span>
+							<span id="bunCount">0</span>
+						</div>
+					</button>
+					<button id="dadButton">
+						<img
+							id="dadImg"
+							src="./icons/Locked-Button.svg"
+							width="250px"
+							height="150"
+							draggable="false"
+						/><br />
+						(<span id="dadPrice">100</span> Hot Dogs)
+						<br />
+						<b>Dads owned: <span id="dadCount">0</span></b>
+						<p>2 Hot Dogs/sec</p>
+					</button>
+					<button id="grillButton">
+						<img
+							id="grillImg"
+							src="./icons/Locked-Button.svg"
+							width="250px"
+							height="150"
+							draggable="false"
+						/><br />
+						(<span id="grillPrice">500</span> Hot Dogs)
+						<br />
+						<b>Grills owned: <span id="grillCount">0</span></b>
+						<p>10 Hot Dogs/sec</p>
+					</button>
+					<button id="farmButton">
+						<img
+							id="farmImg"
+							src="./icons/Locked-Button.svg"
+							width="250px"
+							height="150"
+							draggable="false"
+						/><br />
+						(<span id="farmPrice">5 000</span> Hot Dogs)
+						<br />
+						<b>Hotdog Farms owned: <span id="farmCount">0</span></b>
+						<p>50 Hot Dogs/sec</p>
+					</button>
+					<button id="dogFacButton">
+						<img
+							id="facImg"
+							src="./icons/Locked-Button.svg"
+							width="250px"
+							height="150"
+							draggable="false"
+						/><br />
+						(<span id="facPrice">50,000</span> Hot Dogs)
+						<br />
+						<b
+							>Hotdog Factories owned:
+							<span id="dogFacCount">0</span></b
+						>
+						<p>500 Hot Dogs/sec</p>
+					</button>
+					<button id="dogBankButton">
+						<img
+							id="bankImg"
+							src="./icons/Locked-Button.svg"
+							width="250px"
+							height="150"
+							draggable="false"
+						/><br />
+						(<span id="bankPrice">250,000</span> Hot Dogs)
+						<br />
+						<b
+							>Hotdog Banks owned:
+							<span id="dogBankCount">0</span></b
+						>
+						<p>2,500 Hot Dogs/sec</p>
+					</button>
+					<button id="freezerButton">
+						<img
+							id="freezerImg"
+							src="./icons/Locked-Button.svg"
+							width="250px"
+							height="150"
+							draggable="false"
+						/>
+						<br />
+						(<span id="freezerPrice">1,000,000</span> Hot Dogs)
+						<br />
+						<b>Freezers owned: <span id="freezerCount">0</span></b>
+						<p>15,000 Hot Dogs/sec</p>
+					</button>
+				</div>
+				<div id="upgrades">
+					<button id="tSauceButton">
+						Buy Tomato Sauce (1000 Hot Dogs)
+					</button>
+					<button id="mustardButton">
+						Buy Mustard (5000 Hot Dogs)
+					</button>
+					<button id="crispButton">
+						Buy Extra Crispy Buns (5000 Hot Dogs)
+					</button>
+				</div>
+			</div>
+
+			<script defer src="./dist/game.js"></script>
+		</main>
+		<div id="context" class="hide">
+			<h1>Main Menu</h1>
+			<button id="wipe">WIPE</button><br />
+			<button id="save"><a id="download">SAVE</a></button><br />
+		</div>
 	</body>
 </html>
