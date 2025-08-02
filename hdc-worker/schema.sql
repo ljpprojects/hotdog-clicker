@@ -1,5 +1,0 @@
-/*CREATE TABLE data (uid_hash TEXT PRIMARY KEY, hdb BLOB, dad BLOB, grl BLOB, frm BLOB, fct BLOB, bnk BLOB, frz BLOB)
-CREATE TABLE tokens (hash TEXT PRIMARY KEY, uid_hash TEXT, permissions int, expiration BIGINT);
-
-INSERT INTO tokens VALUES ("c2013495428145e6c178ccfe19d9bd1c3ac017c80323fd1d01670068c1aaecc1496e31c4946e43875a577592bbdfb36a7a77f456eba62315472831c76f84ae30", "fa0b7974161a51c84bbfdf6daad7c4990addcbc80bc9f8f155275880c9724947", 0, ".NEVER");
-*/
