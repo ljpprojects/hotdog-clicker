@@ -153,7 +153,7 @@
     setfn(to: number) {
       this.setBacking(to)
 
-      this.doAsync({ needsToWait: false }, async () => { bunCountElement.textContent = formatter.format(to) })
+      this.doAsync({ needsToWait: false }, async () => { bunCountElement.textContent = String(to) })
     },
 
     getfn(): number {
@@ -168,7 +168,7 @@
     setfn(to: number) {
       this.setBacking(to)
 
-      this.doAsync({ needsToWait: false }, async () => { dadCountElement.textContent = formatter.format(to) })
+      this.doAsync({ needsToWait: false }, async () => { dadCountElement.textContent = String(to) })
     },
 
     getfn(): number {
@@ -183,7 +183,7 @@
     setfn(to: number) {
       this.setBacking(to)
 
-      this.doAsync({ needsToWait: false }, async () => { grillCountElement.textContent = formatter.format(to) })
+      this.doAsync({ needsToWait: false }, async () => { grillCountElement.textContent = String(to) })
     },
 
     getfn(): number {
@@ -213,7 +213,7 @@
     setfn(to: number) {
       this.setBacking(to)
 
-      this.doAsync({ needsToWait: false }, async () => { facCountElement.textContent = formatter.format(to) })
+      this.doAsync({ needsToWait: false }, async () => { facCountElement.textContent = String(to) })
     },
 
     getfn(): number {
@@ -228,7 +228,7 @@
     setfn(to: number) {
       this.setBacking(to)
 
-      this.doAsync({ needsToWait: false }, async () => { bankCountElement.textContent = formatter.format(to) })
+      this.doAsync({ needsToWait: false }, async () => { bankCountElement.textContent = String(to) })
     },
 
     getfn(): number {
@@ -243,7 +243,7 @@
     setfn(to: number) {
       this.setBacking(to)
 
-      this.doAsync({ needsToWait: false }, async () => { freezerCountElement.textContent = formatter.format(to) })
+      this.doAsync({ needsToWait: false }, async () => { freezerCountElement.textContent = String(to) })
     },
 
     getfn(): number {
@@ -351,7 +351,7 @@
     }
   });
 
-  let freezerRate: number = 250;
+  let freezerRate: number = 500;
   const freezerPriceElement = document.getElementById("freezerPrice")!;
   const freezerCost = new Binding<number, number>({
     backing: 1_000_000,

@@ -1,15 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
 :root {
     --fg-col: #fafafa;
     --bg-col: #171717;
     --dn-col: #dc143c;
     --en-col: #7cfc00;
-    --fg-col: #171717;
-    --dn-col: #bb031b;
-    --en-col: #5bdb00
 }
 
-a {
-    font-family: Poppins, sans-serif;
+@media (prefers-color-scheme: light) {
+    :root {
+        --fg-col: #171717;
+        --bg-col: #fafafa;
+        --dn-col: #bb031b;
+        --en-col: #5bdb00;
+    }
+}
+
+:root {
+    font-family: "Poppins", serif;
     color: var(--fg-col);
     text-decoration: none;
     text-wrap-mode: wrap;
@@ -121,45 +129,42 @@ button:active {
 }
 
 #store>#buildings>button {
-    border-radius: 1vmin;
     background-color: var(--dn-col);
-    display: flex;
-    flex-direction: column;
-    row-gap: 1.5vh;
-    min-width: 50%;
-    margin: 0;
-    padding: 0;
-    height: 60%;
-    padding: 2.5vmin;
-    padding: 0
+    border-radius: 1.5vmin;
+    display: grid;
+    grid-template-rows: 1fr 4fr;
+    min-width: 40%;
 }
 
-b,
-p,
-small,
-span {
-    font-family: Poppins, sans-serif;
-    color: var(--bg-col);
-    text-decoration: none;
-    text-wrap-mode: wrap
+#store>#buildings>button>b {
+    font-size: 3em;
 }
 
-p,
-span {
-    font-size: 2em
+#store>#buildings>button.buyable {
+    background-color: var(--en-col);
 }
 
-&>b {
-    font-size: 3em
-}
-
-&>div {
+#store>#buildings>button>div {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr
 }
 
-.nopad {
-    padding: 0;
-    margin: 0
+#store>#buildings>button>div>div:has(p) {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+}
+
+#store>#buildings>button>div>div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+#store>#buildings>button>div>div>div {
+    display: flex;
+    flex-direction: column;
+}
+
+#store>#buildings>button>div>div>div>span {
+    font-size: 2em;
 }

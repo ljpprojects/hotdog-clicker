@@ -107,7 +107,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         backing: 0,
         setfn(to) {
             this.setBacking(to);
-            this.doAsync({ needsToWait: false }, () => __awaiter(this, void 0, void 0, function* () { bunCountElement.textContent = formatter.format(to); }));
+            this.doAsync({ needsToWait: false }, () => __awaiter(this, void 0, void 0, function* () { bunCountElement.textContent = String(to); }));
         },
         getfn() {
             return this.getBacking();
@@ -118,7 +118,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         backing: 0,
         setfn(to) {
             this.setBacking(to);
-            this.doAsync({ needsToWait: false }, () => __awaiter(this, void 0, void 0, function* () { dadCountElement.textContent = formatter.format(to); }));
+            this.doAsync({ needsToWait: false }, () => __awaiter(this, void 0, void 0, function* () { dadCountElement.textContent = String(to); }));
         },
         getfn() {
             return this.getBacking();
@@ -129,7 +129,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         backing: 0,
         setfn(to) {
             this.setBacking(to);
-            this.doAsync({ needsToWait: false }, () => __awaiter(this, void 0, void 0, function* () { grillCountElement.textContent = formatter.format(to); }));
+            this.doAsync({ needsToWait: false }, () => __awaiter(this, void 0, void 0, function* () { grillCountElement.textContent = String(to); }));
         },
         getfn() {
             return this.getBacking();
@@ -151,7 +151,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         backing: 0,
         setfn(to) {
             this.setBacking(to);
-            this.doAsync({ needsToWait: false }, () => __awaiter(this, void 0, void 0, function* () { facCountElement.textContent = formatter.format(to); }));
+            this.doAsync({ needsToWait: false }, () => __awaiter(this, void 0, void 0, function* () { facCountElement.textContent = String(to); }));
         },
         getfn() {
             return this.getBacking();
@@ -162,7 +162,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         backing: 0,
         setfn(to) {
             this.setBacking(to);
-            this.doAsync({ needsToWait: false }, () => __awaiter(this, void 0, void 0, function* () { bankCountElement.textContent = formatter.format(to); }));
+            this.doAsync({ needsToWait: false }, () => __awaiter(this, void 0, void 0, function* () { bankCountElement.textContent = String(to); }));
         },
         getfn() {
             return this.getBacking();
@@ -173,7 +173,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         backing: 0,
         setfn(to) {
             this.setBacking(to);
-            this.doAsync({ needsToWait: false }, () => __awaiter(this, void 0, void 0, function* () { freezerCountElement.textContent = formatter.format(to); }));
+            this.doAsync({ needsToWait: false }, () => __awaiter(this, void 0, void 0, function* () { freezerCountElement.textContent = String(to); }));
         },
         getfn() {
             return this.getBacking();
@@ -254,7 +254,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             return this.getBacking();
         }
     });
-    let freezerRate = 250;
+    let freezerRate = 500;
     const freezerPriceElement = document.getElementById("freezerPrice");
     const freezerCost = new Binding({
         backing: 1000000,
