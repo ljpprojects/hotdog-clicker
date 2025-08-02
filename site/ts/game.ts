@@ -293,8 +293,6 @@
 
       this.doAsync({ needsToWait: false }, async () => {
         grillPriceElement.textContent = formatter.format(to)
-
-        this.doAsync({ needsToWait: false }, async () => { save() })
       })
     },
 
@@ -620,6 +618,8 @@
 
     requestAnimationFrame(_update);
   })()
+
+  setInterval(save, 15e3)
 
   document.oncontextmenu = () => {
     document.querySelector("main")?.classList.add("blur");

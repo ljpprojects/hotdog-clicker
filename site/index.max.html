@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en-au">
+	<head>
+		<title>Hot Dog Clicker</title>
+		<meta
+			name="description"
+			content="Hot Dog Clicker is a fun way to pass the time."
+		/>
+		<meta name="og:title" property="og:title" content="Hot Dog Clicker" />
+		<link rel="canonical" href="https://hdc.ljpprojects.org/" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<link rel="stylesheet" href="/dist/index-min.css" />
+	</head>
+
+	<body>
+        <nav class="display">
+            <div>
+                <h1>Hot Dog Clicker</h1>
+
+                <h2>Hot Dogs: <span id="clickCount">0</span></h2>
+                <h2>Hot Dogs Per Second: <span id="passive">0</span></h2>
+            </div>
+
+            <button id="hotdogButton">
+                <img
+                    src="./icons/Hotdog.svg"
+                    id="hotdogImage"
+                    alt="Hotdog"
+                    draggable="false"
+                />
+            </button>
+        </nav>
+		<main class="display">
+			<div id="store">
+				<div id="buildings">
+					<button id="bunButton">
+						<b>Bun</b>
+						<div>
+		                    <div>
+								<div>
+								    <span style="font-size: 3em;">0.2</span>
+									<small>hdps</small>
+								</div>
+							</div>
+
+						    <div>
+						        <div>
+									<span id="bunPrice">10</span>
+									<small>hds</small>
+								</div>
+								<div>
+								    <span id="bunCount">0</span>
+			                        <small>owned</small>
+								</div>
+						    </div>
+						</div>
+					</button>
+					<button id="dadButton">
+						<b>Dad</b>
+						<div>
+		                    <div>
+						        <div>
+                                    <span style="font-size: 3em;">1</span>
+                                    <small>hdps</small>
+                                </div>
+						    </div>
+
+						    <div>
+						        <div>
+									<span id="dadPrice">100</span>
+									<small>hds</small>
+								</div>
+								<div>
+								    <span id="dadCount">0</span>
+			                        <small>owned</small>
+								</div>
+						    </div>
+						</div>
+					</button>
+					<button id="grillButton">
+					    <b>Grill</b>
+					    <div>
+                            <div>
+                                <div>
+                                    <span style="font-size: 3em;">7.5</span>
+                                    <small>hdps</small>
+                                </div>
+                            </div>
+
+					        <div>
+					            <div>
+								    <span id="grillPrice">500</span>
+								    <small>hds</small>
+							    </div>
+							    <div>
+							        <span id="grillCount">0</span>
+		                            <small>owned</small>
+							    </div>
+					        </div>
+					    </div>
+					</button>
+					<button id="farmButton">
+						<b>Farm</b>
+	                    <div>
+	                        <div>
+								<div>
+                                    <span style="font-size: 3em;">10</span>
+                                    <small>hdps</small>
+                                </div>
+							</div>
+
+	                        <div>
+	                            <div>
+				                    <span id="farmPrice">5000</span>
+				                    <small>hds</small>
+			                    </div>
+			                    <div>
+			                        <span id="farmCount">0</span>
+                                        <small>owned</small>
+			                    </div>
+	                        </div>
+	                    </div>
+					</button>
+					<button id="dogFacButton">
+						<b>Factory</b>
+	                    <div>
+	                        <div>
+								<div>
+                                    <span style="font-size: 3em;">50</span>
+                                    <small>hdps</small>
+                                </div>
+					        </div>
+
+	                        <div>
+	                            <div>
+				                    <span id="facPrice">50000</span>
+				                    <small>hds</small>
+			                    </div>
+			                    <div>
+			                        <span id="facCount">0</span>
+                                        <small>owned</small>
+			                    </div>
+	                        </div>
+	                    </div>
+					</button>
+					<button id="dogBankButton">
+					    <b>Bank</b>
+                        <div>
+                            <div>
+						        <div>
+                                    <span style="font-size: 3em;">150</span>
+                                    <small>hdps</small>
+                                </div>
+						    </div>
+
+                            <div>
+                                <div>
+                                    <span id="bankPrice">250000</span>
+                                    <small>hds</small>
+                                </div>
+                                <div>
+                                    <span id="bankCount">0</span>
+                                    <small>owned</small>
+                                </div>
+                            </div>
+                        </div>
+					</button>
+					<button id="freezerButton">
+					    <b>Freezer</b>
+                        <div>
+                            <div>
+						        <div>
+                                    <span style="font-size: 3em;">500</span>
+                                    <small>hdps</small>
+                                </div>
+						    </div>
+
+                            <div>
+                                <div>
+                                    <span id="freezerPrice">1000000</span>
+                                    <small>hds</small>
+                                </div>
+                                <div>
+                                    <span id="freezerCount">0</span>
+                                    <small>owned</small>
+                                </div>
+                            </div>
+                        </div>
+					</button>
+				</div>
+			</div>
+
+			<script defer src="/dist/game.min.js"></script>
+		</main>
+		<div id="context" class="hide">
+			<h1>Main Menu</h1>
+			<button id="wipe">WIPE</button><br />
+			<button id="save">SAVE</button><br />
+		</div>
+	</body>
+</html>

@@ -211,7 +211,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             this.setBacking(to);
             this.doAsync({ needsToWait: false }, () => __awaiter(this, void 0, void 0, function* () {
                 grillPriceElement.textContent = formatter.format(to);
-                this.doAsync({ needsToWait: false }, () => __awaiter(this, void 0, void 0, function* () { save(); }));
             }));
         },
         getfn() {
@@ -465,6 +464,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         };
         requestAnimationFrame(_update);
     })();
+    setInterval(save, 15e3);
     document.oncontextmenu = () => {
         var _a, _b, _c;
         (_a = document.querySelector("main")) === null || _a === void 0 ? void 0 : _a.classList.add("blur");
