@@ -134,6 +134,7 @@ button:active {
     display: grid;
     grid-template-rows: 1fr 4fr;
     min-width: 40%;
+    padding: 2.5vmin;
 }
 
 #store>#buildings>button>b {
