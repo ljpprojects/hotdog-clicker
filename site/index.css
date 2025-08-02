@@ -1,0 +1,165 @@
+:root {
+    --fg-col: #fafafa;
+    --bg-col: #171717;
+    --dn-col: #dc143c;
+    --en-col: #7cfc00;
+    --fg-col: #171717;
+    --dn-col: #bb031b;
+    --en-col: #5bdb00
+}
+
+a {
+    font-family: Poppins, sans-serif;
+    color: var(--fg-col);
+    text-decoration: none;
+    text-wrap-mode: wrap;
+    max-width: 90vw
+}
+
+h1 {
+    font-size: 3em
+}
+
+#hotdogImage {
+    width: 30vw
+}
+
+body {
+    background-color: var(--bg-col);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    overflow: clip;
+    max-height: 100vh;
+    max-width: 100vw;
+    padding: 0;
+    margin: 0
+}
+
+main {
+    overflow: clip;
+    height: 100vh;
+    max-height: 100vh;
+    max-width: 100vw;
+    justify-content: space-evenly;
+    align-content: space-evenly
+}
+
+#store {
+    justify-content: space-evenly;
+    align-content: space-evenly
+}
+
+nav {
+    display: grid;
+    height: 100%;
+    justify-content: space-evenly;
+    align-content: space-evenly;
+    padding: 0;
+    margin: 0;
+    overflow: clip;
+    max-height: 100vh;
+    max-width: 100vw
+}
+
+button {
+    background-color: transparent;
+    border-color: transparent;
+    transition-duration: .15s;
+    transition-timing-function: cubic-bezier(0.26, 0.91, 0.76, 1)
+}
+
+button:active {
+    transform: scale(.9)
+}
+
+#wipe {
+    color: var(--dn-col)
+}
+
+#save {
+    color: var(--en-col)
+}
+
+#save,
+#wipe {
+    font-size-adjust: 2
+}
+
+.display {
+    opacity: 1;
+    transition-duration: 1s
+}
+
+.hide {
+    opacity: 0;
+    transition-duration: 1s;
+    position: absolute;
+    left: 100vw;
+    transition: all .5s;
+    z-index: -1
+}
+
+.blur {
+    filter: blur(1.5rem) contrast(0);
+    transition-duration: 1s
+}
+
+#context {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%)
+}
+
+#store>#buildings {
+    column-gap: 5vmin;
+    display: flex;
+    justify-content: space-evenly;
+    align-content: space-evenly;
+    overflow: auto
+}
+
+#store>#buildings>button {
+    border-radius: 1vmin;
+    background-color: var(--dn-col);
+    display: flex;
+    flex-direction: column;
+    row-gap: 1.5vh;
+    min-width: 50%;
+    margin: 0;
+    padding: 0;
+    height: 60%;
+    padding: 2.5vmin;
+    padding: 0
+}
+
+b,
+p,
+small,
+span {
+    font-family: Poppins, sans-serif;
+    color: var(--bg-col);
+    text-decoration: none;
+    text-wrap-mode: wrap
+}
+
+p,
+span {
+    font-size: 2em
+}
+
+&>b {
+    font-size: 3em
+}
+
+&>div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr
+}
+
+.nopad {
+    padding: 0;
+    margin: 0
+}
