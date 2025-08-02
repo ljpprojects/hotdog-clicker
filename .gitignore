@@ -1,2 +1,6 @@
+.DS_Store
+node_modules
+._*
 **/.DS_Store
-curve/node_modules
+**/._*
+.idea

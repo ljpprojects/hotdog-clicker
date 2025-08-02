@@ -1,5 +1,23 @@
 {
-  "dependencies": {
-    "typescript": "^5.8.2"
+  "name": "hotdog-clicker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ljpprojects/hotdog-clicker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ljpprojects/hotdog-clicker/issues"
+  },
+  "homepage": "https://github.com/ljpprojects/hotdog-clicker#readme",
+  "devDependencies": {
+    "typescript": "^5.9.2"
   }
 }
