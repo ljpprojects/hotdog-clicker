@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Created with Vectornator (http://vectornator.io/) -->
+<svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="126.545 121.322 770.91 781.356" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:vectornator="http://vectornator.io" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs/>
+<clipPath id="ArtboardFrame">
+<rect height="781.356" width="770.91" x="126.545" y="121.322"/>
+</clipPath>
+<g clip-path="url(#ArtboardFrame)" id="Layer" vectornator:layerName="Layer">
+<g opacity="1" vectornator:layerName="Hotdog">
+<path d="M281.943 147.354C317.142 113.203 373.362 114.053 407.512 149.252L871.423 627.407C905.574 662.606 904.724 718.825 869.524 752.976L869.524 752.976C834.325 787.126 778.106 786.276 743.955 751.077L280.045 272.923C245.894 237.724 246.744 181.505 281.943 147.354L281.943 147.354Z" fill="#f1c999" fill-rule="nonzero" opacity="1" stroke="#f1c999" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1.92961" vectornator:layerName="Rectangle 1"/>
+<path d="M218.209 209.189C253.409 175.038 309.628 175.888 343.778 211.088L807.689 689.242C841.84 724.441 840.99 780.66 805.791 814.811L805.791 814.811C770.591 848.962 714.372 848.112 680.222 812.912L216.311 334.758C182.16 299.559 183.01 243.34 218.209 209.189L218.209 209.189Z" fill="#e34e4e" fill-rule="nonzero" opacity="1" stroke="none" vectornator:layerName="Rectangle 3"/>
+<path d="M154.476 271.024C189.675 236.874 245.894 237.724 280.045 272.923L743.955 751.077C778.106 786.276 777.256 842.495 742.057 876.646L742.057 876.646C706.858 910.797 650.638 909.947 616.488 874.748L152.577 396.593C118.426 361.394 119.276 305.175 154.476 271.024L154.476 271.024Z" fill="#f1c999" fill-rule="nonzero" opacity="1" stroke="#f1c999" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1.92961" vectornator:layerName="Rectangle 2"/>
+<path d="M282.271 250.278L342.56 258.274C355.998 257.499 366.979 268.507 366.698 281.965L373.479 302.13C373.198 315.588 383.834 325.481 397.236 324.226L406.892 323.322C420.295 322.068 432.361 331.896 433.843 345.275L435.156 357.128C436.638 370.507 448.158 384.902 460.887 389.279L486.919 398.232C499.648 402.609 512.099 416.86 514.73 430.061L517.133 442.121C519.763 455.323 532.736 467.273 546.109 468.813L548.275 469.063C561.648 470.603 570.74 482.623 568.584 495.91L568.576 495.959C566.42 509.245 575.573 520.515 589.019 521.13L590.433 521.194C603.879 521.809 614.823 533.219 614.877 546.68L614.941 562.786C614.994 576.246 625.753 589.221 638.971 591.764L661.136 596.03C674.354 598.574 687.246 611.329 689.932 624.519L692.125 635.294C694.811 648.484 707.506 662.082 720.48 665.666L736.621 670.124C749.596 673.708 761.609 687.423 763.453 700.756L769.357 743.448" fill="none" opacity="1" stroke="#e9d735" stroke-linecap="butt" stroke-linejoin="round" stroke-width="40.5217" vectornator:layerName="Curve 1"/>
+</g>
+</g>
+</svg>

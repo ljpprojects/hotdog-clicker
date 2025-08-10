@@ -1,0 +1,27 @@
+{
+  "$schema": "/Users/geez/fleet/hotdog-clicker/node_modules/wrangler/config-schema.json",
+  "name": "hotdog-clicker",
+  "compatibility_date": "2025-04-01",
+  "main": "./worker/index.ts",
+  "assets": {
+    "directory": "./site",
+    "not_found_handling": "none"
+  },
+  "build": {
+    "command": "make build",
+    "watch_dir": [
+      "./site/ts",
+      "./site/index.css",
+      "./site/index.max.html",
+      "./worker",
+      "./shared"
+    ]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "hotdog-clicker-db",
+      "database_id": "323937b2-8bb1-4f6d-a7cd-fc1a9146acb1"
+    }
+  ],
+}
