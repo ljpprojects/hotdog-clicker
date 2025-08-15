@@ -5,10 +5,10 @@ import { BlankInput } from "hono/types";
 import {
   DBData,
   ClaimToken,
-  ServerSentSocketData,
-  ClientSentSocketData,
+  ServerSentWorkerData,
+  ClientSentWorkerData,
   ErrorAbbrev,
-  ClientSentSocketDataReportAction,
+  ClientSentWorkerDataReportAction,
 } from "../shared/types";
 
 const CLAIM_TOKEN = {
@@ -103,7 +103,7 @@ type Bindings = {
   DB: D1Database;
 };
 
-const sockData: (dat: ServerSentSocketData) => ServerSentSocketData = (dat) =>
+const sockData: (dat: ServerSentWorkerData) => ServerSentWorkerData = (dat) =>
   dat;
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -128,8 +128,8 @@ app.get("/auth", async (c) => {
     httpOnly: true,
     sameSite: "Strict",
     maxAge: 60 * 30,
-    // secure: true,
-    // prefix: "secure",
+    secure: true,
+    prefix: "secure",
     path: "/",
     // domain: "hdc.ljpprojects.org"
   });
@@ -145,8 +145,8 @@ app.get("/auth", async (c) => {
   });
 });
 
-app.get("/actionable", async (c) => {
-  let body: ClientSentSocketData;
+app.post("/action", async (c) => {
+  let body: ClientSentWorkerData;
 
   try {
     body = await c.req.json();
@@ -170,7 +170,7 @@ app.get("/actionable", async (c) => {
         success: false,
         error: {
           abbrev: "EAUTH",
-          message: "Must be authenticated to create a WebSocket session.",
+          message: "Must be authenticated to run an action.",
         },
       }),
     );
@@ -188,7 +188,7 @@ app.get("/actionable", async (c) => {
 
       try {
         const claimtk = await generateClaimToken(
-          (body as ClientSentSocketDataReportAction).encodedSaveData,
+          (body as ClientSentWorkerDataReportAction).encodedSaveData,
         );
         const pubkey = base64Encode(
           new Uint8Array(
@@ -204,8 +204,8 @@ app.get("/actionable", async (c) => {
           res = await c.env.DB.prepare(query)
             .bind(
               identifier,
-              (body as ClientSentSocketDataReportAction).encodedSaveData,
-              (body as ClientSentSocketDataReportAction).nickname,
+              (body as ClientSentWorkerDataReportAction).encodedSaveData,
+              (body as ClientSentWorkerDataReportAction).nickname,
               tokenstr,
               pubkey,
             )
@@ -227,7 +227,7 @@ app.get("/actionable", async (c) => {
         }
 
         if (res.error) {
-          ws.send(
+          return c.json(
             sockData({
               success: false,
               error: {
@@ -235,20 +235,18 @@ app.get("/actionable", async (c) => {
                 message: `D1 returned an error: ${res.error}`,
               },
             }),
-            { compress: true },
           );
 
           break;
         }
 
-        ws.send(
+        return c.json(
           sockData({
             success: true,
           }),
-          { compress: true },
         );
       } catch (e) {
-        ws.send(
+        return c.json(
           sockData({
             success: false,
             error: {
@@ -256,7 +254,6 @@ app.get("/actionable", async (c) => {
               message: `Unknown error encountered: ${e}`,
             },
           }),
-          { compress: true },
         );
       }
     case "get":
@@ -264,7 +261,7 @@ app.get("/actionable", async (c) => {
       const d1result = await c.env.DB.prepare(saveQuery).bind(identifier).run();
 
       if (d1result.error) {
-        ws.send(
+        return c.json(
           sockData({
             success: false,
             error: {
@@ -272,27 +269,24 @@ app.get("/actionable", async (c) => {
               message: `D1 returned an error: ${d1result.error}`,
             },
           }),
-          { compress: true },
         );
       }
 
       const results = d1result.results as DBData[];
 
-      ws.send(
+      return c.json(
         sockData({
           success: true,
           results,
         }),
-        { compress: true },
       );
 
       break;
     case "ping":
-      ws.send(
-        JSON.stringify({
+      return c.json(
+        sockData({
           success: true,
         }),
-        { compress: true },
       );
       break;
   }

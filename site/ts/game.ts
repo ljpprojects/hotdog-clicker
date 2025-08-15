@@ -1,5 +1,5 @@
 import { Binding } from "./Binding";
-import { increase } from "./math"
+import { increase } from "./math";
 import { save, wipe, load } from "./save";
 import {
   passiveClicksElement,
@@ -28,7 +28,9 @@ import {
   facButton,
   bankButton,
   freezerButton,
-} from "./elements"
+} from "./elements";
+
+import * as _ from "./worker/interfacing";
 
 export const formatter = new Intl.NumberFormat(navigator.language, {
   minimumFractionDigits: 2,
@@ -38,131 +40,147 @@ export const hdps = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    this.setBacking(to)
+    this.setBacking(to);
 
-    this.doAsync({ needsToWait: false }, async () => { passiveClicksElement.textContent = formatter.format(to) })
+    this.doAsync({ needsToWait: false }, async () => {
+      passiveClicksElement.textContent = formatter.format(to);
+    });
   },
 
   getfn(): number {
-    return this.getBacking()!
-  }
+    return this.getBacking()!;
+  },
 });
 
-export const nickname = prompt("Enter a nickname to use.") ?? "<not given>"
+export const nickname = prompt("Enter a nickname to use.") ?? "<not given>";
 
 export const hds = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    this.setBacking(to)
+    this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      clickCountElement.textContent = formatter.format(to)
-      checkBuyables()
-    })
+      clickCountElement.textContent = formatter.format(to);
+      checkBuyables();
+    });
   },
 
   getfn(): number {
-    return this.getBacking()!
-  }
+    return this.getBacking()!;
+  },
 });
 
 export const bunCount = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    this.setBacking(to)
+    this.setBacking(to);
 
-    this.doAsync({ needsToWait: false }, async () => { bunCountElement.textContent = String(to) })
+    this.doAsync({ needsToWait: false }, async () => {
+      bunCountElement.textContent = String(to);
+    });
   },
 
   getfn(): number {
-    return this.getBacking()!
-  }
+    return this.getBacking()!;
+  },
 });
 
 export const dadCount = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    this.setBacking(to)
+    this.setBacking(to);
 
-    this.doAsync({ needsToWait: false }, async () => { dadCountElement.textContent = String(to) })
+    this.doAsync({ needsToWait: false }, async () => {
+      dadCountElement.textContent = String(to);
+    });
   },
 
   getfn(): number {
-    return this.getBacking()!
-  }
+    return this.getBacking()!;
+  },
 });
 
 export const grillCount = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    this.setBacking(to)
+    this.setBacking(to);
 
-    this.doAsync({ needsToWait: false }, async () => { grillCountElement.textContent = String(to) })
+    this.doAsync({ needsToWait: false }, async () => {
+      grillCountElement.textContent = String(to);
+    });
   },
 
   getfn(): number {
-    return this.getBacking()!
-  }
+    return this.getBacking()!;
+  },
 });
 
 export const farmCount = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    this.setBacking(to)
+    this.setBacking(to);
 
-    this.doAsync({ needsToWait: false }, async () => { farmCountElement.textContent = formatter.format(to) })
+    this.doAsync({ needsToWait: false }, async () => {
+      farmCountElement.textContent = formatter.format(to);
+    });
   },
 
   getfn(): number {
-    return this.getBacking()!
-  }
+    return this.getBacking()!;
+  },
 });
 
 export const facCount = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    this.setBacking(to)
+    this.setBacking(to);
 
-    this.doAsync({ needsToWait: false }, async () => { facCountElement.textContent = String(to) })
+    this.doAsync({ needsToWait: false }, async () => {
+      facCountElement.textContent = String(to);
+    });
   },
 
   getfn(): number {
-    return this.getBacking()!
-  }
+    return this.getBacking()!;
+  },
 });
 
 export const bankCount = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    this.setBacking(to)
+    this.setBacking(to);
 
-    this.doAsync({ needsToWait: false }, async () => { bankCountElement.textContent = String(to) })
+    this.doAsync({ needsToWait: false }, async () => {
+      bankCountElement.textContent = String(to);
+    });
   },
 
   getfn(): number {
-    return this.getBacking()!
-  }
+    return this.getBacking()!;
+  },
 });
 
 export const freezerCount = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    this.setBacking(to)
+    this.setBacking(to);
 
-    this.doAsync({ needsToWait: false }, async () => { freezerCountElement.textContent = String(to) })
+    this.doAsync({ needsToWait: false }, async () => {
+      freezerCountElement.textContent = String(to);
+    });
   },
 
   getfn(): number {
-    return this.getBacking()!
-  }
+    return this.getBacking()!;
+  },
 });
 
 export const bunRate: number = 0.2;
@@ -170,14 +188,16 @@ export const bunCost = new Binding<number, number>({
   backing: 10,
 
   setfn(to: number) {
-    this.setBacking(to)
+    this.setBacking(to);
 
-    this.doAsync({ needsToWait: false }, async () => { bunPriceElement.textContent = formatter.format(to) })
+    this.doAsync({ needsToWait: false }, async () => {
+      bunPriceElement.textContent = formatter.format(to);
+    });
   },
 
   getfn(): number {
-    return this.getBacking()!
-  }
+    return this.getBacking()!;
+  },
 });
 
 export const dadRate: number = 1;
@@ -185,14 +205,16 @@ export const dadCost = new Binding<number, number>({
   backing: 100,
 
   setfn(to: number) {
-    this.setBacking(to)
+    this.setBacking(to);
 
-    this.doAsync({ needsToWait: false }, async () => { dadPriceElement.textContent = formatter.format(to) })
+    this.doAsync({ needsToWait: false }, async () => {
+      dadPriceElement.textContent = formatter.format(to);
+    });
   },
 
   getfn(): number {
-    return this.getBacking()!
-  }
+    return this.getBacking()!;
+  },
 });
 
 export const grillRate: number = 7.5;
@@ -200,16 +222,16 @@ export const grillCost = new Binding<number, number>({
   backing: 500,
 
   setfn(to: number) {
-    this.setBacking(to)
+    this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      grillPriceElement.textContent = formatter.format(to)
-    })
+      grillPriceElement.textContent = formatter.format(to);
+    });
   },
 
   getfn(): number {
-    return this.getBacking()!
-  }
+    return this.getBacking()!;
+  },
 });
 
 export const farmRate: number = 15;
@@ -217,14 +239,16 @@ export const farmCost = new Binding<number, number>({
   backing: 5_000,
 
   setfn(to: number) {
-    this.setBacking(to)
+    this.setBacking(to);
 
-    this.doAsync({ needsToWait: false }, async () => { farmPriceElement.textContent = formatter.format(to) })
+    this.doAsync({ needsToWait: false }, async () => {
+      farmPriceElement.textContent = formatter.format(to);
+    });
   },
 
   getfn(): number {
-    return this.getBacking()!
-  }
+    return this.getBacking()!;
+  },
 });
 
 export const facRate: number = 50;
@@ -232,14 +256,16 @@ export const facCost = new Binding<number, number>({
   backing: 50_000,
 
   setfn(to: number) {
-    this.setBacking(to)
+    this.setBacking(to);
 
-    this.doAsync({ needsToWait: false }, async () => { facPriceElement.textContent = formatter.format(to) })
+    this.doAsync({ needsToWait: false }, async () => {
+      facPriceElement.textContent = formatter.format(to);
+    });
   },
 
   getfn(): number {
-    return this.getBacking()!
-  }
+    return this.getBacking()!;
+  },
 });
 
 export const bankRate: number = 150;
@@ -247,14 +273,16 @@ export const bankCost = new Binding<number, number>({
   backing: 250_000,
 
   setfn(to: number) {
-    this.setBacking(to)
+    this.setBacking(to);
 
-    this.doAsync({ needsToWait: false }, async () => { bankPriceElement.textContent = formatter.format(to) })
+    this.doAsync({ needsToWait: false }, async () => {
+      bankPriceElement.textContent = formatter.format(to);
+    });
   },
 
   getfn(): number {
-    return this.getBacking()!
-  }
+    return this.getBacking()!;
+  },
 });
 
 export const freezerRate: number = 500;
@@ -262,14 +290,16 @@ export const freezerCost = new Binding<number, number>({
   backing: 1_000_000,
 
   setfn(to: number) {
-    this.setBacking(to)
+    this.setBacking(to);
 
-    this.doAsync({ needsToWait: false }, async () => { freezerPriceElement.textContent = formatter.format(to) })
+    this.doAsync({ needsToWait: false }, async () => {
+      freezerPriceElement.textContent = formatter.format(to);
+    });
   },
 
   getfn(): number {
-    return this.getBacking()!
-  }
+    return this.getBacking()!;
+  },
 });
 
 saveBtn!!.onclick = save;
@@ -277,45 +307,45 @@ wipeBtn!!.onclick = wipe;
 
 const checkBuyables = () => {
   if (hds.value >= bunCost.value) {
-    bunButton?.classList.add("buyable")
+    bunButton?.classList.add("buyable");
   } else {
-    bunButton?.classList.remove("buyable")
+    bunButton?.classList.remove("buyable");
   }
 
   if (hds.value >= dadCost.value) {
-    dadButton?.classList.add("buyable")
+    dadButton?.classList.add("buyable");
   } else {
-    dadButton?.classList.remove("buyable")
+    dadButton?.classList.remove("buyable");
   }
 
   if (hds.value >= grillCost.value) {
-    grillButton?.classList.add("buyable")
+    grillButton?.classList.add("buyable");
   } else {
-    grillButton?.classList.remove("buyable")
+    grillButton?.classList.remove("buyable");
   }
 
   if (hds.value >= farmCost.value) {
-    farmButton?.classList.add("buyable")
+    farmButton?.classList.add("buyable");
   } else {
-    farmButton?.classList.remove("buyable")
+    farmButton?.classList.remove("buyable");
   }
 
   if (hds.value >= facCost.value) {
-    facButton?.classList.add("buyable")
+    facButton?.classList.add("buyable");
   } else {
-    facButton?.classList.remove("buyable")
+    facButton?.classList.remove("buyable");
   }
 
   if (hds.value >= bankCost.value) {
-    bankButton?.classList.add("buyable")
+    bankButton?.classList.add("buyable");
   } else {
-    bankButton?.classList.remove("buyable")
+    bankButton?.classList.remove("buyable");
   }
 
   if (hds.value >= freezerCost.value) {
-    freezerButton?.classList.add("buyable")
+    freezerButton?.classList.add("buyable");
   } else {
-    freezerButton?.classList.remove("buyable")
+    freezerButton?.classList.remove("buyable");
   }
 };
 
@@ -332,9 +362,7 @@ hotdogButton?.addEventListener("click", () => {
 });
 
 bunButton?.addEventListener("click", () => {
-  if (
-    hds.value >= bunCost.value
-  ) {
+  if (hds.value >= bunCost.value) {
     hds.value -= bunCost.value;
     bunCost.value = increase(bunCost.value, bunCount.value);
     bunCount.value++;
@@ -343,9 +371,7 @@ bunButton?.addEventListener("click", () => {
 });
 
 dadButton?.addEventListener("click", () => {
-  if (
-    hds.value >= dadCost.value
-  ) {
+  if (hds.value >= dadCost.value) {
     hds.value -= dadCost.value;
     dadCost.value = increase(dadCost.value, dadCount.value);
     dadCount.value++;
@@ -354,9 +380,7 @@ dadButton?.addEventListener("click", () => {
 });
 
 grillButton?.addEventListener("click", () => {
-  if (
-    hds.value >= grillCost.value
-  ) {
+  if (hds.value >= grillCost.value) {
     hds.value -= grillCost.value;
     grillCost.value = increase(grillCost.value, grillCount.value);
     grillCount.value++;
@@ -365,9 +389,7 @@ grillButton?.addEventListener("click", () => {
 });
 
 farmButton?.addEventListener("click", () => {
-  if (
-    hds.value >= farmCost.value
-  ) {
+  if (hds.value >= farmCost.value) {
     hds.value -= farmCost.value;
     farmCost.value = increase(farmCost.value, farmCount.value);
     farmCount.value++;
@@ -376,9 +398,7 @@ farmButton?.addEventListener("click", () => {
 });
 
 facButton?.addEventListener("click", () => {
-  if (
-    hds.value >= facCost.value
-  ) {
+  if (hds.value >= facCost.value) {
     hds.value -= facCost.value;
     facCost.value = increase(facCost.value, facCount.value);
     facCount.value++;
@@ -387,9 +407,7 @@ facButton?.addEventListener("click", () => {
 });
 
 bankButton?.addEventListener("click", () => {
-  if (
-    hds.value >= bankCost.value
-  ) {
+  if (hds.value >= bankCost.value) {
     hds.value -= bankCost.value;
     bankCost.value = increase(bankCost.value, bankCount.value);
     bankCount.value++;
@@ -398,9 +416,7 @@ bankButton?.addEventListener("click", () => {
 });
 
 freezerButton?.addEventListener("click", () => {
-  if (
-    hds.value >= freezerCost.value
-  ) {
+  if (hds.value >= freezerCost.value) {
     hds.value -= freezerCost.value;
     freezerCost.value = increase(freezerCost.value, freezerCount.value);
     freezerCount.value++;
@@ -420,12 +436,12 @@ freezerButton?.addEventListener("click", () => {
     hds.value += hdps.value * secondsElapsed;
 
     requestAnimationFrame(_update);
-  }
+  };
 
   requestAnimationFrame(_update);
-})()
+})();
 
-setInterval(save, 15e3)
+setInterval(save, 15e3);
 
 document.oncontextmenu = () => {
   document.querySelector("main")?.classList.add("blur");
@@ -440,10 +456,10 @@ document.oncontextmenu = () => {
     document.querySelector("main")?.classList.remove("blur");
     document.querySelector("nav")?.classList.remove("blur");
     document.getElementById("context")?.setAttribute("class", "hide");
-    window.onscroll = function () { };
+    window.onscroll = function () {};
   });
 
-  window.onbeforeunload = save
+  window.onbeforeunload = save;
 
   return false;
 };

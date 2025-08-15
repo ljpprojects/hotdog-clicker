@@ -3,54 +3,50 @@ export type DBData = {
   claimtk: string | null;
   encoded_save: string;
   nickname: string;
-}
+};
 
 export type ClaimToken = {
-  token: { base64: string, raw: Uint8Array };
+  token: { base64: string; raw: Uint8Array };
   keypair: CryptoKeyPair;
-  tokenSignature: { base64: string, raw: Uint8Array };
-  saveSignature: { base64: string, raw: Uint8Array };
-}
+  tokenSignature: { base64: string; raw: Uint8Array };
+  saveSignature: { base64: string; raw: Uint8Array };
+};
 
-export interface ClientSentSocketData {
+export interface ClientSentWorkerData {
   action: "close" | "report" | "get" | "ping" | "claim";
 }
 
-export interface ClientSentSocketDataCloseAction extends ClientSentSocketData {
+export interface ClientSentWorkerDataCloseAction extends ClientSentWorkerData {
   action: "close";
 }
 
-export interface ClientSentSocketDataReportAction extends ClientSentSocketData {
+export interface ClientSentWorkerDataReportAction extends ClientSentWorkerData {
   action: "report";
   encodedSaveData: string;
   nickname: string;
 }
 
-export interface ClientSentSocketDataGetAction extends ClientSentSocketData {
+export interface ClientSentWorkerDataGetAction extends ClientSentWorkerData {
   action: "get";
 }
 
-export interface ClientSentSocketDataPingAction extends ClientSentSocketData {
+export interface ClientSentWorkerDataPingAction extends ClientSentWorkerData {
   action: "ping";
 }
 
-export interface ClientSentSocketDataClaimAction extends ClientSentSocketData {
+export interface ClientSentWorkerDataClaimAction extends ClientSentWorkerData {
   action: "claim";
 }
 
-export type ErrorAbbrev =
-  "EAUTH" |
-  "ESNTX" |
-  "EQURY" |
-  "EUNKN"
+export type ErrorAbbrev = "EAUTH" | "ESNTX" | "EQURY" | "EUNKN";
 
-export interface ServerSentSocketData {
-  success: boolean,
+export interface ServerSentWorkerData {
+  success: boolean;
   error?: {
-    abbrev: ErrorAbbrev,
-    message: string,
-  },
-  results?: DBData[]
+    abbrev: ErrorAbbrev;
+    message: string;
+  };
+  results?: DBData[];
 
-  [name: string]: any
+  [name: string]: any;
 }
