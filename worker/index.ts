@@ -128,8 +128,8 @@ app.get("/auth", async (c) => {
     httpOnly: true,
     sameSite: "Strict",
     maxAge: 60 * 30,
-    secure: true,
-    prefix: "secure",
+    //secure: true,
+    //prefix: "secure",
     path: "/",
     // domain: "hdc.ljpprojects.org"
   });

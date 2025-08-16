@@ -30,7 +30,9 @@ import {
   freezerButton,
 } from "./elements";
 
-import * as _ from "./worker/interfacing";
+import { initialise } from "./worker/interfacing";
+
+initialise()
 
 export const formatter = new Intl.NumberFormat(navigator.language, {
   minimumFractionDigits: 2,
@@ -456,7 +458,7 @@ document.oncontextmenu = () => {
     document.querySelector("main")?.classList.remove("blur");
     document.querySelector("nav")?.classList.remove("blur");
     document.getElementById("context")?.setAttribute("class", "hide");
-    window.onscroll = function () {};
+    window.onscroll = function () { };
   });
 
   window.onbeforeunload = save;

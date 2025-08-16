@@ -139,7 +139,7 @@ button:active {
     transform: translate(50%, -50%);
 }
 
-#store > #buildings {
+#store>#buildings {
     column-gap: 5vw;
     display: flex;
     justify-content: space-evenly;
@@ -150,7 +150,7 @@ button:active {
     scrollbar-width: none;
 }
 
-#store > #buildings > button {
+#store>#buildings>button {
     background-color: var(--dn-col);
     border-radius: 1.5vmin;
     display: grid;
@@ -158,36 +158,37 @@ button:active {
     padding: 2.5vh 7.5vw;
 }
 
-#store > #buildings > button > b {
+#store>#buildings>button>b {
     font-size: 3em;
 }
 
-#store > #buildings > button.buyable {
+#store>#buildings>button.buyable {
     background-color: var(--en-col);
 }
 
-#store > #buildings > button > div {
+#store>#buildings>button>div {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    padding: 5vmin;
+    padding: 1.25vmin;
+    gap: 5vmin;
 }
 
-#store > #buildings > button > div > div:has(p) {
+#store>#buildings>button>div>div:has(p) {
     display: grid;
     grid-template-rows: 1fr 1fr;
 }
 
-#store > #buildings > button > div > div {
+#store>#buildings>button>div>div {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
 }
 
-#store > #buildings > button > div > div > div {
+#store>#buildings>button>div>div>div {
     display: flex;
     flex-direction: column;
 }
 
-#store > #buildings > button > div > div > div > span {
+#store>#buildings>button>div>div>div>span {
     font-size: 2em;
 }

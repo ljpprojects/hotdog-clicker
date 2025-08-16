@@ -53,15 +53,12 @@ export const makeWorkerReq = async (
 
 // Try to get our save data and authenticate if needed
 
-(async () => {
+export const initialise = async () => {
   const res = await makeWorkerReq(generateGet());
 
   if (!res.success) {
-    if (res.error?.message === "EAUTH") {
-      // Just hope this redirects automatically?
-      await fetch(AUTH_REDIRECT_URL);
+    if (res.error?.abbrev === "EAUTH") {
+      window.location.href = AUTH_REDIRECT_URL
     }
   }
-
-  console.log(res);
-})();
+};
