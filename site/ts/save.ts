@@ -16,6 +16,7 @@ import {
   bankCost,
   freezerCost,
   nickname,
+  portalCount,
 } from "./game";
 
 import { calcCost, increase } from "./math";
@@ -57,11 +58,21 @@ export interface HDCSaveData {
    * The projected net worth of the user in 168 hours (1 week), assuming no new generators are acquired.
    */
   phdnw168: number;
-  
+
   /**
    * The projected net worth of the user in 730 hours (The average amount of hours in a month rounded down), assuming no new generators are acquired.
    */
   phdnw730: number;
+
+  /**
+   * The projected net worth of the user in 2192 hours (The average amount of hours in 3 months rounded up), assuming no new generators are acquired.
+   */
+  phdnw2192: number;
+
+  /**
+   * The projected net worth of the user in 4383 hours (The average amount of hours in 6 months), assuming no new generators are acquired.
+   */
+  phdnw4383: number;
 
   /**
    * The amount of "Bun" generators owned by the user.
@@ -117,6 +128,9 @@ export const DEFAULT_SAVE_DATA: HDCSaveData = {
   phdnw24: 0,
   phdnw72: 0,
   phdnw168: 0,
+  phdnw730: 0,
+  phdnw2192: 0,
+  phdnw4383: 0,
   ownedBuns: 0,
   ownedDads: 0,
   ownedGrills: 0,
@@ -152,8 +166,19 @@ export const compileSave = (): HDCSaveData => {
     ownedFactories: facCount.value,
     ownedBanks: bankCount.value,
     ownedFreezers: freezerCount.value,
-    ownedPortals: 0,
+    ownedPortals: portalCount.value,
     nickname,
+
+    // TODO: Net worth
+
+    hdnw: 0,
+    phdnw1: 0,
+    phdnw24: 0,
+    phdnw72: 0,
+    phdnw168: 0,
+    phdnw730: 0,
+    phdnw2192: 0,
+    phdnw4383: 0,
   };
 };
 

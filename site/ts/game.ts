@@ -11,6 +11,7 @@ import {
   facCountElement,
   bankCountElement,
   freezerCountElement,
+  portalCountElement,
   bunPriceElement,
   dadPriceElement,
   grillPriceElement,
@@ -18,6 +19,7 @@ import {
   facPriceElement,
   bankPriceElement,
   freezerPriceElement,
+  portalPriceElement,
   wipeBtn,
   saveBtn,
   hotdogButton,
@@ -28,11 +30,12 @@ import {
   facButton,
   bankButton,
   freezerButton,
+  portalButton,
 } from "./elements";
 
 import { initialise } from "./worker/interfacing";
 
-initialise()
+initialise();
 
 export const formatter = new Intl.NumberFormat(navigator.language, {
   minimumFractionDigits: 2,
@@ -185,6 +188,22 @@ export const freezerCount = new Binding<number, number>({
   },
 });
 
+export const portalCount = new Binding<number, number>({
+  backing: 0,
+
+  setfn(to: number) {
+    this.setBacking(to);
+
+    this.doAsync({ needsToWait: false }, async () => {
+      portalCountElement.textContent = String(to);
+    });
+  },
+
+  getfn(): number {
+    return this.getBacking()!;
+  },
+});
+
 export const bunRate: number = 0.2;
 export const bunCost = new Binding<number, number>({
   backing: 10,
@@ -304,6 +323,23 @@ export const freezerCost = new Binding<number, number>({
   },
 });
 
+export const portalRate: number = 1500;
+export const portalCost = new Binding<number, number>({
+  backing: 5_000_000,
+
+  setfn(to: number) {
+    this.setBacking(to);
+
+    this.doAsync({ needsToWait: false }, async () => {
+      portalPriceElement.textContent = formatter.format(to);
+    });
+  },
+
+  getfn(): number {
+    return this.getBacking()!;
+  },
+});
+
 saveBtn!!.onclick = save;
 wipeBtn!!.onclick = wipe;
 
@@ -348,6 +384,12 @@ const checkBuyables = () => {
     freezerButton?.classList.add("buyable");
   } else {
     freezerButton?.classList.remove("buyable");
+  }
+
+  if (hds.value >= portalCost.value) {
+    portalButton?.classList.add("buyable");
+  } else {
+    portalButton?.classList.remove("buyable");
   }
 };
 
@@ -426,6 +468,15 @@ freezerButton?.addEventListener("click", () => {
   }
 });
 
+portalButton?.addEventListener("click", () => {
+  if (hds.value >= portalCost.value) {
+    hds.value -= portalCost.value;
+    portalCost.value = increase(portalCost.value, portalCount.value);
+    portalCount.value++;
+    hdps.value += portalRate;
+  }
+});
+
 (() => {
   let lastTime = performance.now();
 
@@ -458,7 +509,7 @@ document.oncontextmenu = () => {
     document.querySelector("main")?.classList.remove("blur");
     document.querySelector("nav")?.classList.remove("blur");
     document.getElementById("context")?.setAttribute("class", "hide");
-    window.onscroll = function () { };
+    window.onscroll = function () {};
   });
 
   window.onbeforeunload = save;
