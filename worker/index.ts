@@ -97,7 +97,8 @@ const generateClaimToken = async (encodedSave: string): Promise<ClaimToken> => {
 
 let SECRET: Uint8Array<ArrayBuffer> | null = null;
 
-const COOKIE_NAME = "identifier";
+const IDENT_COOKIE_NAME = "identifier";
+const CLMTK_COOKIE_NAME = "claimtk";
 
 type Bindings = {
   DB: D1Database;
@@ -124,7 +125,7 @@ app.get("/auth", async (c) => {
 
   const identifier = btoa(String.fromCharCode(...bytes));
 
-  setCookie(c, COOKIE_NAME, identifier, {
+  setCookie(c, IDENT_COOKIE_NAME, identifier, {
     httpOnly: true,
     sameSite: "Strict",
     maxAge: 60 * 30,
@@ -162,7 +163,7 @@ app.post("/action", async (c) => {
     );
   }
 
-  const identifier = getCookie(c, COOKIE_NAME);
+  const identifier = getCookie(c, IDENT_COOKIE_NAME);
 
   if (!identifier) {
     return c.json(
@@ -179,17 +180,21 @@ app.post("/action", async (c) => {
   switch (body.action) {
     case "report":
       const query = `
-      INSERT INTO savedat (identifier, claimtk, pubkey, encoded_save, nickname)
-      VALUES (?1, ?4, ?5, ?2, ?3)
+      INSERT INTO savedat (identifier, claimtk, pubkey, encoded_save, nickname, net_worth)
+      VALUES (?1, ?4, ?5, ?2, ?3, ?6)
       ON CONFLICT(identifier) DO UPDATE SET
         encoded_save = excluded.encoded_save,
-        nickname = excluded.nickname;
+        nickname = excluded.nickname,
+        net_worth = excluded.net_worth,
+        claimtk = excluded.claimtk,
+        pubkey = excluded.piubkey;
     `.trim();
 
       try {
         const claimtk = await generateClaimToken(
           (body as ClientSentWorkerDataReportAction).encodedSaveData,
         );
+
         const pubkey = base64Encode(
           new Uint8Array(
             await crypto.subtle.exportKey("spki", claimtk.keypair.publicKey),
@@ -208,6 +213,9 @@ app.post("/action", async (c) => {
               (body as ClientSentWorkerDataReportAction).nickname,
               tokenstr,
               pubkey,
+              btoa(
+                (body as ClientSentWorkerDataReportAction).net_worth.toString(),
+              ),
             )
             .run();
         } catch (e) {
@@ -281,13 +289,6 @@ app.post("/action", async (c) => {
         }),
       );
 
-      break;
-    case "ping":
-      return c.json(
-        sockData({
-          success: true,
-        }),
-      );
       break;
   }
 });

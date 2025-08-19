@@ -59,16 +59,24 @@ export const hdps = new Binding<number, number>({
 
 export const nickname = prompt("Enter a nickname to use.") ?? "<not given>";
 
+let hdsIncTimeoutEnd = Date.now();
+
 export const hds = new Binding<number, number>({
   backing: 0,
 
-  setfn(to: number) {
+  setfn(to: number, dispatcher?: string) {
+    console.log(hdsIncTimeoutEnd, Date.now());
+
+    if (hdsIncTimeoutEnd > Date.now() && dispatcher === "btn-click") return;
+
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
       clickCountElement.textContent = formatter.format(to);
       checkBuyables();
     });
+
+    if (dispatcher === "btn-click") hdsIncTimeoutEnd = Date.now() + 100;
   },
 
   getfn(): number {
@@ -103,7 +111,7 @@ export const dadCount = new Binding<number, number>({
     });
   },
 
-  getfn(): number {
+  getfn(dispatcher): number {
     return this.getBacking()!;
   },
 });
@@ -131,7 +139,7 @@ export const farmCount = new Binding<number, number>({
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      farmCountElement.textContent = formatter.format(to);
+      farmCountElement.textContent = String(to);
     });
   },
 
@@ -397,9 +405,11 @@ load();
 
 setInterval(save, 10000);
 
-hotdogButton?.addEventListener("click", () => {
+hotdogButton?.addEventListener("click", (event) => {
+  if (!event.isTrusted) return;
+
   if (clickCountElement != null) {
-    hds.value++;
+    hds.setValue(hds.value + 1, "btn-click");
   } else {
     alert("Hotdog Clicker has encountered a fatal error.");
   }

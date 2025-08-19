@@ -2,7 +2,6 @@ import {
   ServerSentWorkerData,
   ClientSentWorkerData,
   ClientSentWorkerDataReportAction,
-  ClientSentWorkerDataCloseAction,
   ClientSentWorkerDataGetAction,
   ClientSentWorkerDataPingAction,
   ClientSentWorkerDataClaimAction,
@@ -10,16 +9,8 @@ import {
 
 const AUTH_REDIRECT_URL = `/auth?callback=${encodeURIComponent(window.location.href)}`;
 
-export const generatePing = (): ClientSentWorkerDataPingAction => ({
-  action: "ping",
-});
-
 export const generateGet = (): ClientSentWorkerDataGetAction => ({
   action: "get",
-});
-
-export const generateClose = (): ClientSentWorkerDataCloseAction => ({
-  action: "close",
 });
 
 export const generateClaim = (): ClientSentWorkerDataClaimAction => ({
@@ -29,10 +20,12 @@ export const generateClaim = (): ClientSentWorkerDataClaimAction => ({
 export const generateReport = (
   encodedSaveData: string,
   nickname: string,
+  netWorth: number,
 ): ClientSentWorkerDataReportAction => ({
   action: "report",
   encodedSaveData,
   nickname,
+  net_worth: netWorth,
 });
 
 export const makeWorkerReq = async (
@@ -58,7 +51,7 @@ export const initialise = async () => {
 
   if (!res.success) {
     if (res.error?.abbrev === "EAUTH") {
-      window.location.href = AUTH_REDIRECT_URL
+      window.location.href = AUTH_REDIRECT_URL;
     }
   }
 };

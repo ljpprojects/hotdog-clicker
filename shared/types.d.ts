@@ -13,17 +13,14 @@ export type ClaimToken = {
 };
 
 export interface ClientSentWorkerData {
-  action: "close" | "report" | "get" | "ping" | "claim";
-}
-
-export interface ClientSentWorkerDataCloseAction extends ClientSentWorkerData {
-  action: "close";
+  action: "report" | "get" | "wipe" | "claim";
 }
 
 export interface ClientSentWorkerDataReportAction extends ClientSentWorkerData {
   action: "report";
   encodedSaveData: string;
   nickname: string;
+  net_worth: number;
 }
 
 export interface ClientSentWorkerDataGetAction extends ClientSentWorkerData {
@@ -31,7 +28,7 @@ export interface ClientSentWorkerDataGetAction extends ClientSentWorkerData {
 }
 
 export interface ClientSentWorkerDataPingAction extends ClientSentWorkerData {
-  action: "ping";
+  action: "wipe";
 }
 
 export interface ClientSentWorkerDataClaimAction extends ClientSentWorkerData {
