@@ -143,9 +143,9 @@ button:active {
     column-gap: 5vw;
     display: flex;
     overflow: auto;
-    padding: 0 0 5vw 0;
-    max-width: 50vw;
+    padding: 0 0 7.5vw;
     scrollbar-width: none;
+    max-width: 50vw;
 }
 
 #store > #buildings > button {
@@ -165,10 +165,11 @@ button:active {
 }
 
 #store > #buildings > button > div {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: row;
     padding: 1.25vmin;
-    gap: 5vmin;
+    gap: 5vw;
+    align-items: space-between;
 }
 
 #store > #buildings > button > div > div:has(p) {
@@ -189,4 +190,5 @@ button:active {
 
 #store > #buildings > button > div > div > div > span {
     font-size: 2em;
+    text-wrap: nowrap;
 }

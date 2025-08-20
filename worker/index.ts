@@ -10,6 +10,7 @@ import {
   ErrorAbbrev,
   ClientSentWorkerDataReportAction,
 } from "../shared/types";
+import { CookieOptions } from "hono/utils/cookie";
 
 const CLAIM_TOKEN = {
   LEN_B: 256,
@@ -100,6 +101,16 @@ let SECRET: Uint8Array<ArrayBuffer> | null = null;
 const IDENT_COOKIE_NAME = "identifier";
 const CLMTK_COOKIE_NAME = "claimtk";
 
+const COOKIE_OPTS: CookieOptions = {
+  httpOnly: true,
+  sameSite: "Strict",
+  maxAge: 60 * 30,
+  //secure: true,
+  //prefix: "secure",
+  path: "/",
+  // domain: "hdc.ljpprojects.org"
+};
+
 type Bindings = {
   DB: D1Database;
 };
@@ -125,15 +136,7 @@ app.get("/auth", async (c) => {
 
   const identifier = btoa(String.fromCharCode(...bytes));
 
-  setCookie(c, IDENT_COOKIE_NAME, identifier, {
-    httpOnly: true,
-    sameSite: "Strict",
-    maxAge: 60 * 30,
-    //secure: true,
-    //prefix: "secure",
-    path: "/",
-    // domain: "hdc.ljpprojects.org"
-  });
+  setCookie(c, IDENT_COOKIE_NAME, identifier, COOKIE_OPTS);
 
   const callback = c.req.query("callback");
 
@@ -218,6 +221,8 @@ app.post("/action", async (c) => {
               ),
             )
             .run();
+
+          setCookie(c, CLMTK_COOKIE_NAME, tokenstr, COOKIE_OPTS);
         } catch (e) {
           return c.json(
             sockData({

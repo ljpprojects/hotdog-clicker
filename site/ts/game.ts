@@ -12,6 +12,7 @@ import {
   bankCountElement,
   freezerCountElement,
   portalCountElement,
+  wormholeCountElement,
   bunPriceElement,
   dadPriceElement,
   grillPriceElement,
@@ -20,6 +21,7 @@ import {
   bankPriceElement,
   freezerPriceElement,
   portalPriceElement,
+  wormholePriceElement,
   wipeBtn,
   saveBtn,
   hotdogButton,
@@ -31,6 +33,7 @@ import {
   bankButton,
   freezerButton,
   portalButton,
+  wormholeButton,
 } from "./elements";
 
 import { initialise } from "./worker/interfacing";
@@ -65,8 +68,6 @@ export const hds = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number, dispatcher?: string) {
-    console.log(hdsIncTimeoutEnd, Date.now());
-
     if (hdsIncTimeoutEnd > Date.now() && dispatcher === "btn-click") return;
 
     this.setBacking(to);
@@ -212,6 +213,22 @@ export const portalCount = new Binding<number, number>({
   },
 });
 
+export const wormholeCount = new Binding<number, number>({
+  backing: 0,
+
+  setfn(to: number) {
+    this.setBacking(to);
+
+    this.doAsync({ needsToWait: false }, async () => {
+      wormholeCountElement.textContent = String(to);
+    });
+  },
+
+  getfn(): number {
+    return this.getBacking()!;
+  },
+});
+
 export const bunRate: number = 0.2;
 export const bunCost = new Binding<number, number>({
   backing: 10,
@@ -340,6 +357,23 @@ export const portalCost = new Binding<number, number>({
 
     this.doAsync({ needsToWait: false }, async () => {
       portalPriceElement.textContent = formatter.format(to);
+    });
+  },
+
+  getfn(): number {
+    return this.getBacking()!;
+  },
+});
+
+export const wormholeRate: number = 10_000;
+export const wormholeCost = new Binding<number, number>({
+  backing: 75_000_000,
+
+  setfn(to: number) {
+    this.setBacking(to);
+
+    this.doAsync({ needsToWait: false }, async () => {
+      wormholePriceElement.textContent = formatter.format(to);
     });
   },
 
@@ -484,6 +518,15 @@ portalButton?.addEventListener("click", () => {
     portalCost.value = increase(portalCost.value, portalCount.value);
     portalCount.value++;
     hdps.value += portalRate;
+  }
+});
+
+wormholeButton?.addEventListener("click", () => {
+  if (hds.value >= wormholeCost.value) {
+    hds.value -= wormholeCost.value;
+    wormholeCost.value = increase(wormholeCost.value, wormholeCount.value);
+    wormholeCount.value++;
+    hdps.value += wormholeRate;
   }
 });
 
