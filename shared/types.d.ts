@@ -1,8 +1,8 @@
 export type DBData = {
   identifier: string;
-  claimtk: string | null;
   encoded_save: string;
   nickname: string;
+  net_worth: string;
 };
 
 export type ClaimToken = {

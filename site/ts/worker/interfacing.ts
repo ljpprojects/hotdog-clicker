@@ -7,7 +7,7 @@ import {
   ClientSentWorkerDataClaimAction,
 } from "../../../shared/types";
 
-const AUTH_REDIRECT_URL = `/auth?callback=${encodeURIComponent(window.location.href)}`;
+export const AUTH_REDIRECT_URL = `/auth?callback=${encodeURIComponent(window.location.href)}`;
 
 export const generateGet = (): ClientSentWorkerDataGetAction => ({
   action: "get",
@@ -42,16 +42,4 @@ export const makeWorkerReq = async (
   const response = await headers.json();
 
   return response;
-};
-
-// Try to get our save data and authenticate if needed
-
-export const initialise = async () => {
-  const res = await makeWorkerReq(generateGet());
-
-  if (!res.success) {
-    if (res.error?.abbrev === "EAUTH") {
-      window.location.href = AUTH_REDIRECT_URL;
-    }
-  }
 };

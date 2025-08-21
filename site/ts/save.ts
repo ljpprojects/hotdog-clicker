@@ -16,10 +16,19 @@ import {
   bankCost,
   freezerCost,
   nickname,
+  setNickname,
   portalCount,
 } from "./game";
 
-import { calcCost, increase } from "./math";
+import {
+  makeWorkerReq,
+  generateGet,
+  AUTH_REDIRECT_URL,
+  generateReport,
+  generateClaim,
+} from "./worker/interfacing";
+
+import { calcCost } from "./math";
 
 export interface HDCSaveData {
   /**
@@ -167,7 +176,7 @@ export const compileSave = (): HDCSaveData => {
     ownedBanks: bankCount.value,
     ownedFreezers: freezerCount.value,
     ownedPortals: portalCount.value,
-    nickname,
+    nickname: nickname || "<not given>",
 
     // TODO: Net worth
 
@@ -190,10 +199,13 @@ export const generateEncodedSave = (from?: HDCSaveData): string => {
   return encoded;
 };
 
-export const save = () => {
+export const save = async () => {
   const saveData = generateEncodedSave();
+  const req = generateReport(saveData, nickname, compileSave().hdnw);
 
-  document.cookie = `saved=${saveData}; Max-Age=7776000; path=/;`;
+  const res = await makeWorkerReq(req);
+
+  console.log(res);
 };
 
 export const wipe = () => {
@@ -201,32 +213,57 @@ export const wipe = () => {
   window.location.reload();
 };
 
-export const load = () => {
-  const saveData = decodeSaveData(
-    document.cookie.split("=")[1] || generateEncodedSave(DEFAULT_SAVE_DATA),
-  );
+export const load = async () => {
+  const res = await makeWorkerReq(generateGet());
 
-  hds.value = Number(saveData.hdc);
-  hdps.value = Number(saveData.hdps);
+  if (!res.success) {
+    if (res.error?.abbrev === "EAUTH") {
+      window.location.href = AUTH_REDIRECT_URL;
+    }
+  }
 
-  bunCount.value = saveData.ownedBuns;
-  bunCost.value = calcCost(bunCost.value, bunCount.value);
+  // Check if we already have a save
+  if (res.results && res.results[0]) {
+    const saveData = decodeSaveData(res.results[0].encoded_save);
 
-  dadCount.value = saveData.ownedDads;
-  dadCost.value = calcCost(dadCost.value, dadCount.value);
+    hds.value = Number(saveData.hdc);
+    hdps.value = Number(saveData.hdps);
 
-  grillCount.value = saveData.ownedGrills;
-  grillCost.value = calcCost(grillCost.value, grillCount.value);
+    bunCount.value = saveData.ownedBuns;
+    bunCost.value = calcCost(bunCost.value, bunCount.value);
 
-  farmCount.value = saveData.ownedFarms;
-  farmCost.value = calcCost(farmCost.value, farmCount.value);
+    dadCount.value = saveData.ownedDads;
+    dadCost.value = calcCost(dadCost.value, dadCount.value);
 
-  facCount.value = saveData.ownedFactories;
-  facCost.value = calcCost(facCost.value, facCount.value);
+    grillCount.value = saveData.ownedGrills;
+    grillCost.value = calcCost(grillCost.value, grillCount.value);
 
-  bankCount.value = saveData.ownedBanks;
-  bankCost.value = calcCost(bankCost.value, bankCount.value);
+    farmCount.value = saveData.ownedFarms;
+    farmCost.value = calcCost(farmCost.value, farmCount.value);
 
-  freezerCount.value = saveData.ownedFreezers;
-  freezerCost.value = calcCost(freezerCost.value, freezerCount.value);
+    facCount.value = saveData.ownedFactories;
+    facCost.value = calcCost(facCost.value, facCount.value);
+
+    bankCount.value = saveData.ownedBanks;
+    bankCost.value = calcCost(bankCost.value, bankCount.value);
+
+    freezerCount.value = saveData.ownedFreezers;
+    freezerCost.value = calcCost(freezerCost.value, freezerCount.value);
+
+    setNickname(
+      res.results[0].nickname &&
+        res.results[0].nickname.trim() !== "<not given>"
+        ? res.results[0].nickname
+        : (prompt("Enter a nickname (for the leaderboard)") ?? "<not given>"),
+    );
+
+    save();
+  } else {
+    // If we do not yet have a save, attempt to claim another save using our claim token
+
+    const req = generateClaim();
+    await makeWorkerReq(req);
+
+    window.location.reload();
+  }
 };

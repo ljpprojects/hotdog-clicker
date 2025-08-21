@@ -145,7 +145,13 @@ button:active {
     overflow: auto;
     padding: 0 0 7.5vw;
     scrollbar-width: none;
-    max-width: 50vw;
+    max-width: 100vw;
+}
+
+@media (min-width: 1000px) {
+    #store > #buildings {
+        max-width: 50vw;
+    }
 }
 
 #store > #buildings > button {

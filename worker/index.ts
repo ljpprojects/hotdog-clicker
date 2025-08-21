@@ -183,14 +183,14 @@ app.post("/action", async (c) => {
   switch (body.action) {
     case "report":
       const query = `
-      INSERT INTO savedat (identifier, claimtk, pubkey, encoded_save, nickname, net_worth)
+      INSERT INTO savedat (identifier, claimtk, verifykey, encoded_save, nickname, net_worth)
       VALUES (?1, ?4, ?5, ?2, ?3, ?6)
       ON CONFLICT(identifier) DO UPDATE SET
         encoded_save = excluded.encoded_save,
         nickname = excluded.nickname,
         net_worth = excluded.net_worth,
         claimtk = excluded.claimtk,
-        pubkey = excluded.piubkey;
+        verifykey = excluded.verifykey;
     `.trim();
 
       try {
@@ -295,6 +295,54 @@ app.post("/action", async (c) => {
       );
 
       break;
+    case "claim":
+      const claimtkquery = `
+        UPDATE savedat
+        SET identifier = ?1
+        WHERE claimtk = ?2;
+      `.trim();
+
+      let res: D1Result<Record<string, unknown>>;
+
+      try {
+        res = await c.env.DB.prepare(claimtkquery)
+          .bind(identifier, getCookie(c, CLMTK_COOKIE_NAME))
+          .run();
+      } catch (e) {
+        return c.json(
+          sockData({
+            success: false,
+            error: {
+              abbrev: "EQURY",
+              message: `D1 returned an error: ${e}`,
+            },
+          }),
+        );
+      }
+
+      if (res == null) {
+        break;
+      }
+
+      if (res.error) {
+        return c.json(
+          sockData({
+            success: false,
+            error: {
+              abbrev: "EQURY",
+              message: `D1 returned an error: ${res.error}`,
+            },
+          }),
+        );
+
+        break;
+      }
+
+      return c.json(
+        sockData({
+          success: true,
+        }),
+      );
   }
 });
 

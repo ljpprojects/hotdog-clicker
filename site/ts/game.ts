@@ -36,10 +36,6 @@ import {
   wormholeButton,
 } from "./elements";
 
-import { initialise } from "./worker/interfacing";
-
-initialise();
-
 export const formatter = new Intl.NumberFormat(navigator.language, {
   minimumFractionDigits: 2,
 });
@@ -60,7 +56,11 @@ export const hdps = new Binding<number, number>({
   },
 });
 
-export const nickname = prompt("Enter a nickname to use.") ?? "<not given>";
+export let nickname = "<not given>";
+
+export const setNickname = (n: string) => {
+  nickname = n;
+};
 
 let hdsIncTimeoutEnd = Date.now();
 
@@ -437,7 +437,7 @@ const checkBuyables = () => {
 
 load();
 
-setInterval(save, 10000);
+setInterval(save, 60e3);
 
 hotdogButton?.addEventListener("click", (event) => {
   if (!event.isTrusted) return;
