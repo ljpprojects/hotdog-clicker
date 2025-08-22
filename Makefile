@@ -1,7 +1,11 @@
 build:
-	npm i
+	bun i
 	rm -rf site/dist/*
-	node ./node_modules/typescript/bin/tsc
-	node ./node_modules/clean-css-cli/bin/cleancss -O3 -b site/index.css -o site/dist
-	node ./node_modules/html-minifier/cli.js site/index.max.html --collapse-whitespace -o site/index.html
-	node ./node_modules/webpack-cli/bin/cli.js
+	bun ./node_modules/typescript/bin/tsc
+	bun ./node_modules/clean-css-cli/bin/cleancss -O3 -b site/index.css -o site/dist
+	bun ./node_modules/html-minifier/cli.js site/index.max.html --collapse-whitespace -o site/index.html
+	bunx webpack
+
+deploy:
+    make build
+    bunx wrangler deploy
