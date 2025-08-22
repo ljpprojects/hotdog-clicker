@@ -6,6 +6,5 @@ build:
 	bun ./node_modules/html-minifier/cli.js site/index.max.html --collapse-whitespace -o site/index.html
 	bunx webpack
 
-deploy:
-    make build
-    bunx wrangler deploy
+deploy: build
+	bunx wrangler deploy
