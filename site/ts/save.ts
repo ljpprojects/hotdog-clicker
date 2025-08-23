@@ -217,8 +217,18 @@ export const load = async () => {
   const res = await makeWorkerReq(generateGet());
 
   if (!res.success) {
-    if (res.error?.abbrev === "EAUTH") {
-      window.location.href = AUTH_REDIRECT_URL;
+    switch (res.error?.abbrev) {
+      case "EAUTH":
+        window.location.href = AUTH_REDIRECT_URL;
+
+        break;
+      case "ECLMR":
+        console.warn("Claim must be made.")
+
+        await makeWorkerReq(generateClaim());
+        window.location.reload();
+
+        break;
     }
   }
 
@@ -258,12 +268,5 @@ export const load = async () => {
     );
 
     save();
-  } else {
-    // If we do not yet have a save, attempt to claim another save using our claim token
-
-    const req = generateClaim();
-    await makeWorkerReq(req);
-
-    window.location.reload();
-  }
+  } // If we do not have a save we do not have to do anything
 };

@@ -99,17 +99,20 @@ const generateClaimToken = async (encodedSave: string): Promise<ClaimToken> => {
 let SECRET: Uint8Array<ArrayBuffer> | null = null;
 
 const IDENT_COOKIE_NAME = "identifier";
-const CLMTK_COOKIE_NAME = "claimtk";
+const IDENT_COOKIE_MAX_AGE = 60 * 10;
 
-const COOKIE_OPTS: CookieOptions = {
+const CLMTK_COOKIE_NAME = "claimtk";
+const CLMTK_COOKIE_MAX_AGE = 60 ** 2 * 24 * 31 * 6;
+
+const COOKIE_OPTS: (age: number) => CookieOptions = (age: number) => ({
   httpOnly: true,
   sameSite: "Strict",
-  maxAge: 60 * 30,
+  maxAge: age,
   //secure: true,
   //prefix: "secure",
   path: "/",
   // domain: "hdc.ljpprojects.org"
-};
+});
 
 type Bindings = {
   DB: D1Database;
@@ -136,7 +139,7 @@ app.get("/auth", async (c) => {
 
   const identifier = btoa(String.fromCharCode(...bytes));
 
-  setCookie(c, IDENT_COOKIE_NAME, identifier, COOKIE_OPTS);
+  setCookie(c, IDENT_COOKIE_NAME, identifier, COOKIE_OPTS(IDENT_COOKIE_MAX_AGE));
 
   const callback = c.req.query("callback");
 
@@ -167,6 +170,7 @@ app.post("/action", async (c) => {
   }
 
   const identifier = getCookie(c, IDENT_COOKIE_NAME);
+  const claimtk = getCookie(c, CLMTK_COOKIE_NAME)
 
   if (!identifier) {
     return c.json(
@@ -222,7 +226,7 @@ app.post("/action", async (c) => {
             )
             .run();
 
-          setCookie(c, CLMTK_COOKIE_NAME, tokenstr, COOKIE_OPTS);
+          setCookie(c, CLMTK_COOKIE_NAME, tokenstr, COOKIE_OPTS(CLMTK_COOKIE_MAX_AGE));
         } catch (e) {
           return c.json(
             sockData({
@@ -270,8 +274,8 @@ app.post("/action", async (c) => {
         );
       }
     case "get":
-      const saveQuery = "SELECT * FROM savedat WHERE identifier = ?;";
-      const d1result = await c.env.DB.prepare(saveQuery).bind(identifier).run();
+      const saveQuery = "SELECT * FROM savedat WHERE identifier = ?1 OR claimtk = ?2;";
+      const d1result = await c.env.DB.prepare(saveQuery).bind(identifier, claimtk ?? "").run();
 
       if (d1result.error) {
         return c.json(
@@ -286,6 +290,33 @@ app.post("/action", async (c) => {
       }
 
       const results = d1result.results as DBData[];
+
+      if (
+        claimtk &&
+        results[0] &&
+        d1result.results[0].claimtk &&
+        results[0].identifier !== identifier &&
+        d1result.results[0].claimtk == claimtk
+      ) {
+        return c.json(
+          sockData({
+            success: false,
+            error: {
+              abbrev: "ECLMR",
+              message: "A claim is required to access the data."
+            },
+          }),
+        );
+      }
+
+      console.log(d1result.results[0])
+
+      if (
+        claimtk &&
+        d1result.results[0]
+      ) {
+        setCookie(c, CLMTK_COOKIE_NAME, d1result.results[0].claimtk as string, COOKIE_OPTS(CLMTK_COOKIE_MAX_AGE));
+      }
 
       return c.json(
         sockData({

@@ -35,7 +35,7 @@ export interface ClientSentWorkerDataClaimAction extends ClientSentWorkerData {
   action: "claim";
 }
 
-export type ErrorAbbrev = "EAUTH" | "ESNTX" | "EQURY" | "EUNKN";
+export type ErrorAbbrev = "EAUTH" | "ESNTX" | "EQURY" | "EUNKN" | "ECLMR";
 
 export interface ServerSentWorkerData {
   success: boolean;
