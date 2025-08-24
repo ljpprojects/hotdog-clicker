@@ -2,17 +2,18 @@
 
 set -euo pipefail
 mkdir -p site/dist
+touch .build
 
 function createallhash {
-    tar -c build.sh site/**/*.ts site/index.css worker/index.ts **/tsconfig.json | md5
+    tar -c build.sh site/**/*.ts site/index.css worker/index.ts **/tsconfig.json | md5sum
 }
 
 function createtshash {
-    tar -c site/**/*.ts | md5
+    tar -c site/**/*.ts | md5sum
 }
 
 function createcsshtmlhash {
-    tar -c site/index.css site/index.max.html | md5
+    tar -c site/index.css site/index.max.html | md5sum
 }
 
 function finish {
