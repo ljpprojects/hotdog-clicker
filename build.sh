@@ -1,4 +1,4 @@
-#! /opt/homebrew/bin/zsh
+#! /bin/bash
 
 set -euo pipefail
 mkdir -p site/dist
