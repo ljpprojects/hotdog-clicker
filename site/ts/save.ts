@@ -18,6 +18,7 @@ import {
   nickname,
   setNickname,
   portalCount,
+  hdnw,
 } from "./game";
 
 import {
@@ -25,10 +26,10 @@ import {
   generateGet,
   AUTH_REDIRECT_URL,
   generateReport,
-  generateClaim,
 } from "./worker/interfacing";
 
 import { calcCost } from "./math";
+import { DBData, ServerSentWorkerData } from "../../shared/types";
 
 export interface HDCSaveData {
   /**
@@ -47,41 +48,6 @@ export interface HDCSaveData {
    * - The summed cost of generators (e.g. Bun, Grill, Freezer)
    */
   hdnw: number;
-
-  /**
-   * The projected net worth of the user in 1 hour, assuming no new generators are acquired.
-   */
-  phdnw1: number;
-
-  /**
-   * The projected net worth of the user in 24 hours, assuming no new generators are acquired.
-   */
-  phdnw24: number;
-
-  /**
-   * The projected net worth of the user in 72 hours, assuming no new generators are acquired.
-   */
-  phdnw72: number;
-
-  /**
-   * The projected net worth of the user in 168 hours (1 week), assuming no new generators are acquired.
-   */
-  phdnw168: number;
-
-  /**
-   * The projected net worth of the user in 730 hours (The average amount of hours in a month rounded down), assuming no new generators are acquired.
-   */
-  phdnw730: number;
-
-  /**
-   * The projected net worth of the user in 2192 hours (The average amount of hours in 3 months rounded up), assuming no new generators are acquired.
-   */
-  phdnw2192: number;
-
-  /**
-   * The projected net worth of the user in 4383 hours (The average amount of hours in 6 months), assuming no new generators are acquired.
-   */
-  phdnw4383: number;
 
   /**
    * The amount of "Bun" generators owned by the user.
@@ -133,13 +99,6 @@ export const DEFAULT_SAVE_DATA: HDCSaveData = {
   hdc: 0,
   hdps: 0,
   hdnw: 0,
-  phdnw1: 0,
-  phdnw24: 0,
-  phdnw72: 0,
-  phdnw168: 0,
-  phdnw730: 0,
-  phdnw2192: 0,
-  phdnw4383: 0,
   ownedBuns: 0,
   ownedDads: 0,
   ownedGrills: 0,
@@ -177,17 +136,7 @@ export const compileSave = (): HDCSaveData => {
     ownedFreezers: freezerCount.value,
     ownedPortals: portalCount.value,
     nickname: nickname || "<not given>",
-
-    // TODO: Net worth
-
-    hdnw: 0,
-    phdnw1: 0,
-    phdnw24: 0,
-    phdnw72: 0,
-    phdnw168: 0,
-    phdnw730: 0,
-    phdnw2192: 0,
-    phdnw4383: 0,
+    hdnw: hdnw.value,
   };
 };
 
@@ -199,18 +148,18 @@ export const generateEncodedSave = (from?: HDCSaveData): string => {
   return encoded;
 };
 
-export const save = async () => {
+export const save = async (): Promise<ServerSentWorkerData> => {
   const saveData = generateEncodedSave();
   const req = generateReport(saveData, nickname, compileSave().hdnw);
 
-  const res = await makeWorkerReq(req);
-
-  console.log(res);
+  return await makeWorkerReq(req)
 };
 
-export const wipe = () => {
-  document.cookie = `saved=${generateEncodedSave(DEFAULT_SAVE_DATA)}; Max-Age=7776000; path=/;`;
-  window.location.reload();
+export const wipe = async (): Promise<ServerSentWorkerData> => {
+  const saveData = generateEncodedSave(DEFAULT_SAVE_DATA)
+  const req = generateReport(saveData, DEFAULT_SAVE_DATA.nickname, DEFAULT_SAVE_DATA.hdnw)
+
+  return await makeWorkerReq(req)
 };
 
 export const load = async () => {
@@ -222,19 +171,12 @@ export const load = async () => {
         window.location.href = AUTH_REDIRECT_URL;
 
         break;
-      case "ECLMR":
-        console.warn("Claim must be made.")
-
-        await makeWorkerReq(generateClaim());
-        window.location.reload();
-
-        break;
     }
   }
 
   // Check if we already have a save
   if (res.results && res.results[0]) {
-    const saveData = decodeSaveData(res.results[0].encoded_save);
+    const saveData = decodeSaveData((res.results as DBData[])[0].encoded_save);
 
     hds.value = Number(saveData.hdc);
     hdps.value = Number(saveData.hdps);
@@ -259,6 +201,8 @@ export const load = async () => {
 
     freezerCount.value = saveData.ownedFreezers;
     freezerCost.value = calcCost(freezerCost.value, freezerCount.value);
+
+    hdnw.value = saveData.hdnw;
 
     setNickname(
       res.results[0].nickname &&

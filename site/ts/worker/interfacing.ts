@@ -3,19 +3,14 @@ import {
   ClientSentWorkerData,
   ClientSentWorkerDataReportAction,
   ClientSentWorkerDataGetAction,
-  ClientSentWorkerDataPingAction,
-  ClientSentWorkerDataClaimAction,
+  ClientSentWorkerDataLeaderboardAction,
 } from "../../../shared/types";
 
 export const AUTH_REDIRECT_URL = `/auth?callback=${encodeURIComponent(window.location.href)}`;
 
-export const generateGet = (): ClientSentWorkerDataGetAction => ({
-  action: "get",
-});
+export const generateGet = (): ClientSentWorkerDataGetAction => ({ action: "get" });
 
-export const generateClaim = (): ClientSentWorkerDataClaimAction => ({
-  action: "claim",
-});
+export const generateLeaderboard = (): ClientSentWorkerDataLeaderboardAction => ({ action: "leaderboard" });
 
 export const generateReport = (
   encodedSaveData: string,

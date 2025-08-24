@@ -8,13 +8,17 @@
     "not_found_handling": "none"
   },
   "build": {
-    "command": "make build",
+    "command": "./build.sh selective",
     "watch_dir": [
       "./site/ts",
       "./site/index.css",
       "./site/index.max.html",
-      "./worker",
-      "./shared"
+      "./worker/index.ts",
+      "./shared",
+      "./tsconfig.json",
+      "./worker/tsconfig.json",
+      "./wrangler.json",
+      "./build.sh"
     ]
   },
   "d1_databases": [

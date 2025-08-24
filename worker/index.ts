@@ -1,15 +1,18 @@
 import { Hono, Context } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 import { logger } from "hono/logger";
-import { BlankInput } from "hono/types";
 import {
   DBData,
+  LeaderboardData,
   ClaimToken,
   ServerSentWorkerData,
   ClientSentWorkerData,
   ErrorAbbrev,
   ClientSentWorkerDataReportAction,
-} from "../shared/types";
+  DBDataFull,
+  sanitiseDBData,
+  // @ts-expect-error
+} from "../shared/types.d.ts";
 import { CookieOptions } from "hono/utils/cookie";
 
 const CLAIM_TOKEN = {
@@ -99,10 +102,7 @@ const generateClaimToken = async (encodedSave: string): Promise<ClaimToken> => {
 let SECRET: Uint8Array<ArrayBuffer> | null = null;
 
 const IDENT_COOKIE_NAME = "identifier";
-const IDENT_COOKIE_MAX_AGE = 60 * 10;
-
-const CLMTK_COOKIE_NAME = "claimtk";
-const CLMTK_COOKIE_MAX_AGE = 60 ** 2 * 24 * 31 * 6;
+const IDENT_COOKIE_MAX_AGE = 60 ** 2 * 24 * 31 * 6;
 
 const COOKIE_OPTS: (age: number) => CookieOptions = (age: number) => ({
   httpOnly: true,
@@ -131,6 +131,7 @@ app.use(async (_, next) => {
 
   await next();
 });
+
 app.use(logger());
 
 app.get("/auth", async (c) => {
@@ -170,7 +171,6 @@ app.post("/action", async (c) => {
   }
 
   const identifier = getCookie(c, IDENT_COOKIE_NAME);
-  const claimtk = getCookie(c, CLMTK_COOKIE_NAME)
 
   if (!identifier) {
     return c.json(
@@ -185,59 +185,68 @@ app.post("/action", async (c) => {
   }
 
   switch (body.action) {
+    case "leaderboard":
+      const ldbdQuery = `
+        select
+          nickname,
+          net_worth,
+          ldbd_rank
+        from (
+          select
+            identifier,
+            nickname,
+            net_worth,
+            rank() over (order by net_worth desc) as ldbd_rank
+          from savedat
+        )
+        where (ldbd_rank <= 15
+           or identifier = ?1)
+           and nickname != "<not given>"
+        order by ldbd_rank asc;
+      `.trim();
+
+      const result = await c.env.DB.prepare(ldbdQuery).bind(identifier).run();
+
+      if (result.error) {
+        return c.json(
+          sockData({
+            success: false,
+            error: {
+              abbrev: "EQURY",
+              message: `D1 returned an error: ${result.error}`,
+            },
+          }),
+        );
+      }
+
+      return c.json(
+        sockData({
+          success: true,
+          results: result.results as LeaderboardData[],
+        }),
+      );
+
+      break
     case "report":
       const query = `
-      INSERT INTO savedat (identifier, claimtk, verifykey, encoded_save, nickname, net_worth)
-      VALUES (?1, ?4, ?5, ?2, ?3, ?6)
-      ON CONFLICT(identifier) DO UPDATE SET
-        encoded_save = excluded.encoded_save,
-        nickname = excluded.nickname,
-        net_worth = excluded.net_worth,
-        claimtk = excluded.claimtk,
-        verifykey = excluded.verifykey;
-    `.trim();
+        insert into savedat (identifier, encoded_save, nickname, net_worth)
+        values (?1, ?2, ?3, ?4)
+        on conflict(identifier) do update set
+          encoded_save = excluded.encoded_save,
+          nickname = excluded.nickname,
+          net_worth = excluded.net_worth
+        returning *;
+      `.trim();
 
       try {
-        const claimtk = await generateClaimToken(
-          (body as ClientSentWorkerDataReportAction).encodedSaveData,
-        );
-
-        const pubkey = base64Encode(
-          new Uint8Array(
-            await crypto.subtle.exportKey("spki", claimtk.keypair.publicKey),
-          ),
-        );
-
-        const { tokenstr, pemkey: _ } = await formatClaimToken(claimtk);
-
-        let res: D1Result<Record<string, unknown>>;
-
-        try {
-          res = await c.env.DB.prepare(query)
-            .bind(
-              identifier,
-              (body as ClientSentWorkerDataReportAction).encodedSaveData,
-              (body as ClientSentWorkerDataReportAction).nickname,
-              tokenstr,
-              pubkey,
-              btoa(
-                (body as ClientSentWorkerDataReportAction).net_worth.toString(),
-              ),
-            )
-            .run();
-
-          setCookie(c, CLMTK_COOKIE_NAME, tokenstr, COOKIE_OPTS(CLMTK_COOKIE_MAX_AGE));
-        } catch (e) {
-          return c.json(
-            sockData({
-              success: false,
-              error: {
-                abbrev: "EQURY",
-                message: `D1 returned an error: ${e}`,
-              },
-            }),
-          );
-        }
+        let res: D1Result<Record<string, unknown>> = await c.env.DB.prepare(query)
+          .bind(
+            identifier,
+            (body as ClientSentWorkerDataReportAction).encodedSaveData,
+            (body as ClientSentWorkerDataReportAction).nickname,
+            (body as ClientSentWorkerDataReportAction).net_worth,
+          )
+          .run();
 
         if (res == null) {
           break;
@@ -257,9 +266,12 @@ app.post("/action", async (c) => {
           break;
         }
 
+        const results = (res.results as DBDataFull[]).map(dirty => sanitiseDBData(dirty));
+
         return c.json(
           sockData({
             success: true,
+            results
           }),
         );
       } catch (e) {
@@ -267,15 +279,20 @@ app.post("/action", async (c) => {
           sockData({
             success: false,
             error: {
-              abbrev: "EUNKN",
-              message: `Unknown error encountered: ${e}`,
+              abbrev: "EQURY",
+              message: `D1 returned an error: ${e}`,
             },
           }),
         );
       }
     case "get":
-      const saveQuery = "SELECT * FROM savedat WHERE identifier = ?1 OR claimtk = ?2;";
-      const d1result = await c.env.DB.prepare(saveQuery).bind(identifier, claimtk ?? "").run();
+      const getQuery = `
+        select *
+        from savedat
+        where identifier = ?1;
+      `.trim();
+
+      const d1result = await c.env.DB.prepare(getQuery).bind(identifier).run();
 
       if (d1result.error) {
         return c.json(
@@ -289,89 +306,12 @@ app.post("/action", async (c) => {
         );
       }
 
-      const results = d1result.results as DBData[];
-
-      if (
-        claimtk &&
-        results[0] &&
-        d1result.results[0].claimtk &&
-        results[0].identifier !== identifier &&
-        d1result.results[0].claimtk == claimtk
-      ) {
-        return c.json(
-          sockData({
-            success: false,
-            error: {
-              abbrev: "ECLMR",
-              message: "A claim is required to access the data."
-            },
-          }),
-        );
-      }
-
-      console.log(d1result.results[0])
-
-      if (
-        claimtk &&
-        d1result.results[0]
-      ) {
-        setCookie(c, CLMTK_COOKIE_NAME, d1result.results[0].claimtk as string, COOKIE_OPTS(CLMTK_COOKIE_MAX_AGE));
-      }
+      const results = (d1result.results as DBDataFull[]).map(dirty => sanitiseDBData(dirty));
 
       return c.json(
         sockData({
           success: true,
           results,
-        }),
-      );
-
-      break;
-    case "claim":
-      const claimtkquery = `
-        UPDATE savedat
-        SET identifier = ?1
-        WHERE claimtk = ?2;
-      `.trim();
-
-      let res: D1Result<Record<string, unknown>>;
-
-      try {
-        res = await c.env.DB.prepare(claimtkquery)
-          .bind(identifier, getCookie(c, CLMTK_COOKIE_NAME))
-          .run();
-      } catch (e) {
-        return c.json(
-          sockData({
-            success: false,
-            error: {
-              abbrev: "EQURY",
-              message: `D1 returned an error: ${e}`,
-            },
-          }),
-        );
-      }
-
-      if (res == null) {
-        break;
-      }
-
-      if (res.error) {
-        return c.json(
-          sockData({
-            success: false,
-            error: {
-              abbrev: "EQURY",
-              message: `D1 returned an error: ${res.error}`,
-            },
-          }),
-        );
-
-        break;
-      }
-
-      return c.json(
-        sockData({
-          success: true,
         }),
       );
   }

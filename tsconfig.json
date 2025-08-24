@@ -101,5 +101,8 @@
   "include": [
     "shared/*.d.ts",
     "site/ts/**/*.ts"
+  ],
+  "exclude": [
+    "**/._*"
   ]
 }

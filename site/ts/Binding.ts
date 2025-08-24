@@ -8,6 +8,7 @@ export abstract class BindingBacker<T> {
   private currentTask: Promise<void> = Promise.resolve();
 
   abstract getBacking(): T | null;
+  abstract getPreviousBacking(): T | null;
   abstract setBacking(to: T): void;
 
   constructor(backedBinding: Binding<any, T>) {
@@ -46,13 +47,20 @@ export class Binding<V, B> {
 
   private backing: B | null;
 
-  private readonly binderBacking: BindingBacker<B> =
+  readonly binderBacking: BindingBacker<B> =
     new (class extends BindingBacker<B> {
+      private prev: B | null = null
+
       getBacking(): B | null {
         return this.backedBinding.backing;
       }
 
+      getPreviousBacking(): B | null {
+        return this.prev
+      }
+
       setBacking(to: B) {
+        this.prev = this.getBacking()
         this.backedBinding.backing = to;
       }
 

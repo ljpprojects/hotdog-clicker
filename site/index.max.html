@@ -14,17 +14,18 @@
 
     <body>
         <nav class="display">
-            <div>
+            <section>
                 <h1 class="mhide">Hot Dog Clicker</h1>
 
                 <h2>Hot Dogs: <span id="clickCount">0</span></h2>
                 <h2>Hot Dogs Per Second: <span id="passive">0</span></h2>
-            </div>
+                <h2>Net Worth: <span id="hdnw">0</span></h2>
+            </section>
 
             <button id="hotdogButton">
                 <img
                     src="/icons/Hotdog.svg"
-                    id="hotdogImage"
+                    id="hotdogButton"
                     alt="Hotdog"
                     draggable="false"
                 />
@@ -236,10 +237,33 @@
 
             <script defer src="/dist/bundle.js"></script>
         </main>
-        <div id="context" class="hide">
+        <section class="display" id="leaderboard">
+            <h2>Leaderboard</h2>
+            <p>Refreshed once every minute.</p>
+
+            <ol>
+                <li id="ldbd-pl-01">John</li>
+                <li id="ldbd-pl-02">Jane</li>
+                <li id="ldbd-pl-03">John</li>
+                <li id="ldbd-pl-04">Jane</li>
+                <li id="ldbd-pl-05">John</li>
+                <li id="ldbd-pl-06">Jane</li>
+                <li id="ldbd-pl-07">John</li>
+                <li id="ldbd-pl-08">Jane</li>
+                <li id="ldbd-pl-09">John</li>
+                <li id="ldbd-pl-10">Jane</li>
+                <li id="ldbd-pl-11" class="less-impt">John</li>
+                <li id="ldbd-pl-12" class="less-impt">Jane</li>
+                <li id="ldbd-pl-13" class="less-impt">John</li>
+                <li id="ldbd-pl-14" class="less-impt">Jane</li>
+                <li id="ldbd-pl-15" class="less-impt">John</li>
+                <li id="ldbd-you" value="17">(You) Bob</li>
+            </ol>
+        </section>
+        <section id="context" class="hide">
             <h1>Main Menu</h1>
             <button id="wipe">WIPE</button><br />
             <button id="save">SAVE</button><br />
-        </div>
+        </section>
     </body>
 </html>
