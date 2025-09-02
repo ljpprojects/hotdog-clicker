@@ -85,23 +85,12 @@ section#leaderboard {
     padding: 10vmin;
     text-align: center;
     overflow: auto;
-}
-
-@media (min-width: 1000px) {
-    section#leaderboard {
-        max-height: 100vh;
-    }
+    max-height: 100vh;
 }
 
 section#leaderboard > ol {
     overflow: auto;
-    scrollbar-width: none;
-}
-
-@media (min-width: 1000px) {
-    section#leaderboard>ol {
-        max-height: 100vh;
-    }
+    max-height: 100vh;
 }
 
 section#leaderboard > ol > li {
