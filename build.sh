@@ -13,7 +13,7 @@ function createtshash {
 }
 
 function createcsshtmlhash {
-    tar -c site/index.css site/index.max.html | md5sum
+    tar -c site/*.css site/index.max.html | md5sum
 }
 
 function finish {
@@ -47,6 +47,8 @@ if [[ "$1" == "selective" ]]; then
 
     if [[ "$(head -n 3 .build | tail -n 1)" != "$(createcsshtmlhash)" ]]; then
         bun ./node_modules/clean-css-cli/bin/cleancss -O3 -b site/index.css -o site/dist;
+        bun ./node_modules/clean-css-cli/bin/cleancss -O3 -b site/alto.css -o site/dist;
+        bun ./node_modules/clean-css-cli/bin/cleancss -O3 -b site/empty.css -o site/dist;
         bun ./node_modules/html-minifier/cli.js site/index.max.html --collapse-whitespace -o site/index.html;
     else
         echo "Skipping CSS/HTML build; no changes."
