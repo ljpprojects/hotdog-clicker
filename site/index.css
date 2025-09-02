@@ -84,10 +84,11 @@ section#leaderboard {
     flex-direction: column;
     padding: 10vmin;
     text-align: center;
+    overflow: auto;
 }
 
 section#leaderboard > ol {
-    overflow-y: auto;
+    overflow: auto;
     scrollbar-width: none;
 }
 
