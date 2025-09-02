@@ -31,6 +31,8 @@ import {
 import { calcCost } from "./math";
 import { DBData, ServerSentWorkerData } from "../../shared/types";
 
+const MAX_NICKNAME_LENGTH = 15;
+
 export interface HDCSaveData {
   /**
    * The amount of Hot Dogs the user has (Hot Dog Count)
@@ -135,7 +137,7 @@ export const compileSave = (): HDCSaveData => {
     ownedBanks: bankCount.value,
     ownedFreezers: freezerCount.value,
     ownedPortals: portalCount.value,
-    nickname: nickname || "<not given>",
+    nickname: (nickname || "<not given>").slice(MAX_NICKNAME_LENGTH),
     hdnw: hdnw.value,
   };
 };
@@ -152,14 +154,18 @@ export const save = async (): Promise<ServerSentWorkerData> => {
   const saveData = generateEncodedSave();
   const req = generateReport(saveData, nickname, compileSave().hdnw);
 
-  return await makeWorkerReq(req)
+  return await makeWorkerReq(req);
 };
 
 export const wipe = async (): Promise<ServerSentWorkerData> => {
-  const saveData = generateEncodedSave(DEFAULT_SAVE_DATA)
-  const req = generateReport(saveData, DEFAULT_SAVE_DATA.nickname, DEFAULT_SAVE_DATA.hdnw)
+  const saveData = generateEncodedSave(DEFAULT_SAVE_DATA);
+  const req = generateReport(
+    saveData,
+    DEFAULT_SAVE_DATA.nickname,
+    DEFAULT_SAVE_DATA.hdnw,
+  );
 
-  return await makeWorkerReq(req)
+  return await makeWorkerReq(req);
 };
 
 export const load = async () => {
@@ -208,7 +214,9 @@ export const load = async () => {
       res.results[0].nickname &&
         res.results[0].nickname.trim() !== "<not given>"
         ? res.results[0].nickname
-        : (prompt("Enter a nickname (for the leaderboard)") ?? "<not given>"),
+        : (
+            prompt("Enter a nickname (for the leaderboard)") ?? "<not given>"
+          ).slice(MAX_NICKNAME_LENGTH),
     );
 
     save();
