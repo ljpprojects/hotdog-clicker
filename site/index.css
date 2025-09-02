@@ -98,6 +98,12 @@ section#leaderboard > ol {
     scrollbar-width: none;
 }
 
+@media (min-width: 1000px) {
+    section#leaderboard>ol {
+        max-height: 100vh;
+    }
+}
+
 section#leaderboard > ol > li {
     list-style-type: decimal-leading-zero;
 }
