@@ -86,6 +86,7 @@ section#leaderboard {
     text-align: center;
     overflow: auto;
     max-height: 100vh;
+    max-width: 100%;
 }
 
 section#leaderboard > ol {
