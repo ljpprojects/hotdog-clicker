@@ -16,6 +16,18 @@ function createcsshtmlhash {
     tar -c site/*.css site/index.max.html | md5sum
 }
 
+function buildts {
+    bun ./node_modules/typescript/bin/tsc;
+    ./node_modules/esbuild/bin/esbuild --format=iife --bundle --minify --target=es5 --outfile=site/dist/bundle.js site/dist/game.js
+}
+
+function buildcsshtml {
+    bun ./node_modules/clean-css-cli/bin/cleancss -O3 -b site/index.css -o site/dist;
+    bun ./node_modules/clean-css-cli/bin/cleancss -O3 -b site/alto.css -o site/dist;
+    bun ./node_modules/clean-css-cli/bin/cleancss -O3 -b site/empty.css -o site/dist;
+    bun ./node_modules/html-minifier/cli.js site/index.max.html --collapse-whitespace -o site/index.html;
+}
+
 function finish {
     local allhash="$(createallhash)"
     local tshash="$(createtshash)"
@@ -37,8 +49,7 @@ if [[ "$1" == "selective" ]]; then
     # Check if typescript source has changed (.build:2)
 
     if [[ "$(head -n 2 .build | tail -n 1)" != "$(createtshash)" ]]; then
-        bun ./node_modules/typescript/bin/tsc;
-        ./node_modules/esbuild/bin/esbuild --format=iife --bundle --minify --target=es5 --outfile=site/dist/bundle.js site/dist/game.js
+        buildts
     else
         echo "Skipping TypeScript build; no changes."
     fi;
@@ -46,18 +57,13 @@ if [[ "$1" == "selective" ]]; then
     # Check if css/html has changed (.build:3)
 
     if [[ "$(head -n 3 .build | tail -n 1)" != "$(createcsshtmlhash)" ]]; then
-        bun ./node_modules/clean-css-cli/bin/cleancss -O3 -b site/index.css -o site/dist;
-        bun ./node_modules/clean-css-cli/bin/cleancss -O3 -b site/alto.css -o site/dist;
-        bun ./node_modules/clean-css-cli/bin/cleancss -O3 -b site/empty.css -o site/dist;
-        bun ./node_modules/html-minifier/cli.js site/index.max.html --collapse-whitespace -o site/index.html;
+        buildcsshtml
     else
         echo "Skipping CSS/HTML build; no changes."
     fi;
 elif [[ "$1" == "full" ]]; then
-    bun ./node_modules/typescript/bin/tsc;
-    ./node_modules/esbuild/bin/esbuild --format=iife --bundle --minify --target=es5 --outfile=site/dist/bundle.js site/dist/game.js
-    bun ./node_modules/clean-css-cli/bin/cleancss -O3 -b site/index.css -o site/dist;
-    bun ./node_modules/html-minifier/cli.js site/index.max.html --collapse-whitespace -o site/index.html;
+    buildts
+    buildcsshtml
 fi;
 
 finish;
