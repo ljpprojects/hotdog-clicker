@@ -3,6 +3,10 @@ button {
     background-image: url("https://tse1.mm.bing.net/th/id/OIP.wCuPVbsX-OBYqIFQESwHVgHaEL?r=0&pid=Api");
 }
 
+button {
+    filter: saturate(75%);
+}
+
 button.buyable {
     filter: saturate(200%);
 }
