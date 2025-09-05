@@ -4,9 +4,9 @@ button {
 }
 
 button {
-    filter: saturate(75%);
+    filter: saturate(0);
 }
 
 button.buyable {
-    filter: saturate(200%);
+    filter: saturate(100%);
 }
