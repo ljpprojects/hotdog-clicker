@@ -90,11 +90,11 @@ export const hds = new Binding<number, number>({
   setfn(to: number, dispatcher?: string) {
     if (hdsIncTimeoutEnd > Date.now()) return;
 
-    const prev = this.getBacking() ?? 0
+    const prev = this.getBacking() ?? 0;
     this.setBacking(to);
 
     // The difference in hds is how much to remove from our net worth
-    hdnw.setValue(hdnw.getValue() - (prev - to), "hds-change")
+    hdnw.setValue(hdnw.getValue() - (prev - to), "hds-change");
 
     this.doAsync({ needsToWait: false }, async () => {
       clickCountElement.textContent = formatter.format(to);
@@ -113,10 +113,14 @@ export const bunCount = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    const curr = this.getBacking() ?? 0
-    const netWorthMadeUpOfAsset = (bunCost.binderBacking.getPreviousBacking() ?? 0) * curr
-    const newNetWorthMadeUpOfAsset = bunCost.value * to
-    hdnw.setValue(hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset), "acquire-asset-bun")
+    const curr = this.getBacking() ?? 0;
+    const netWorthMadeUpOfAsset =
+      (bunCost.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const newNetWorthMadeUpOfAsset = bunCost.value * to;
+    hdnw.setValue(
+      hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+      "acquire-asset-bun",
+    );
 
     this.setBacking(to);
 
@@ -134,10 +138,14 @@ export const dadCount = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    const curr = this.getBacking() ?? 0
-    const netWorthMadeUpOfAsset = (dadCost.binderBacking.getPreviousBacking() ?? 0) * curr
-    const newNetWorthMadeUpOfAsset = dadCost.value * to
-    hdnw.setValue(hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset), "acquire-asset-dad")
+    const curr = this.getBacking() ?? 0;
+    const netWorthMadeUpOfAsset =
+      (dadCost.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const newNetWorthMadeUpOfAsset = dadCost.value * to;
+    hdnw.setValue(
+      hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+      "acquire-asset-dad",
+    );
 
     this.setBacking(to);
 
@@ -155,10 +163,14 @@ export const grillCount = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    const curr = this.getBacking() ?? 0
-    const netWorthMadeUpOfAsset = (grillCost.binderBacking.getPreviousBacking() ?? 0) * curr
-    const newNetWorthMadeUpOfAsset = grillCost.value * to
-    hdnw.setValue(hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset), "acquire-asset-grill")
+    const curr = this.getBacking() ?? 0;
+    const netWorthMadeUpOfAsset =
+      (grillCost.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const newNetWorthMadeUpOfAsset = grillCost.value * to;
+    hdnw.setValue(
+      hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+      "acquire-asset-grill",
+    );
 
     this.setBacking(to);
 
@@ -176,10 +188,14 @@ export const farmCount = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    const curr = this.getBacking() ?? 0
-    const netWorthMadeUpOfAsset = (farmCost.binderBacking.getPreviousBacking() ?? 0) * curr
-    const newNetWorthMadeUpOfAsset = farmCost.value * to
-    hdnw.setValue(hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset), "acquire-asset-farm")
+    const curr = this.getBacking() ?? 0;
+    const netWorthMadeUpOfAsset =
+      (farmCost.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const newNetWorthMadeUpOfAsset = farmCost.value * to;
+    hdnw.setValue(
+      hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+      "acquire-asset-farm",
+    );
 
     this.setBacking(to);
 
@@ -197,10 +213,14 @@ export const facCount = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    const curr = this.getBacking() ?? 0
-    const netWorthMadeUpOfAsset = (facCost.binderBacking.getPreviousBacking() ?? 0) * curr
-    const newNetWorthMadeUpOfAsset = facCost.value * to
-    hdnw.setValue(hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset), "acquire-asset-fac")
+    const curr = this.getBacking() ?? 0;
+    const netWorthMadeUpOfAsset =
+      (facCost.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const newNetWorthMadeUpOfAsset = facCost.value * to;
+    hdnw.setValue(
+      hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+      "acquire-asset-fac",
+    );
 
     this.setBacking(to);
 
@@ -218,10 +238,14 @@ export const bankCount = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    const curr = this.getBacking() ?? 0
-    const netWorthMadeUpOfAsset = (bankCost.binderBacking.getPreviousBacking() ?? 0) * curr
-    const newNetWorthMadeUpOfAsset = bankCost.value * to
-    hdnw.setValue(hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset), "acquire-asset-bank")
+    const curr = this.getBacking() ?? 0;
+    const netWorthMadeUpOfAsset =
+      (bankCost.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const newNetWorthMadeUpOfAsset = bankCost.value * to;
+    hdnw.setValue(
+      hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+      "acquire-asset-bank",
+    );
 
     this.setBacking(to);
 
@@ -239,10 +263,14 @@ export const freezerCount = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    const curr = this.getBacking() ?? 0
-    const netWorthMadeUpOfAsset = (freezerCost.binderBacking.getPreviousBacking() ?? 0) * curr
-    const newNetWorthMadeUpOfAsset = freezerCost.value * to
-    hdnw.setValue(hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset), "acquire-asset-freezer")
+    const curr = this.getBacking() ?? 0;
+    const netWorthMadeUpOfAsset =
+      (freezerCost.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const newNetWorthMadeUpOfAsset = freezerCost.value * to;
+    hdnw.setValue(
+      hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+      "acquire-asset-freezer",
+    );
 
     this.setBacking(to);
 
@@ -260,10 +288,14 @@ export const portalCount = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    const curr = this.getBacking() ?? 0
-    const netWorthMadeUpOfAsset = (portalCost.binderBacking.getPreviousBacking() ?? 0) * curr
-    const newNetWorthMadeUpOfAsset = portalCost.value * to
-    hdnw.setValue(hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset), "acquire-asset-portal")
+    const curr = this.getBacking() ?? 0;
+    const netWorthMadeUpOfAsset =
+      (portalCost.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const newNetWorthMadeUpOfAsset = portalCost.value * to;
+    hdnw.setValue(
+      hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+      "acquire-asset-portal",
+    );
 
     this.setBacking(to);
 
@@ -281,10 +313,14 @@ export const wormholeCount = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    const curr = this.getBacking() ?? 0
-    const netWorthMadeUpOfAsset = (wormholeCost.binderBacking.getPreviousBacking() ?? 0) * curr
-    const newNetWorthMadeUpOfAsset = wormholeCost.value * to
-    hdnw.setValue(hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset), "acquire-asset-wormhole")
+    const curr = this.getBacking() ?? 0;
+    const netWorthMadeUpOfAsset =
+      (wormholeCost.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const newNetWorthMadeUpOfAsset = wormholeCost.value * to;
+    hdnw.setValue(
+      hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+      "acquire-asset-wormhole",
+    );
 
     this.setBacking(to);
 
@@ -502,6 +538,12 @@ const checkBuyables = () => {
   } else {
     portalButton?.classList.remove("buyable");
   }
+
+  if (hds.value >= wormholeCost.value) {
+    wormholeButton?.classList.add("buyable");
+  } else {
+    wormholeButton?.classList.remove("buyable");
+  }
 };
 
 load();
@@ -619,29 +661,31 @@ wormholeButton?.addEventListener("click", () => {
 })();
 
 const handleLdbd = async () => {
-  const ldbd = await leaderboard()
+  const ldbd = await leaderboard();
 
-  leaderboardElements.slice(ldbd.length).forEach(e => e.classList.add("hide"))
+  leaderboardElements
+    .slice(ldbd.length)
+    .forEach((e) => e.classList.add("hide"));
   leaderboardElements.slice(0, ldbd.length).forEach((e, i) => {
     e.classList.remove("hide");
     e.textContent = `${ldbd[i].nickname} — ${formatter.format(ldbd[i].net_worth)}`;
-  })
+  });
 
-  const youLdbd = ldbd[ldbd.length - 1]
+  const youLdbd = ldbd[ldbd.length - 1];
 
   if (youLdbd.ldbd_rank <= 15) {
-    youLeaderboardElement.classList.add("hide")
+    youLeaderboardElement.classList.add("hide");
   } else {
-    youLeaderboardElement.classList.remove("hide")
-    youLeaderboardElement.value = youLdbd.ldbd_rank
-    youLeaderboardElement.textContent = `You (${youLdbd.nickname}) — ${formatter.format(youLdbd.net_worth)}`
+    youLeaderboardElement.classList.remove("hide");
+    youLeaderboardElement.value = youLdbd.ldbd_rank;
+    youLeaderboardElement.textContent = `You (${youLdbd.nickname}) — ${formatter.format(youLdbd.net_worth)}`;
   }
-}
+};
 
-handleLdbd()
+handleLdbd();
 
 setInterval(async () => console.log(await save()), 60e3);
-setInterval(handleLdbd, 60e3)
+setInterval(handleLdbd, 60e3);
 
 document.oncontextmenu = () => {
   document.querySelector("main")?.classList.add("blur");
@@ -656,7 +700,7 @@ document.oncontextmenu = () => {
     document.querySelector("main")?.classList.remove("blur");
     document.querySelector("nav")?.classList.remove("blur");
     document.getElementById("context")?.setAttribute("class", "hide");
-    window.onscroll = function () { };
+    window.onscroll = function () {};
   });
 
   window.onbeforeunload = save;
