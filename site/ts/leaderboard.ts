@@ -5,7 +5,7 @@ import { PLACEHOLDER_NICKNAME } from "./save";
 export const MAX_NICKNAME_LENGTH = 15;
 
 export const isValidNickname = (nickname: string) => {
-  return MAX_NICKNAME_LENGTH > nickname.length && nickname.trim().length > 0;
+  return MAX_NICKNAME_LENGTH > nickname.length && nickname.trim().length > 0 && nickname !== PLACEHOLDER_NICKNAME;
 };
 
 export const leaderboard = async () => {
