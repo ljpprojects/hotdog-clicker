@@ -30,8 +30,9 @@ import {
 
 import { calcCost } from "./math";
 import { DBData, ServerSentWorkerData } from "../../shared/types";
+import { MAX_NICKNAME_LENGTH } from "./leaderboard";
 
-const MAX_NICKNAME_LENGTH = 15;
+export const PLACEHOLDER_NICKNAME = "<not given>";
 
 export interface HDCSaveData {
   /**
@@ -109,7 +110,7 @@ export const DEFAULT_SAVE_DATA: HDCSaveData = {
   ownedBanks: 0,
   ownedFreezers: 0,
   ownedPortals: 0,
-  nickname: "<not given>",
+  nickname: PLACEHOLDER_NICKNAME,
 };
 
 export const decodeSaveData = (data: string): HDCSaveData => {
@@ -137,7 +138,7 @@ export const compileSave = (): HDCSaveData => {
     ownedBanks: bankCount.value,
     ownedFreezers: freezerCount.value,
     ownedPortals: portalCount.value,
-    nickname: (nickname || "<not given>").slice(MAX_NICKNAME_LENGTH),
+    nickname: (nickname || PLACEHOLDER_NICKNAME).slice(MAX_NICKNAME_LENGTH),
     hdnw: hdnw.value,
   };
 };
@@ -166,6 +167,18 @@ export const wipe = async (): Promise<ServerSentWorkerData> => {
   );
 
   return await makeWorkerReq(req);
+};
+
+const receiveNickname = () => {
+  const nickname = (
+    prompt("Enter a nickname (for the leaderboard)") ?? "<not given>"
+  ).slice(MAX_NICKNAME_LENGTH);
+
+  if (nickname.trim().length === 0) {
+    return PLACEHOLDER_NICKNAME;
+  }
+
+  return nickname;
 };
 
 export const load = async () => {
@@ -212,11 +225,9 @@ export const load = async () => {
 
     setNickname(
       res.results[0].nickname &&
-        res.results[0].nickname.trim() !== "<not given>"
+        res.results[0].nickname.trim() !== PLACEHOLDER_NICKNAME
         ? res.results[0].nickname
-        : (
-            prompt("Enter a nickname (for the leaderboard)") ?? "<not given>"
-          ).slice(MAX_NICKNAME_LENGTH),
+        : receiveNickname(),
     );
 
     save();
