@@ -1,0 +1,4 @@
+site/ts
+site/node_modules
+site/*.css
+site/index.max.html

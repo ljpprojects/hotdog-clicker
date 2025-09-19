@@ -19,9 +19,17 @@ export const leaderboard = async () => {
     return [];
   }
 
-  const ldbd = (res.results as LeaderboardData[]).filter((entry) =>
-    isValidNickname(entry.nickname.slice(0, MAX_NICKNAME_LENGTH)),
-  );
+  const ldbd = (res.results as LeaderboardData[])
+    .flatMap((entry) => {
+      if (!isValidNickname(entry.nickname)) {
+        return []
+      }
+
+      return {
+        ...entry,
+        nickname: entry.nickname.slice(0, MAX_NICKNAME_LENGTH)
+      } satisfies LeaderboardData
+    });
 
   return ldbd.sort((a, b) => a.ldbd_rank - b.ldbd_rank);
 };
