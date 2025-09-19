@@ -2,19 +2,6 @@
 
 set -euo pipefail
 mkdir -p site/dist
-touch .build
-
-function createallhash {
-    tar -c build.sh site/**/*.ts site/index.css worker/index.ts **/tsconfig.json | md5sum
-}
-
-function createtshash {
-    tar -c site/**/*.ts | md5sum
-}
-
-function createcsshtmlhash {
-    tar -c site/*.css site/index.max.html | md5sum
-}
 
 function buildts {
     bun ./node_modules/typescript/bin/tsc;
@@ -28,42 +15,5 @@ function buildcsshtml {
     bun ./node_modules/html-minifier/cli.js site/index.max.html --collapse-whitespace -o site/index.html;
 }
 
-function finish {
-    local allhash="$(createallhash)"
-    local tshash="$(createtshash)"
-    local csshtmlhash="$(createcsshtmlhash)"
-
-    echo -e "$allhash\n$tshash\n$csshtmlhash" > .build
-
-    exit 0
-}
-
-if [[ "$1" == "selective" ]]; then
-    # Check if any relevant files even changed at all (.build:1)
-
-    if [[ "$(head -n 1 .build)" == "$(createallhash)" ]]; then
-        echo "Skipping build; no relevant changes."
-        finish
-    fi;
-
-    # Check if typescript source has changed (.build:2)
-
-    if [[ "$(head -n 2 .build | tail -n 1)" != "$(createtshash)" ]]; then
-        buildts
-    else
-        echo "Skipping TypeScript build; no changes."
-    fi;
-
-    # Check if css/html has changed (.build:3)
-
-    if [[ "$(head -n 3 .build | tail -n 1)" != "$(createcsshtmlhash)" ]]; then
-        buildcsshtml
-    else
-        echo "Skipping CSS/HTML build; no changes."
-    fi;
-elif [[ "$1" == "full" ]]; then
-    buildts
-    buildcsshtml
-fi;
-
-finish;
+buildts
+buildcsshtml
