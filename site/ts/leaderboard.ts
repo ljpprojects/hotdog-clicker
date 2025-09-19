@@ -1,11 +1,12 @@
 import { LeaderboardData } from "../../shared/types";
 import { generateLeaderboard, makeWorkerReq } from "./worker/interfacing";
-import { PLACEHOLDER_NICKNAME } from "./save";
 
 export const MAX_NICKNAME_LENGTH = 15;
 
 export const isValidNickname = (nickname: string) => {
-  return nickname.trim().length > 0 && nickname !== PLACEHOLDER_NICKNAME;
+  console.log(nickname, nickname.trim(), nickname.trim.length)
+
+  return nickname.trim().length > 0;
 };
 
 export const leaderboard = async () => {

@@ -11,10 +11,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
+      # Only needed for non-self-hosted
+      # - name: Setup bun
+      #   uses: oven-sh/setup-bun@v2
+      #   with:
+      #     bun-version: latest
 
       - name: Install Dependencies
         run: bun install
