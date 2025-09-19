@@ -1,4 +1,6 @@
 ts
-*.css
+index.css
+alto.css
+empty.css
 **/node_modules
 **/*.max.html
