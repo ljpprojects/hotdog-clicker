@@ -19,7 +19,7 @@ export const leaderboard = async () => {
   }
 
   const ldbd = (res.results as LeaderboardData[]).filter((entry) =>
-    isValidNickname(entry.nickname),
+    isValidNickname(entry.nickname.slice(MAX_NICKNAME_LENGTH)),
   );
 
   return ldbd.sort((a, b) => a.ldbd_rank - b.ldbd_rank);
