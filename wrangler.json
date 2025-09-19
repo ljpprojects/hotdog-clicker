@@ -8,7 +8,7 @@
     "not_found_handling": "none"
   },
   "build": {
-    "command": "powershell ./build.ps1",
+    "command": "bash ./build.sh",
     "watch_dir": [
       "./site/ts",
       "./site/index.css",
