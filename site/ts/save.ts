@@ -172,7 +172,7 @@ export const wipe = async (): Promise<ServerSentWorkerData> => {
 const receiveNickname = () => {
   const nickname = (
     prompt("Enter a nickname (for the leaderboard)") ?? "<not given>"
-  ).slice(MAX_NICKNAME_LENGTH);
+  ).slice(0, MAX_NICKNAME_LENGTH);
 
   if (nickname.trim().length === 0) {
     return PLACEHOLDER_NICKNAME;
