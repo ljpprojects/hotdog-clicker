@@ -1,0 +1,6 @@
+**/*.ts
+**/*.css
+**/node_modules
+**/*.max.html
+**/ts
+**/css
