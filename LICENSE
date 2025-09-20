@@ -2,20 +2,36 @@ ACOA1 License
 
 Copyright (c) 2023-2025 ljpprojects
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software with minimal restriction, including without limitation the rights
-to use, copy, modify, merge, publish, and/or distribute copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+The "Software" refers to this software, associated documentation, and/or
+    any other associated files.
+
+The "Licensee" refers to anyone obtaining a copy, derivative, and/or portion
+    of the Software.
+
+Permission is granted, without charge, to the Licensee, to deal in the Software
+without limitation of the rights to use, copy, modify, merge, publish, and/or
+distribute copies of the Software, provided the following conditions are met
+and upheld:
 
 The ability of others to obtain a copy of the Software is not intentionally
 restricted in any way, whether it may be through mandatory compensation,
 sublicensing the Software to be more restrictive, increasing the difficulty
 of obtaining copies of the Software purposefully, and/or by any other means.
 
-The above copyright notice and this permission notice shall be included in all
-copies or portions of the Software.
+All copies, derivatives and/or portions of the Software must be licensed under
+the ACOA1 license, and the full ACOA1 license must accompany it, unless another
+license is available in the original Software, in which case the Licensee may
+choose which license the derivative, copy, and/or portion is licensed under.
+
+Permission is granted to the Licensee to license the Software under any other
+license, even those which have permissions the ACOA1 license lacks, in addition
+to the full ACOA1 license.
+
+Permission is granted to the Licensee to choose to entirely replace the
+original ACOA1 license with any of its succesors. In this case, the terms of
+the ACOA1 license are voided and replaced with the terms of the chosen succesor.
+A succesor to the ACOA1 license must be authored by the author of the ACOA1
+license, and explicitly state that it is ACOA1's successor.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
