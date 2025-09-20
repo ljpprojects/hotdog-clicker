@@ -2,36 +2,69 @@ ACOA1 License
 
 Copyright (c) 2023-2025 ljpprojects
 
-The "Software" refers to this software, associated documentation, and/or
+The "Software" refers to the source code, associated documentation, and/or
     any other associated files.
 
 The "Licensee" refers to anyone obtaining a copy, derivative, and/or portion
     of the Software.
+
+"Derivatives" are derivative works.
+
+The "Contributors" are anyone who is acknowledged in the Software itself as
+    having made contribution. If this is a Derivative, the
+    contributors of the Software it is derived from are also contributors to
+    this Derivative.
+
+The "Core Tenets" of ACOA1 are:
+
+    (1) Preventing the intentional restriction of access.
+
+    (2) Allowing successors.
+
+    (3) Allowing multiple included, not effective, licenses.
+
+    (4) Allowing Derivatives to opt-out of an ACOA license in at least one case.
+
+    (5) The inability to remove core tenets, and the ability to add more.
 
 Permission is granted, without charge, to the Licensee, to deal in the Software
 without limitation of the rights to use, copy, modify, merge, publish, and/or
 distribute copies of the Software, provided the following conditions are met
 and upheld:
 
-The ability of others to obtain a copy of the Software is not intentionally
-restricted in any way, whether it may be through mandatory compensation,
-sublicensing the Software to be more restrictive, increasing the difficulty
-of obtaining copies of the Software purposefully, and/or by any other means.
+    (1) The ability of others to obtain a copy of the Software is not intentionally
+        restricted in any way, whether it may be through mandatory compensation,
+        sublicensing the Software to be more restrictive, creating further
+        limitation(s) on who can obtain copies of the Software, creating further
+        restriction(s) on who can obtain copies of the Software, increasing the
+        difficulty of obtaining copies of the Software, or by some other
+        means.
 
-All copies, derivatives and/or portions of the Software must be licensed under
-the ACOA1 license, and the full ACOA1 license must accompany it, unless another
-license is available in the original Software, in which case the Licensee may
-choose which license the derivative, copy, and/or portion is licensed under.
+    (2) All copies, derivatives and/or portions of the Software must be licensed
+        under the ACOA1 license, and the full ACOA1 license must accompany it,
+        unless another license is included in the original Software, in which
+        case the Licensee may choose which license the derivative, copy,
+        and/or portion is licensed under.
 
-Permission is granted to the Licensee to license the Software under any other
-license, even those which have permissions the ACOA1 license lacks, in addition
-to the full ACOA1 license.
+    (3) No new trademarks or patents are to be created from the Software, and
+        all pre-existing trademarks or patents are used with the correct
+        authorisation.
 
-Permission is granted to the Licensee to choose to entirely replace the
-original ACOA1 license with any of its succesors. In this case, the terms of
-the ACOA1 license are voided and replaced with the terms of the chosen succesor.
-A succesor to the ACOA1 license must be authored by the author of the ACOA1
-license, and explicitly state that it is ACOA1's successor.
+Permission is granted to the Licensee to include any other license with the
+Software, even those which have permissions the ACOA1 license lacks, in addition
+to the full ACOA1 license. The Software is not licensed under these included
+licenses, but the creators of Derivatives may choose to license their derivative
+under one of them, as stated above.
+
+Permission is granted to the Licensee to choose to entirely replace the original
+ACOA1 license with any of its succesors, provided that if it is a Derivative,
+the original also uses the new license. In this case, the terms of the ACOA1
+license are voided and replaced with the terms of the chosen succesor. A successor
+to the ACOA1 license will explicitly state that it is ACOA1's successor and
+keep the Core Tenets of ACOA1. Only Derivatives and copies created after the
+switch to the new license are subject to the new license; pre-existing Derivatives,
+previous versions of the Software, and pre-obtained copies remain subject to the
+old license.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
