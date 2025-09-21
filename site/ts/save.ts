@@ -19,6 +19,9 @@ import {
   setNickname,
   portalCount,
   hdnw,
+  wormholeCount,
+  portalCost,
+  wormholeCost,
 } from "./game";
 
 import {
@@ -93,6 +96,11 @@ export interface HDCSaveData {
   ownedPortals: number;
 
   /**
+   * The amount of "Wormhole" generators owned by the user.
+   */
+  ownedWormholes: number;
+
+  /**
    * The nickname chosen by the user.
    */
   nickname: string;
@@ -110,6 +118,7 @@ export const DEFAULT_SAVE_DATA: HDCSaveData = {
   ownedBanks: 0,
   ownedFreezers: 0,
   ownedPortals: 0,
+  ownedWormholes: 0,
   nickname: PLACEHOLDER_NICKNAME,
 };
 
@@ -138,6 +147,7 @@ export const compileSave = (): HDCSaveData => {
     ownedBanks: bankCount.value,
     ownedFreezers: freezerCount.value,
     ownedPortals: portalCount.value,
+    ownedWormholes: wormholeCount.value,
     nickname: (nickname || PLACEHOLDER_NICKNAME).slice(MAX_NICKNAME_LENGTH),
     hdnw: hdnw.value,
   };
@@ -220,6 +230,12 @@ export const load = async () => {
 
     freezerCount.value = saveData.ownedFreezers;
     freezerCost.value = calcCost(freezerCost.value, freezerCount.value);
+
+    portalCount.value = saveData.ownedPortals;
+    portalCost.value = calcCost(portalCost.value, portalCount.value);
+
+    wormholeCount.value = saveData.ownedFreezers;
+    wormholeCost.value = calcCost(wormholeCost.value, wormholeCount.value);
 
     hdnw.value = saveData.hdnw;
 
