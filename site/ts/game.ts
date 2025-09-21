@@ -39,6 +39,7 @@ import {
   youLeaderboardElement,
 } from "./elements";
 import { leaderboard } from "./leaderboard";
+import { doJoke } from "./jokes"
 
 export const formatter = new Intl.NumberFormat(navigator.language, {
   minimumFractionDigits: 2,
@@ -292,6 +293,7 @@ export const portalCount = new Binding<number, number>({
     const netWorthMadeUpOfAsset =
       (portalCost.binderBacking.getPreviousBacking() ?? 0) * curr;
     const newNetWorthMadeUpOfAsset = portalCost.value * to;
+
     hdnw.setValue(
       hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
       "acquire-asset-portal",
@@ -700,10 +702,12 @@ document.oncontextmenu = () => {
     document.querySelector("main")?.classList.remove("blur");
     document.querySelector("nav")?.classList.remove("blur");
     document.getElementById("context")?.setAttribute("class", "hide");
-    window.onscroll = function () {};
+    window.onscroll = function () { };
   });
 
   window.onbeforeunload = save;
 
   return false;
 };
+
+doJoke()

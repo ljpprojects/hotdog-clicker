@@ -55,3 +55,5 @@ export const leaderboardElements = [
 ]
 
 export const youLeaderboardElement: HTMLLIElement = document.getElementById("ldbd-you")! as HTMLLIElement;
+
+export const taxPopupElement: HTMLElement = document.getElementById("taxpopup")!;

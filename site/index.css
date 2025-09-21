@@ -6,6 +6,11 @@
     --dn-col: #dc143c;
     --en-col: #7cfc00;
 
+    --fg-col-t: #fafafa8a;
+    --bg-col-t: #1717178a;
+    --dn-col-t: #dc143c8a;
+    --en-col-t: #7cfc008a;
+
     touch-action: none;
 }
 
@@ -15,6 +20,11 @@
         --bg-col: #fafafa;
         --dn-col: #bb031b;
         --en-col: #5bdb00;
+
+        --fg-col-t: #1717178a;
+        --bg-col-t: #fafafa8a;
+        --dn-col-t: #bb031b8a;
+        --en-col-t: #5bdb008a;
     }
 }
 
@@ -39,6 +49,7 @@ h1 {
 }
 
 @media (max-screen-width: 999px) {
+
     #hotdogImage,
     #hotdogButton {
         min-width: 30vw;
@@ -89,22 +100,22 @@ section#leaderboard {
     max-width: 100%;
 }
 
-section#leaderboard > ol {
+section#leaderboard>ol {
     overflow: auto;
     max-height: 100vh;
 }
 
-section#leaderboard > ol > li {
+section#leaderboard>ol>li {
     list-style-type: decimal-leading-zero;
 }
 
-section#leaderboard > ol > li::marker {
+section#leaderboard>ol>li::marker {
     font-weight: 700;
     font-size-adjust: 0.55;
     font-family: "Space Mono", monospace;
 }
 
-section#leaderboard > ol > li.less-impt::marker {
+section#leaderboard>ol>li.less-impt::marker {
     font-weight: 400;
 }
 
@@ -187,7 +198,7 @@ button:active {
     transform: translate(50%, -50%);
 }
 
-#store > #buildings {
+#store>#buildings {
     column-gap: 5vw;
     display: flex;
     overflow: auto;
@@ -197,12 +208,12 @@ button:active {
 }
 
 @media (min-width: 1000px) {
-    #store > #buildings {
+    #store>#buildings {
         max-width: 50vw;
     }
 }
 
-#store > #buildings > button {
+#store>#buildings>button {
     background-color: var(--dn-col);
     border-radius: 1.5vmin;
     display: grid;
@@ -210,15 +221,15 @@ button:active {
     padding: 2.5vh 7.5vw;
 }
 
-#store > #buildings > button > b {
+#store>#buildings>button>b {
     font-size: 3em;
 }
 
-#store > #buildings > button.buyable {
+#store>#buildings>button.buyable {
     background-color: var(--en-col);
 }
 
-#store > #buildings > button > div {
+#store>#buildings>button>div {
     display: flex;
     flex-direction: row;
     padding: 1.25vmin;
@@ -226,23 +237,43 @@ button:active {
     align-items: space-between;
 }
 
-#store > #buildings > button > div > div:has(p) {
+#store>#buildings>button>div>div:has(p) {
     display: grid;
     grid-template-rows: 1fr 1fr;
 }
 
-#store > #buildings > button > div > div {
+#store>#buildings>button>div>div {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
 }
 
-#store > #buildings > button > div > div > div {
+#store>#buildings>button>div>div>div {
     display: flex;
     flex-direction: column;
 }
 
-#store > #buildings > button > div > div > div > span {
+#store>#buildings>button>div>div>div>span {
     font-size: 2em;
     text-wrap: nowrap;
+}
+
+#taxpopup {
+    width: 100vw;
+    height: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    background: var(--dn-col-t);
+    backdrop-filter: blur(5rem);
+    -webkit-backdrop-filter: blur(5rem);
+}
+
+#taxpopup>b {
+    font-size-adjust: 5;
+    transform: translateY(37.5vh);
+    color: var(--bg-col)
 }
