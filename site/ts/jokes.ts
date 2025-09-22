@@ -98,9 +98,9 @@ const taxationJoke = async () => {
 
   const req = generateTaxed(gross - net);
 
-  const res = await makeWorkerReq(req).then(r => r.success ? leaderboard().then(_ => { }) : Promise.resolve());
-
-  setTimeout(() => taxPopupElement.classList.add("hide"), 3000);
+  setTimeout(async () => {
+    await makeWorkerReq(req).then(r => r.success ? leaderboard().then(_ => { taxPopupElement.classList.add("hide") }) : Promise.reject())
+  }, 3000);
 };
 
 /*const fleeJoke = () => {
