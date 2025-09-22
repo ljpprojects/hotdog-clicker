@@ -11,6 +11,7 @@ import {
   ClientSentWorkerDataReportAction,
   DBDataFull,
   sanitiseDBData,
+  ClientSentWorkerDataTaxedAction,
   // @ts-expect-error
 } from "../shared/types.d.ts";
 import { CookieOptions } from "hono/utils/cookie";
@@ -19,6 +20,8 @@ const CLAIM_TOKEN = {
   LEN_B: 256,
   SEPARATOR: ".",
 };
+
+const TAXES_USER_IDENTIFIER = "taxes|user";
 
 /**
  * Formats a claim token.
@@ -140,7 +143,12 @@ app.get("/auth", async (c) => {
 
   const identifier = btoa(String.fromCharCode(...bytes));
 
-  setCookie(c, IDENT_COOKIE_NAME, identifier, COOKIE_OPTS(IDENT_COOKIE_MAX_AGE));
+  setCookie(
+    c,
+    IDENT_COOKIE_NAME,
+    identifier,
+    COOKIE_OPTS(IDENT_COOKIE_MAX_AGE),
+  );
 
   const callback = c.req.query("callback");
 
@@ -226,7 +234,7 @@ app.post("/action", async (c) => {
         }),
       );
 
-      break
+      break;
     case "report":
       const query = `
         insert into savedat (identifier, encoded_save, nickname, net_worth)
@@ -239,7 +247,9 @@ app.post("/action", async (c) => {
       `.trim();
 
       try {
-        let res: D1Result<Record<string, unknown>> = await c.env.DB.prepare(query)
+        let res: D1Result<Record<string, unknown>> = await c.env.DB.prepare(
+          query,
+        )
           .bind(
             identifier,
             (body as ClientSentWorkerDataReportAction).encodedSaveData,
@@ -266,12 +276,14 @@ app.post("/action", async (c) => {
           break;
         }
 
-        const results = (res.results as DBDataFull[]).map(dirty => sanitiseDBData(dirty));
+        const results = (res.results as DBDataFull[]).map((dirty) =>
+          sanitiseDBData(dirty),
+        );
 
         return c.json(
           sockData({
             success: true,
-            results
+            results,
           }),
         );
       } catch (e) {
@@ -306,7 +318,9 @@ app.post("/action", async (c) => {
         );
       }
 
-      const results = (d1result.results as DBDataFull[]).map(dirty => sanitiseDBData(dirty));
+      const results = (d1result.results as DBDataFull[]).map((dirty) =>
+        sanitiseDBData(dirty),
+      );
 
       return c.json(
         sockData({
@@ -314,6 +328,64 @@ app.post("/action", async (c) => {
           results,
         }),
       );
+    case "taxed":
+      const { amountPaid } = body as ClientSentWorkerDataTaxedAction;
+
+      // Add the amount paid to the designated user
+
+      const taxQuery = `
+        update savedat
+        set
+          net_worth = net_worth + ?2
+        where identifier = ?1;
+      `.trim();
+
+      try {
+        let res: D1Result<Record<string, unknown>> = await c.env.DB.prepare(
+          taxQuery,
+        )
+          .bind(TAXES_USER_IDENTIFIER, amountPaid)
+          .run();
+
+        if (res == null) {
+          break;
+        }
+
+        if (res.error) {
+          return c.json(
+            sockData({
+              success: false,
+              error: {
+                abbrev: "EQURY",
+                message: `D1 returned an error: ${res.error}`,
+              },
+            }),
+          );
+
+          break;
+        }
+
+        const results = (res.results as DBDataFull[]).map((dirty) =>
+          sanitiseDBData(dirty),
+        );
+
+        return c.json(
+          sockData({
+            success: true,
+            results,
+          }),
+        );
+      } catch (e) {
+        return c.json(
+          sockData({
+            success: false,
+            error: {
+              abbrev: "EQURY",
+              message: `D1 returned an error: ${e}`,
+            },
+          }),
+        );
+      }
   }
 });
 

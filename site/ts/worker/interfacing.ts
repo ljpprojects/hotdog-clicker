@@ -4,13 +4,17 @@ import {
   ClientSentWorkerDataReportAction,
   ClientSentWorkerDataGetAction,
   ClientSentWorkerDataLeaderboardAction,
+  ClientSentWorkerDataTaxedAction,
 } from "../../../shared/types";
 
 export const AUTH_REDIRECT_URL = `/auth?callback=${encodeURIComponent(window.location.href)}`;
 
-export const generateGet = (): ClientSentWorkerDataGetAction => ({ action: "get" });
+export const generateGet = (): ClientSentWorkerDataGetAction => ({
+  action: "get",
+});
 
-export const generateLeaderboard = (): ClientSentWorkerDataLeaderboardAction => ({ action: "leaderboard" });
+export const generateLeaderboard =
+  (): ClientSentWorkerDataLeaderboardAction => ({ action: "leaderboard" });
 
 export const generateReport = (
   encodedSaveData: string,
@@ -21,6 +25,13 @@ export const generateReport = (
   encodedSaveData,
   nickname,
   net_worth: netWorth,
+});
+
+export const generateTaxed = (
+  amountPaid: number,
+): ClientSentWorkerDataTaxedAction => ({
+  action: "taxed",
+  amountPaid,
 });
 
 export const makeWorkerReq = async (
