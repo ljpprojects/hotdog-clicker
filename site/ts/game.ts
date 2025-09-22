@@ -1,6 +1,12 @@
 import { Binding } from "./Binding";
 import { increase } from "./math";
-import { save, wipe, load } from "./save";
+import {
+  save,
+  wipe,
+  load,
+  DEFAULT_SAVE_DATA,
+  generateEncodedSave,
+} from "./save";
 import {
   passiveClicksElement,
   clickCountElement,
@@ -39,7 +45,7 @@ import {
   youLeaderboardElement,
 } from "./elements";
 import { leaderboard } from "./leaderboard";
-import { doJoke } from "./jokes"
+import { doJoke } from "./jokes";
 
 export const formatter = new Intl.NumberFormat(navigator.language, {
   minimumFractionDigits: 2,
@@ -702,7 +708,7 @@ document.oncontextmenu = () => {
     document.querySelector("main")?.classList.remove("blur");
     document.querySelector("nav")?.classList.remove("blur");
     document.getElementById("context")?.setAttribute("class", "hide");
-    window.onscroll = function () { };
+    window.onscroll = function () {};
   });
 
   window.onbeforeunload = save;
@@ -710,4 +716,4 @@ document.oncontextmenu = () => {
   return false;
 };
 
-doJoke()
+doJoke();

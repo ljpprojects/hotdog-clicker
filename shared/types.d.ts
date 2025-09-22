@@ -15,15 +15,15 @@ export type LeaderboardData = {
   nickname: string;
   net_worth: number;
   ldbd_rank: number;
-}
+};
 
 export const sanitiseDBData = (full: DBDataFull): DBData => {
   const sanitised: DBDataFull = structuredClone(full);
 
   delete sanitised.identifier;
 
-  return sanitised as DBData
-}
+  return sanitised as DBData;
+};
 
 export type ClaimToken = {
   token: { base64: string; raw: Uint8Array };
@@ -33,7 +33,7 @@ export type ClaimToken = {
 };
 
 export interface ClientSentWorkerData {
-  action: "report" | "get" | "leaderboard";
+  action: "report" | "get" | "leaderboard" | "taxed";
 }
 
 export interface ClientSentWorkerDataReportAction extends ClientSentWorkerData {
@@ -43,7 +43,13 @@ export interface ClientSentWorkerDataReportAction extends ClientSentWorkerData {
   net_worth: number;
 }
 
-export interface ClientSentWorkerDataLeaderboardAction extends ClientSentWorkerData {
+export interface ClientSentWorkerDataTaxedAction extends ClientSentWorkerData {
+  action: "taxed";
+  amountPaid: number;
+}
+
+export interface ClientSentWorkerDataLeaderboardAction
+  extends ClientSentWorkerData {
   action: "leaderboard";
 }
 
