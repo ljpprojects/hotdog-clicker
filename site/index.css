@@ -95,13 +95,14 @@ section#leaderboard {
     flex-direction: column;
     padding: 10vmin;
     text-align: center;
-    overflow: auto;
+    overflow: visible;
     max-width: 100%;
 }
 
 @media (min-width: 1000px) {
     section#leaderboard {
         max-height: 100vh;
+        overflow: auto;
     }
 }
 
