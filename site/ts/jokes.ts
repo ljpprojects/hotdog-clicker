@@ -2,6 +2,7 @@ import { hds, hdnw } from "./game";
 import { taxPopupElement } from "./elements";
 import BigNumber from "./lib/bignumber";
 import { generateTaxed, makeWorkerReq } from "./worker/interfacing";
+import { leaderboard } from "./leaderboard"
 
 BigNumber.config({
   DECIMAL_PLACES: 48,
@@ -29,7 +30,7 @@ export const doJoke = () => {
     console.log("NO TAXES");
   }
 
-  const t = 16942 * Math.random();
+  const t = 36942 * Math.random();
 
   console.log(t);
 
@@ -97,12 +98,16 @@ const taxationJoke = async () => {
 
   const req = generateTaxed(gross - net);
 
-  console.log(await makeWorkerReq(req));
+  const res = await makeWorkerReq(req);
+
+  if (res.success) {
+    await leaderboard()
+  }
 
   setTimeout(() => taxPopupElement.classList.add("hide"), 3000);
 };
 
-const fleeJoke = () => {
+/*const fleeJoke = () => {
   // Get every button
   const buttons = document.getElementsByTagName("button");
 
@@ -175,3 +180,4 @@ const fleeJoke = () => {
     }
   };
 };
+*/
