@@ -96,8 +96,13 @@ section#leaderboard {
     padding: 10vmin;
     text-align: center;
     overflow: auto;
-    max-height: 100vh;
     max-width: 100%;
+}
+
+@media (min-width: 1000px) {
+    section#leaderboard {
+        max-height: 100vh;
+    }
 }
 
 section#leaderboard>ol {
