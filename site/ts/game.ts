@@ -554,7 +554,7 @@ const checkBuyables = () => {
   }
 };
 
-load();
+load().then(doJoke);
 
 setInterval(save, 60e3);
 
@@ -708,12 +708,10 @@ document.oncontextmenu = () => {
     document.querySelector("main")?.classList.remove("blur");
     document.querySelector("nav")?.classList.remove("blur");
     document.getElementById("context")?.setAttribute("class", "hide");
-    window.onscroll = function () {};
+    window.onscroll = function () { };
   });
 
   window.onbeforeunload = save;
 
   return false;
 };
-
-doJoke();
