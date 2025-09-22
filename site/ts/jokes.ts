@@ -135,11 +135,19 @@ const fleeJoke = () => {
       const b2 = centreX.minus(originalCentreX).abs()
       const distanceStrayed = a2.pow(2).plus(b2.pow(2)).sqrt()
 
+      // a = 200
       const th = BigNumber(200)
+
+      // b = 100
       const tw = BigNumber(100)
+
+      // l = 1.35
       const l = BigNumber(1.35)
+
+      // k = a / b^l
       const k = th.div(tw.pow(l))
 
+      // a / 2 - c^l*k
       const relativeDistanceToMoveAway = th.div(2).minus(relativeDist.times(100).pow(l)).times(k)
       const distanceToMoveAway = relativeDistanceToMoveAway.times(relativeDistanceToMoveAway.lt(0) ? distanceStrayed : viewportDiagonal)
 
