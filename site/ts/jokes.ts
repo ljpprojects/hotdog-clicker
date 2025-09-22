@@ -98,11 +98,7 @@ const taxationJoke = async () => {
 
   const req = generateTaxed(gross - net);
 
-  const res = await makeWorkerReq(req);
-
-  if (res.success) {
-    await leaderboard()
-  }
+  const res = await makeWorkerReq(req).then(r => r.success ? leaderboard().then(_ => { }) : Promise.resolve());
 
   setTimeout(() => taxPopupElement.classList.add("hide"), 3000);
 };
