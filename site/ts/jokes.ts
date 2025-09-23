@@ -2,7 +2,7 @@ import { hds, hdnw } from "./game";
 import { taxPopupElement } from "./elements";
 import BigNumber from "./lib/bignumber";
 import { generateTaxed, makeWorkerReq } from "./worker/interfacing";
-import { leaderboard } from "./leaderboard"
+import { handleLdbd } from "./leaderboard";
 
 BigNumber.config({
   DECIMAL_PLACES: 48,
@@ -74,10 +74,10 @@ const taxationJoke = async () => {
   const bracket = getTaxBracket();
 
   const bracketTaxRateMap: Record<TaxBracket, number> = {
-    broke: 1 / 5,
-    poor: 2 / 7,
-    barely: 6 / 19,
-    wealthy: 2 / 5,
+    broke: 1 / 4,
+    poor: 7 / 19,
+    barely: 3 / 7,
+    wealthy: 4 / 9,
     "well-off": 4 / 7,
     rich: 3 / 5,
     "no-life": 4 / 5,
@@ -99,7 +99,13 @@ const taxationJoke = async () => {
   const req = generateTaxed(gross - net);
 
   setTimeout(async () => {
-    await makeWorkerReq(req).then(r => r.success ? leaderboard().then(_ => { taxPopupElement.classList.add("hide") }) : Promise.reject())
+    await makeWorkerReq(req).then((r) =>
+      r.success
+        ? handleLdbd().then((_) => {
+            taxPopupElement.classList.add("hide");
+          })
+        : Promise.reject(),
+    );
   }, 3000);
 };
 

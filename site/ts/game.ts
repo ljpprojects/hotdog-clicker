@@ -44,7 +44,7 @@ import {
   leaderboardElements,
   youLeaderboardElement,
 } from "./elements";
-import { leaderboard } from "./leaderboard";
+import { handleLdbd } from "./leaderboard";
 import { doJoke } from "./jokes";
 
 export const formatter = new Intl.NumberFormat(navigator.language, {
@@ -668,32 +668,10 @@ wormholeButton?.addEventListener("click", () => {
   requestAnimationFrame(_update);
 })();
 
-const handleLdbd = async () => {
-  const ldbd = await leaderboard();
-
-  leaderboardElements
-    .slice(ldbd.length)
-    .forEach((e) => e.classList.add("hide"));
-  leaderboardElements.slice(0, ldbd.length).forEach((e, i) => {
-    e.classList.remove("hide");
-    e.textContent = `${ldbd[i].nickname} — ${formatter.format(ldbd[i].net_worth)}`;
-  });
-
-  const youLdbd = ldbd[ldbd.length - 1];
-
-  if (youLdbd.ldbd_rank <= 15) {
-    youLeaderboardElement.classList.add("hide");
-  } else {
-    youLeaderboardElement.classList.remove("hide");
-    youLeaderboardElement.value = youLdbd.ldbd_rank;
-    youLeaderboardElement.textContent = `You (${youLdbd.nickname}) — ${formatter.format(youLdbd.net_worth)}`;
-  }
-};
-
-handleLdbd();
+(async () => console.log(await handleLdbd()))();
 
 setInterval(async () => console.log(await save()), 60e3);
-setInterval(handleLdbd, 60e3);
+setInterval(async () => console.log(await handleLdbd()), 60e3);
 
 document.oncontextmenu = () => {
   document.querySelector("main")?.classList.add("blur");
@@ -708,7 +686,7 @@ document.oncontextmenu = () => {
     document.querySelector("main")?.classList.remove("blur");
     document.querySelector("nav")?.classList.remove("blur");
     document.getElementById("context")?.setAttribute("class", "hide");
-    window.onscroll = function () { };
+    window.onscroll = function () {};
   });
 
   window.onbeforeunload = save;

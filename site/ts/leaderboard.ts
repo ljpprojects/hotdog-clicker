@@ -1,10 +1,17 @@
 import { LeaderboardData } from "../../shared/types";
 import { generateLeaderboard, makeWorkerReq } from "./worker/interfacing";
+import { leaderboardElements, youLeaderboardElement } from "./elements";
+import { formatter } from "./game";
 
 export const MAX_NICKNAME_LENGTH = 15;
 
 export const isValidNickname = (nickname: string) => {
-  console.log(nickname, nickname.trim(), nickname.trim.length, nickname.slice(0, MAX_NICKNAME_LENGTH))
+  console.log(
+    nickname,
+    nickname.trim(),
+    nickname.trim.length,
+    nickname.slice(0, MAX_NICKNAME_LENGTH),
+  );
 
   return nickname.trim().length > 0;
 };
@@ -19,17 +26,38 @@ export const leaderboard = async () => {
     return [];
   }
 
-  const ldbd = (res.results as LeaderboardData[])
-    .flatMap((entry) => {
-      if (!isValidNickname(entry.nickname)) {
-        return []
-      }
+  const ldbd = (res.results as LeaderboardData[]).flatMap((entry) => {
+    if (!isValidNickname(entry.nickname)) {
+      return [];
+    }
 
-      return {
-        ...entry,
-        nickname: entry.nickname.slice(0, MAX_NICKNAME_LENGTH)
-      } satisfies LeaderboardData
-    });
+    return {
+      ...entry,
+      nickname: entry.nickname.slice(0, MAX_NICKNAME_LENGTH),
+    } satisfies LeaderboardData;
+  });
 
   return ldbd.sort((a, b) => a.ldbd_rank - b.ldbd_rank);
+};
+
+export const handleLdbd = async () => {
+  const ldbd = await leaderboard();
+
+  leaderboardElements
+    .slice(ldbd.length)
+    .forEach((e) => e.classList.add("hide"));
+  leaderboardElements.slice(0, ldbd.length).forEach((e, i) => {
+    e.classList.remove("hide");
+    e.textContent = `${ldbd[i].nickname} — ${formatter.format(ldbd[i].net_worth)}`;
+  });
+
+  const youLdbd = ldbd[ldbd.length - 1];
+
+  if (youLdbd.ldbd_rank <= 15) {
+    youLeaderboardElement.classList.add("hide");
+  } else {
+    youLeaderboardElement.classList.remove("hide");
+    youLeaderboardElement.value = youLdbd.ldbd_rank;
+    youLeaderboardElement.textContent = `You (${youLdbd.nickname}) — ${formatter.format(youLdbd.net_worth)}`;
+  }
 };
