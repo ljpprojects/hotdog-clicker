@@ -166,17 +166,6 @@ export const generateEncodedSave = (from?: HDCSaveData): string => {
 };
 
 export const save = async (): Promise<ServerSentWorkerData> => {
-  // If our nickname is invalid, request the user chooses a new one.
-  if (!isValidNickname(nickname, false)) {
-    console.log("INVALID")
-
-    await notify(
-      "Do not reload or leave the page; your data has not been saved. " +
-      "Your nickname is either blank or exceeding the maximum length. " +
-      "You will be asked to choose a new one once this notification is acknowledged."
-    ).then(async () => await setNickname(await receiveNickname()))
-  }
-
   const saveData = generateEncodedSave();
   const req = generateReport(saveData, nickname, compileSave().hdnw);
 
@@ -248,6 +237,17 @@ export const load = async (fromReq?: ServerSentWorkerData) => {
         ? res.results[0].nickname
         : await receiveNickname(),
     );
+
+    // If our nickname is invalid, request the user chooses a new one.
+    if (!isValidNickname(nickname, false)) {
+      console.log("INVALID", nickname)
+
+      await notify(
+        "Do not reload or leave the page; your data has not been saved. " +
+        "Your nickname is either blank or exceeding the maximum length. " +
+        "You will be asked to choose a new one once this notification is acknowledged."
+      ).then(async () => await setNickname(await receiveNickname()))
+    }
 
     await save();
   } // If we do not have a save we do not have to do anything
