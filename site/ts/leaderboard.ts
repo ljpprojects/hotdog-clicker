@@ -2,19 +2,7 @@ import { LeaderboardData } from "../../shared/types";
 import { generateLeaderboard, makeWorkerReq } from "./worker/interfacing";
 import { leaderboardElements, youLeaderboardElement } from "./elements";
 import { formatter } from "./game";
-
-export const MAX_NICKNAME_LENGTH = 15;
-
-export const isValidNickname = (nickname: string) => {
-  console.log(
-    nickname,
-    nickname.trim(),
-    nickname.trim.length,
-    nickname.slice(0, MAX_NICKNAME_LENGTH),
-  );
-
-  return nickname.trim().length > 0;
-};
+import { isValidNickname, MAX_NICKNAME_LENGTH } from "./nickname";
 
 export const leaderboard = async () => {
   const req = generateLeaderboard();

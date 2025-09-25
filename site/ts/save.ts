@@ -33,9 +33,11 @@ import {
 
 import { calcCost } from "./math";
 import { DBData, ServerSentWorkerData } from "../../shared/types";
-import { MAX_NICKNAME_LENGTH } from "./leaderboard";
-
-export const PLACEHOLDER_NICKNAME = "<not given>";
+import {
+  MAX_NICKNAME_LENGTH,
+  PLACEHOLDER_NICKNAME,
+  receiveNickname,
+} from "./nickname";
 
 export interface HDCSaveData {
   /**
@@ -179,18 +181,6 @@ export const wipe = async (): Promise<ServerSentWorkerData> => {
   return await makeWorkerReq(req);
 };
 
-const receiveNickname = () => {
-  const nickname = (
-    prompt("Enter a nickname (for the leaderboard)") ?? "<not given>"
-  ).slice(0, MAX_NICKNAME_LENGTH);
-
-  if (nickname.trim().length === 0) {
-    return PLACEHOLDER_NICKNAME;
-  }
-
-  return nickname;
-};
-
 export const load = async () => {
   const res = await makeWorkerReq(generateGet());
 
@@ -243,7 +233,7 @@ export const load = async () => {
       res.results[0].nickname &&
         res.results[0].nickname.trim() !== PLACEHOLDER_NICKNAME
         ? res.results[0].nickname
-        : receiveNickname(),
+        : await receiveNickname(),
     );
 
     save();

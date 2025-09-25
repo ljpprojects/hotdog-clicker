@@ -52,8 +52,21 @@ export const leaderboardElements = [
   document.getElementById("ldbd-pl-13")!,
   document.getElementById("ldbd-pl-14")!,
   document.getElementById("ldbd-pl-15")!,
-]
+];
 
-export const youLeaderboardElement: HTMLLIElement = document.getElementById("ldbd-you")! as HTMLLIElement;
+export const youLeaderboardElement: HTMLLIElement = document.getElementById(
+  "ldbd-you",
+)! as HTMLLIElement;
 
-export const taxPopupElement: HTMLElement = document.getElementById("taxpopup")!;
+export const taxPopupElement: HTMLElement =
+  document.getElementById("taxpopup")!;
+
+export const nicknameDialogContainerElement: HTMLElement =
+  document.getElementById("nicknameDialogContainer")!;
+
+export const nicknameDialogElement: HTMLDialogElement = document.getElementById(
+  "nicknameDialog",
+)! as HTMLDialogElement;
+
+export const nicknameDialogInputElement: HTMLInputElement =
+  document.querySelector("#nicknameDialog > form > input")!;

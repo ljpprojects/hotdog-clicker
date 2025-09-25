@@ -238,6 +238,24 @@
 
             <script defer src="/dist/bundle.js"></script>
         </main>
+        <section class="dialogPopup hide" id="nicknameDialogContainer">
+            <dialog id="nicknameDialog">
+                <form method="dialog">
+                    <p>Enter a nickname to be displayed on the leaderboard.</p>
+                    <p>It must be</p>
+                    <ul>
+                        <li>Less than 16 characters</li>
+                        <li>Non-empty</li>
+                    </ul>
+                    <input
+                        type="text"
+                        maxlength="15"
+                        minlength="1"
+                        placeholder="nickname"
+                    />
+                </form>
+            </dialog>
+        </section>
         <section class="display" id="leaderboard">
             <h2>Leaderboard</h2>
             <p>Refreshed once every minute.</p>
