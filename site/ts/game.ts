@@ -45,7 +45,7 @@ import {
 } from "./elements";
 import { handleLdbd } from "./leaderboard";
 import { doJoke } from "./jokes";
-import { receiveNickname } from "./nickname";
+import { receiveNickname } from "./dialogs";
 
 export const formatter = new Intl.NumberFormat(navigator.language, {
   minimumFractionDigits: 2,

@@ -2,7 +2,7 @@ import { LeaderboardData } from "../../shared/types";
 import { generateLeaderboard, makeWorkerReq } from "./worker/interfacing";
 import { leaderboardElements, youLeaderboardElement } from "./elements";
 import { formatter } from "./game";
-import { isValidNickname, MAX_NICKNAME_LENGTH } from "./nickname";
+import { isValidNickname, MAX_NICKNAME_LENGTH } from "./dialogs";
 
 export const leaderboard = async () => {
   const req = generateLeaderboard();

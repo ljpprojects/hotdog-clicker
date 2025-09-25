@@ -37,7 +37,7 @@ import {
   MAX_NICKNAME_LENGTH,
   PLACEHOLDER_NICKNAME,
   receiveNickname,
-} from "./nickname";
+} from "./dialogs";
 
 export interface HDCSaveData {
   /**
