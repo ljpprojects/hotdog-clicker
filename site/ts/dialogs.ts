@@ -41,7 +41,7 @@ export const notify = async (message: string): Promise<void> => {
 }
 
 export const isValidNickname = (nickname: string, allowExcessLength: boolean = true) => {
-  return nickname.trim().length > 0 && (allowExcessLength || nickname.length < MAX_NICKNAME_LENGTH);
+  return nickname.trim().length > 0 && (allowExcessLength || nickname.length <= MAX_NICKNAME_LENGTH);
 };
 
 export const receiveNickname = async (): Promise<string> => {
@@ -135,8 +135,6 @@ export const restoreSave = async () => {
 
     // Make the request
     const res = await makeWorkerReq(req)
-
-    console.log(res)
 
     // Load the save from the returned data of the request
     load(res)

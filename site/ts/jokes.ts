@@ -23,16 +23,11 @@ export const doJoke = () => {
     (hour + second - minute) % 2 === 0 ||
     (hourUTC + secondUTC - minuteUTC) % 2 === 0
   ) {
-    console.log("TAXES");
     // Tax the player
     taxationJoke();
-  } else {
-    console.log("NO TAXES");
   }
 
   const t = 36942 * Math.random();
-
-  console.log(t);
 
   setTimeout(doJoke, t);
 };
@@ -102,8 +97,8 @@ const taxationJoke = async () => {
     await makeWorkerReq(req).then((r) =>
       r.success
         ? handleLdbd().then((_) => {
-            taxPopupElement.classList.add("hide");
-          })
+          taxPopupElement.classList.add("hide");
+        })
         : Promise.reject(),
     );
   }, 3000);
