@@ -25,6 +25,8 @@ export const wormholePriceElement = document.getElementById("wormholePrice")!;
 export const wipeButton = document.getElementById("wipe")!;
 export const saveButton = document.getElementById("save")!;
 export const changeNicknameButton = document.getElementById("setNickname")!;
+export const restoreSaveButton = document.getElementById("restoreSave")!;
+export const getIdentifierButton = document.getElementById("getIdentifier")!;
 export const openContextMenuButton = document.getElementById("openContextMenu")!;
 export const closeContextMenuButton = document.getElementById("closeContextMenu")!;
 
@@ -67,17 +69,35 @@ export const taxPopupElement: HTMLElement =
 export const nicknameDialogContainerElement: HTMLElement =
   document.getElementById("nicknameDialogContainer")!;
 
+
+export const nicknameDialogElement: HTMLDialogElement =
+  document.querySelector("#nicknameDialog")!;
+
 export const nicknameDialogFormElement: HTMLFormElement =
   document.querySelector("#nicknameDialog > form")!;
 
 export const nicknameDialogInputElement: HTMLInputElement =
   document.querySelector("#nicknameDialog > form > input")!;
 
+
 export const restoreDialogContainerElement: HTMLElement =
   document.getElementById("restoreDialogContainer")!;
+
+export const restoreDialogElement: HTMLDialogElement =
+  document.querySelector("#restoreDialog")!;
 
 export const restoreDialogFormElement: HTMLFormElement =
   document.querySelector("#restoreDialog > form")!;
 
 export const restoreDialogInputElement: HTMLInputElement =
   document.querySelector("#restoreDialog > form > input")!;
+
+
+export const notificationDialogContainerElement: HTMLElement =
+  document.getElementById("notificationDialogContainer")!;
+
+export const notificationDialogElement: HTMLDialogElement =
+  document.querySelector("#notificationDialog")!;
+
+export const notificationDialogMessageElement: HTMLFormElement =
+  document.querySelector("#notificationDialog #notificationBody")!;

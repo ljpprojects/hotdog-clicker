@@ -1,7 +1,7 @@
 import { Hono, Context } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 import { logger } from "hono/logger";
-import {
+import type {
   DBData,
   LeaderboardData,
   ClaimToken,
@@ -10,10 +10,10 @@ import {
   ErrorAbbrev,
   ClientSentWorkerDataReportAction,
   DBDataFull,
-  sanitiseDBData,
   ClientSentWorkerDataTaxedAction,
-  // @ts-expect-error
+  ClientSentWorkerDataRestoreAction,
 } from "../shared/types.d.ts";
+
 import { CookieOptions } from "hono/utils/cookie";
 
 const CLAIM_TOKEN = {
@@ -117,11 +117,19 @@ const COOKIE_OPTS: (age: number) => CookieOptions = (age: number) => ({
   // domain: "hdc.ljpprojects.org"
 });
 
+const sanitiseDBData = (full: DBDataFull): DBData => {
+  return {
+    encoded_save: full.encoded_save,
+    nickname: full.nickname,
+    net_worth: full.net_worth
+  } satisfies DBData;
+};
+
 type Bindings = {
   DB: D1Database;
 };
 
-const sockData: (dat: ServerSentWorkerData) => ServerSentWorkerData = (dat) =>
+const workerData: (dat: ServerSentWorkerData) => ServerSentWorkerData = (dat) =>
   dat;
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -168,7 +176,7 @@ app.post("/action", async (c) => {
     body = await c.req.json();
   } catch (e) {
     return c.json(
-      sockData({
+      workerData({
         success: false,
         error: {
           abbrev: "ESNTX",
@@ -182,7 +190,7 @@ app.post("/action", async (c) => {
 
   if (!identifier) {
     return c.json(
-      sockData({
+      workerData({
         success: false,
         error: {
           abbrev: "EAUTH",
@@ -217,7 +225,7 @@ app.post("/action", async (c) => {
 
       if (result.error) {
         return c.json(
-          sockData({
+          workerData({
             success: false,
             error: {
               abbrev: "EQURY",
@@ -228,7 +236,7 @@ app.post("/action", async (c) => {
       }
 
       return c.json(
-        sockData({
+        workerData({
           success: true,
           results: result.results as LeaderboardData[],
         }),
@@ -254,7 +262,7 @@ app.post("/action", async (c) => {
             identifier,
             (body as ClientSentWorkerDataReportAction).encodedSaveData,
             (body as ClientSentWorkerDataReportAction).nickname,
-            (body as ClientSentWorkerDataReportAction).net_worth,
+            (body as ClientSentWorkerDataReportAction).netWorth,
           )
           .run();
 
@@ -264,7 +272,7 @@ app.post("/action", async (c) => {
 
         if (res.error) {
           return c.json(
-            sockData({
+            workerData({
               success: false,
               error: {
                 abbrev: "EQURY",
@@ -281,14 +289,14 @@ app.post("/action", async (c) => {
         );
 
         return c.json(
-          sockData({
+          workerData({
             success: true,
             results,
           }),
         );
       } catch (e) {
         return c.json(
-          sockData({
+          workerData({
             success: false,
             error: {
               abbrev: "EQURY",
@@ -308,7 +316,7 @@ app.post("/action", async (c) => {
 
       if (d1result.error) {
         return c.json(
-          sockData({
+          workerData({
             success: false,
             error: {
               abbrev: "EQURY",
@@ -323,7 +331,7 @@ app.post("/action", async (c) => {
       );
 
       return c.json(
-        sockData({
+        workerData({
           success: true,
           results,
         }),
@@ -353,7 +361,7 @@ app.post("/action", async (c) => {
 
         if (res.error) {
           return c.json(
-            sockData({
+            workerData({
               success: false,
               error: {
                 abbrev: "EQURY",
@@ -370,14 +378,14 @@ app.post("/action", async (c) => {
         );
 
         return c.json(
-          sockData({
+          workerData({
             success: true,
             results,
           }),
         );
       } catch (e) {
         return c.json(
-          sockData({
+          workerData({
             success: false,
             error: {
               abbrev: "EQURY",
@@ -386,6 +394,81 @@ app.post("/action", async (c) => {
           }),
         );
       }
+
+    case "restore":
+      const { oldIdentifier } = body as ClientSentWorkerDataRestoreAction;
+
+      // Add the amount paid to the designated user
+
+      const restoreQuery = `
+          UPDATE savedat
+          SET encoded_save = src.encoded_save,
+              nickname     = src.nickname,
+              net_worth    = src.net_worth
+          FROM (SELECT encoded_save, nickname, net_worth
+                FROM savedat
+                WHERE identifier = ?1) AS src
+          WHERE savedat.identifier = ?2
+          RETURNING savedat.identifier,
+                    savedat.encoded_save,
+                    savedat.nickname,
+                    savedat.net_worth;
+        `.trim();
+
+      try {
+        let res: D1Result<Record<string, unknown>> = await c.env.DB.prepare(
+          restoreQuery,
+        )
+          .bind(oldIdentifier, identifier)
+          .run();
+
+        if (res == null) {
+          break;
+        }
+
+        if (res.error) {
+          return c.json(
+            workerData({
+              success: false,
+              error: {
+                abbrev: "EQURY",
+                message: `D1 returned an error: ${res.error}`,
+              },
+            }),
+          );
+
+          break;
+        }
+
+        const results = (res.results as DBDataFull[]).map((dirty) =>
+          sanitiseDBData(dirty),
+        );
+
+        return c.json(
+          workerData({
+            success: true,
+            results,
+          }),
+        );
+      } catch (e) {
+        return c.json(
+          workerData({
+            success: false,
+            error: {
+              abbrev: "EQURY",
+              message: `D1 returned an error: ${e}`,
+            },
+          }),
+        );
+      }
+
+    case "ident":
+      return c.json(
+        workerData({
+          success: true,
+          ident: identifier,
+        })
+      )
   }
 });
 

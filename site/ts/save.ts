@@ -34,7 +34,9 @@ import {
 import { calcCost } from "./math";
 import { DBData, ServerSentWorkerData } from "../../shared/types";
 import {
+  isValidNickname,
   MAX_NICKNAME_LENGTH,
+  notify,
   PLACEHOLDER_NICKNAME,
   receiveNickname,
 } from "./dialogs";
@@ -164,6 +166,17 @@ export const generateEncodedSave = (from?: HDCSaveData): string => {
 };
 
 export const save = async (): Promise<ServerSentWorkerData> => {
+  // If our nickname is invalid, request the user chooses a new one.
+  if (!isValidNickname(nickname, false)) {
+    console.log("INVALID")
+
+    await notify(
+      "Do not reload or leave the page; your data has not been saved. " +
+      "Your nickname is either blank or exceeding the maximum length. " +
+      "You will be asked to choose a new one once this notification is acknowledged."
+    ).then(async () => await setNickname(await receiveNickname()))
+  }
+
   const saveData = generateEncodedSave();
   const req = generateReport(saveData, nickname, compileSave().hdnw);
 
@@ -181,8 +194,8 @@ export const wipe = async (): Promise<ServerSentWorkerData> => {
   return await makeWorkerReq(req);
 };
 
-export const load = async () => {
-  const res = await makeWorkerReq(generateGet());
+export const load = async (fromReq?: ServerSentWorkerData) => {
+  const res = fromReq ?? await makeWorkerReq(generateGet());
 
   if (!res.success) {
     switch (res.error?.abbrev) {

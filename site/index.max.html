@@ -265,9 +265,17 @@
                     <input
                         type="text"
                         maxlength="44"
-                        minlength="1"
+                        minlength="44"
                         placeholder="identifier code"
                     />
+                </form>
+            </dialog>
+        </section>
+        <section class="dialogPopup hide" id="notificationDialogContainer">
+            <dialog id="notificationDialog">
+                <form method="dialog">
+                    <p id="notificationBody">If you are reading this, an error has occured.</p>
+                    <input type="submit" value="OK" />
                 </form>
             </dialog>
         </section>
@@ -303,6 +311,8 @@
                 <button id="wipe">WIPE</button>
                 <button id="save">SAVE</button>
                 <button id="setNickname">Change Nickname</button>
+                <button id="restoreSave">Restore Save</button>
+                <button id="getIdentifier">Get Identifier Code</button>
             </section>
         </section>
         <section id="taxpopup" class="fpopup hide">

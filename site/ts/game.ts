@@ -41,11 +41,13 @@ import {
   wormholeButton,
   changeNicknameButton,
   closeContextMenuButton,
-  openContextMenuButton
+  openContextMenuButton,
+  restoreSaveButton,
+  getIdentifierButton
 } from "./elements";
 import { handleLdbd } from "./leaderboard";
 import { doJoke } from "./jokes";
-import { receiveNickname } from "./dialogs";
+import { getIdentifierCode, receiveNickname, restoreSave } from "./dialogs";
 
 export const formatter = new Intl.NumberFormat(navigator.language, {
   minimumFractionDigits: 2,
@@ -707,4 +709,16 @@ changeNicknameButton.addEventListener("click", async () => {
   hideContextMenu()
 
   await setNickname(await receiveNickname(), true)
+})
+
+restoreSaveButton.addEventListener("click", async () => {
+  hideContextMenu()
+
+  await restoreSave()
+})
+
+getIdentifierButton.addEventListener("click", async () => {
+  hideContextMenu()
+
+  await getIdentifierCode()
 })

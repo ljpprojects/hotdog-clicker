@@ -17,14 +17,6 @@ export type LeaderboardData = {
   ldbd_rank: number;
 };
 
-export const sanitiseDBData = (full: DBDataFull): DBData => {
-  const sanitised: DBDataFull = structuredClone(full);
-
-  delete sanitised.identifier;
-
-  return sanitised as DBData;
-};
-
 export type ClaimToken = {
   token: { base64: string; raw: Uint8Array };
   keypair: CryptoKeyPair;
@@ -33,14 +25,14 @@ export type ClaimToken = {
 };
 
 export interface ClientSentWorkerData {
-  action: "report" | "get" | "leaderboard" | "taxed";
+  action: "report" | "get" | "leaderboard" | "taxed" | "restore" | "ident";
 }
 
 export interface ClientSentWorkerDataReportAction extends ClientSentWorkerData {
   action: "report";
   encodedSaveData: string;
   nickname: string;
-  net_worth: number;
+  netWorth: number;
 }
 
 export interface ClientSentWorkerDataTaxedAction extends ClientSentWorkerData {
@@ -57,7 +49,17 @@ export interface ClientSentWorkerDataGetAction extends ClientSentWorkerData {
   action: "get";
 }
 
-export type ErrorAbbrev = "EAUTH" | "ESNTX" | "EQURY" | "EUNKN" | "ECLMR";
+export interface ClientSentWorkerDataIdentAction extends ClientSentWorkerData {
+  action: "ident";
+}
+
+export interface ClientSentWorkerDataRestoreAction
+  extends ClientSentWorkerData {
+  action: "restore";
+  oldIdentifier: string;
+}
+
+export type ErrorAbbrev = "EAUTH" | "ESNTX" | "EQURY" | "EUNKN";
 
 export interface ServerSentWorkerData {
   success: boolean;
@@ -66,6 +68,7 @@ export interface ServerSentWorkerData {
     message: string;
   };
   results?: DBData[] | LeaderboardData[];
+  ident?: string;
 
   [name: string]: any;
 }

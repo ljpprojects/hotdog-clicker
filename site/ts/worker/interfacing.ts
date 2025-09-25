@@ -1,11 +1,13 @@
-import {
+import type {
   ServerSentWorkerData,
   ClientSentWorkerData,
   ClientSentWorkerDataReportAction,
   ClientSentWorkerDataGetAction,
   ClientSentWorkerDataLeaderboardAction,
   ClientSentWorkerDataTaxedAction,
-} from "../../../shared/types";
+  ClientSentWorkerDataRestoreAction,
+  ClientSentWorkerDataIdentAction
+} from "../../../shared/types.d.ts";
 
 export const AUTH_REDIRECT_URL = `/auth?callback=${encodeURIComponent(window.location.href)}`;
 
@@ -24,7 +26,7 @@ export const generateReport = (
   action: "report",
   encodedSaveData,
   nickname,
-  net_worth: netWorth,
+  netWorth: netWorth,
 });
 
 export const generateTaxed = (
@@ -34,18 +36,25 @@ export const generateTaxed = (
   amountPaid,
 });
 
+export const generateRestore = (
+  oldIdentifier: string,
+): ClientSentWorkerDataRestoreAction => ({
+  action: "restore",
+  oldIdentifier,
+});
+
+export const generateIdent = (): ClientSentWorkerDataIdentAction => ({
+  action: "ident",
+});
+
 export const makeWorkerReq = async (
   action: ClientSentWorkerData,
 ): Promise<ServerSentWorkerData> => {
-  const headers = await fetch("/action", {
+  return await fetch("/action", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(action),
-  });
-
-  const response = await headers.json();
-
-  return response;
+  }).then(h => h.json());
 };
