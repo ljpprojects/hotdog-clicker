@@ -67,12 +67,17 @@ export const taxPopupElement: HTMLElement =
 export const nicknameDialogContainerElement: HTMLElement =
   document.getElementById("nicknameDialogContainer")!;
 
-export const nicknameDialogElement: HTMLDialogElement = document.getElementById(
-  "nicknameDialog",
-)! as HTMLDialogElement;
-
 export const nicknameDialogFormElement: HTMLFormElement =
   document.querySelector("#nicknameDialog > form")!;
 
 export const nicknameDialogInputElement: HTMLInputElement =
   document.querySelector("#nicknameDialog > form > input")!;
+
+export const restoreDialogContainerElement: HTMLElement =
+  document.getElementById("restoreDialogContainer")!;
+
+export const restoreDialogFormElement: HTMLFormElement =
+  document.querySelector("#restoreDialog > form")!;
+
+export const restoreDialogInputElement: HTMLInputElement =
+  document.querySelector("#restoreDialog > form > input")!;

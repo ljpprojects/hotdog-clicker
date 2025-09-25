@@ -1,8 +1,11 @@
 import {
   nicknameDialogContainerElement,
-  nicknameDialogElement,
   nicknameDialogFormElement,
   nicknameDialogInputElement,
+
+  restoreDialogContainerElement,
+  restoreDialogFormElement,
+  restoreDialogInputElement,
 } from "./elements";
 
 export const MAX_NICKNAME_LENGTH = 15;

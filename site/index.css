@@ -315,21 +315,26 @@ button:active {
     -webkit-backdrop-filter: blur(5rem);
 }
 
-#nicknameDialog {
-    height: 30vh;
-    width: 30vw;
+.dialogPopup>dialog {
+    min-height: 30vh;
+    min-width: 30vw;
+    max-height: 90vh;
+    max-width: 90vw;
+    width: auto;
+    height: auto;
     display: grid;
     align-items: center;
     justify-content: center;
     background: var(--dn-col-t);
 }
 
-#nicknameDialog::backdrop,
-#nicknameDialog::-ms-backdrop {
+.dialogPopup>dialog::backdrop,
+.dialogPopup>dialog::-ms-backdrop {
     filter: blur(5rem) contrast(0) saturate(0);
 }
 
-#nicknameDialog>form>input {
+.dialogPopup>dialog>form>input {
     padding: 1vmin;
+    width: 85%;
     border: none;
 }
