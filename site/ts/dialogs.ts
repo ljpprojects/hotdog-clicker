@@ -50,6 +50,17 @@ export const receiveNickname = async (): Promise<string> => {
   nicknameDialogElement.showModal();
 
   return new Promise((res, rej) => {
+    nicknameDialogElement.onclose = () => {
+      // Hide dialog
+      nicknameDialogContainerElement.classList.add("hide");
+
+      // Remove listeners
+      nicknameDialogInputElement.onchange = null
+      nicknameDialogElement.onclose = null
+
+      rej("Operation was cancelled.")
+    }
+
     // listen for input
     nicknameDialogInputElement.onchange = (e) => {
       e.preventDefault();
@@ -67,8 +78,9 @@ export const receiveNickname = async (): Promise<string> => {
         nicknameDialogContainerElement.classList.add("hide");
         nicknameDialogElement.close();
 
-        // Remove listener
+        // Remove listeners
         nicknameDialogInputElement.onchange = null
+        nicknameDialogElement.onclose = null
       };
 
       const recvNickname = nicknameDialogInputElement.value;
@@ -83,7 +95,7 @@ export const receiveNickname = async (): Promise<string> => {
       res(recvNickname.slice(0, MAX_NICKNAME_LENGTH));
     };
 
-    setTimeout(() => rej("timeout"), 60e3)
+    setTimeout(() => rej("Operation timed out."), 60e3)
   });
 };
 
@@ -98,6 +110,15 @@ export const restoreSave = async () => {
   restoreDialogInputElement.onchange = async (e) => {
     e.preventDefault();
 
+    restoreDialogElement.onclose = () => {
+      // Hide dialog
+      restoreDialogContainerElement.classList.add("hide");
+
+      // Remove listeners
+      restoreDialogInputElement.onchange = null
+      restoreDialogElement.onclose = null
+    }
+
     const cleanup = () => {
       // Submit the form
       restoreDialogFormElement.dispatchEvent(
@@ -111,8 +132,9 @@ export const restoreSave = async () => {
       restoreDialogContainerElement.classList.add("hide");
       restoreDialogElement.close();
 
-      // Remove listener
+      // Remove listeners
       restoreDialogInputElement.onchange = null
+      restoreDialogElement.onclose = null
     };
 
     const recvIdentifier = restoreDialogInputElement.value.trim();
