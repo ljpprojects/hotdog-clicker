@@ -4,8 +4,6 @@ import {
   save,
   wipe,
   load,
-  DEFAULT_SAVE_DATA,
-  generateEncodedSave,
 } from "./save";
 import {
   passiveClicksElement,
@@ -29,8 +27,8 @@ import {
   freezerPriceElement,
   portalPriceElement,
   wormholePriceElement,
-  wipeBtn,
-  saveBtn,
+  wipeButton,
+  saveButton,
   hotdogButton,
   bunButton,
   dadButton,
@@ -41,11 +39,13 @@ import {
   freezerButton,
   portalButton,
   wormholeButton,
-  leaderboardElements,
-  youLeaderboardElement,
+  changeNicknameButton,
+  closeContextMenuButton,
+  openContextMenuButton
 } from "./elements";
 import { handleLdbd } from "./leaderboard";
 import { doJoke } from "./jokes";
+import { receiveNickname } from "./nickname";
 
 export const formatter = new Intl.NumberFormat(navigator.language, {
   minimumFractionDigits: 2,
@@ -69,8 +69,12 @@ export const hdps = new Binding<number, number>({
 
 export let nickname = "<not given>";
 
-export const setNickname = (n: string) => {
+export const setNickname = async (n: string, alsoSave: boolean = false) => {
   nickname = n;
+
+  if (alsoSave) {
+    await save().then(handleLdbd)
+  }
 };
 
 export const hdnw = new Binding<number, number>({
@@ -495,8 +499,8 @@ export const wormholeCost = new Binding<number, number>({
   },
 });
 
-saveBtn!!.onclick = save;
-wipeBtn!!.onclick = wipe;
+saveButton!!.onclick = save;
+wipeButton!!.onclick = wipe;
 
 const checkBuyables = () => {
   if (hds.value >= bunCost.value) {
@@ -670,26 +674,37 @@ wormholeButton?.addEventListener("click", () => {
 
 (async () => console.log(await handleLdbd()))();
 
-setInterval(async () => console.log(await save()), 60e3);
-setInterval(async () => console.log(await handleLdbd()), 60e3);
+setInterval(async () => console.log(await save().then(handleLdbd)), 60e3);
 
-document.oncontextmenu = () => {
+const showContextMenu = () => {
   document.querySelector("main")?.classList.add("blur");
   document.querySelector("nav")?.classList.add("blur");
+  document.querySelector("#leaderboard")?.classList.add("blur");
   document.getElementById("context")?.setAttribute("class", "display");
+}
 
-  window.onscroll = () => {
-    return false;
-  };
+const hideContextMenu = () => {
+  document.querySelector("main")?.classList.remove("blur");
+  document.querySelector("nav")?.classList.remove("blur");
+  document.querySelector("#leaderboard")?.classList.remove("blur");
+  document.getElementById("context")?.setAttribute("class", "hide");
+}
 
-  document.addEventListener("dblclick", () => {
-    document.querySelector("main")?.classList.remove("blur");
-    document.querySelector("nav")?.classList.remove("blur");
-    document.getElementById("context")?.setAttribute("class", "hide");
-    window.onscroll = function () {};
-  });
+document.oncontextmenu = () => {
+  showContextMenu()
 
-  window.onbeforeunload = save;
+  document.addEventListener("dblclick", hideContextMenu);
 
   return false;
 };
+
+openContextMenuButton.addEventListener("click", document.oncontextmenu)
+closeContextMenuButton.addEventListener("click", hideContextMenu)
+
+window.onbeforeunload = save;
+
+changeNicknameButton.addEventListener("click", async () => {
+  hideContextMenu()
+
+  await setNickname(await receiveNickname(), true)
+})

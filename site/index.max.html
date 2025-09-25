@@ -18,6 +18,8 @@
             <section>
                 <h1 class="mhide">Hot Dog Clicker</h1>
 
+                <p>To open the main menu, right click or press <button id="openContextMenu" style="text-decoration: underline;">OPEN</button>.</p>
+
                 <h2>Hot Dogs: <span id="clickCount">0</span></h2>
                 <h2>Hot Dogs Per Second: <span id="passive">0</span></h2>
                 <h2>Net Worth: <span id="hdnw">0</span></h2>
@@ -280,9 +282,15 @@
             </ol>
         </section>
         <section id="context" class="hide">
+            <!-- Padding magic -->
+            <section></section>
             <h1>Main Menu</h1>
-            <button id="wipe">WIPE</button><br />
-            <button id="save">SAVE</button><br />
+            <section>
+                <p>Double click to close or press <button id="closeContextMenu" style="text-decoration: underline;">CLOSE</button>.</p>
+                <button id="wipe">WIPE</button>
+                <button id="save">SAVE</button>
+                <button id="setNickname">Change Nickname</button>
+            </section>
         </section>
         <section id="taxpopup" class="fpopup hide">
             <b>TAXED</b>

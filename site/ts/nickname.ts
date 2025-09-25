@@ -1,6 +1,7 @@
 import {
   nicknameDialogContainerElement,
   nicknameDialogElement,
+  nicknameDialogFormElement,
   nicknameDialogInputElement,
 } from "./elements";
 
@@ -23,22 +24,26 @@ export const receiveNickname = async (): Promise<string> => {
   nicknameDialogContainerElement.classList.remove("hide");
 
   return new Promise((res, rej) => {
+    console.log("PROM")
+
     // listen for input
-    const nicknameOnsubmit: (
-      this: HTMLInputElement,
-      ev: SubmitEvent,
-    ) => void = (e) => {
+    nicknameDialogInputElement.onchange = (e) => {
       e.preventDefault();
 
       const cleanup = () => {
-        // Remove listener
-        nicknameDialogInputElement.removeEventListener(
-          "submit",
-          nicknameOnsubmit,
-        );
+        // Submit the form
+        const ev = new SubmitEvent("submit", {
+          cancelable: false,
+          submitter: nicknameDialogInputElement
+        })
+
+        nicknameDialogFormElement.dispatchEvent(ev);
 
         // Hide dialog
         nicknameDialogContainerElement.classList.add("hide");
+
+        // Remove listener
+        nicknameDialogInputElement.onchange = null
       };
 
       const recvNickname = nicknameDialogInputElement.value;
@@ -50,12 +55,9 @@ export const receiveNickname = async (): Promise<string> => {
 
       cleanup();
 
-      res(recvNickname.slice(MAX_NICKNAME_LENGTH));
+      res(recvNickname.slice(0, MAX_NICKNAME_LENGTH));
     };
 
-    const t = nicknameDialogInputElement.addEventListener(
-      "submit",
-      nicknameOnsubmit,
-    );
+    setTimeout(() => rej("timeout"), 60e3)
   });
 };

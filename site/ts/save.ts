@@ -229,13 +229,13 @@ export const load = async () => {
 
     hdnw.value = saveData.hdnw;
 
-    setNickname(
+    await setNickname(
       res.results[0].nickname &&
         res.results[0].nickname.trim() !== PLACEHOLDER_NICKNAME
         ? res.results[0].nickname
         : await receiveNickname(),
     );
 
-    save();
+    await save();
   } // If we do not have a save we do not have to do anything
 };

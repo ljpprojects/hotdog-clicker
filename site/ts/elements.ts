@@ -22,8 +22,11 @@ export const freezerPriceElement = document.getElementById("freezerPrice")!;
 export const portalPriceElement = document.getElementById("portalPrice")!;
 export const wormholePriceElement = document.getElementById("wormholePrice")!;
 
-export const wipeBtn = document.getElementById("wipe");
-export const saveBtn = document.getElementById("save");
+export const wipeButton = document.getElementById("wipe")!;
+export const saveButton = document.getElementById("save")!;
+export const changeNicknameButton = document.getElementById("setNickname")!;
+export const openContextMenuButton = document.getElementById("openContextMenu")!;
+export const closeContextMenuButton = document.getElementById("closeContextMenu")!;
 
 export const hotdogButton = document.getElementById("hotdogButton")!;
 export const bunButton = document.getElementById("bunButton")!;
@@ -67,6 +70,9 @@ export const nicknameDialogContainerElement: HTMLElement =
 export const nicknameDialogElement: HTMLDialogElement = document.getElementById(
   "nicknameDialog",
 )! as HTMLDialogElement;
+
+export const nicknameDialogFormElement: HTMLFormElement =
+  document.querySelector("#nicknameDialog > form")!;
 
 export const nicknameDialogInputElement: HTMLInputElement =
   document.querySelector("#nicknameDialog > form > input")!;
