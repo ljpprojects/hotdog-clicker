@@ -255,6 +255,7 @@
                         minlength="1"
                         placeholder="nickname"
                     />
+                    <br />
                     <input type="submit" value="Cancel" />
                 </form>
             </dialog>
@@ -269,6 +270,7 @@
                         minlength="44"
                         placeholder="identifier code"
                     />
+                    <br />
                     <input type="submit" value="Cancel" />
                 </form>
             </dialog>
@@ -277,6 +279,7 @@
             <dialog id="notificationDialog">
                 <form method="dialog">
                     <p id="notificationBody">If you are reading this, an error has occured.</p>
+                    <br />
                     <input type="submit" value="OK" />
                 </form>
             </dialog>
@@ -286,7 +289,7 @@
                 <b>Settings</b>
 
                 <form method="dialog">
-                    <div style="display: flex; justify-content: space-between; gap: 2vw;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 2vw;">
                         <p>Number format</p>
                         <select id="numberFormat">
                             <option>Normal</option>
@@ -294,9 +297,13 @@
                             <option>Scientific</option>
                         </select>
                     </div>
-                    <div style="display: flex; justify-content: space-between; gap: 2vw;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 2vw;">
                         <p>Number of digits (<span id="numberDigitsDisplay">2</span>)</p>
                         <input id="numberDigits" type="range" max="10" min="0" value="2" />
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 2vw;">
+                        <p>Show tax popup</p>
+                        <input type="checkbox" id="showTaxPopup" checked />
                     </div>
                     <br />
                     <input type="submit" value="Confirm" />
@@ -305,7 +312,6 @@
         </section>
         <section class="display" id="leaderboard">
             <h2>Leaderboard</h2>
-            <p>Refreshed once every minute.</p>
 
             <ol>
                 <li id="ldbd-pl-01">John</li>
@@ -343,5 +349,7 @@
         <section id="taxpopup" class="fpopup hide">
             <b>TAXED</b>
         </section>
+        <!-- Padding magic -->
+        <section></section>
     </body>
 </html>

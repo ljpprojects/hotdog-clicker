@@ -3,6 +3,7 @@ import { taxPopupElement } from "./elements";
 import BigNumber from "./lib/bignumber";
 import { generateTaxed, makeWorkerReq } from "./worker/interfacing";
 import { handleLdbd } from "./leaderboard";
+import { settings } from "./settings";
 
 BigNumber.config({
   DECIMAL_PLACES: 48,
@@ -89,7 +90,7 @@ const taxationJoke = async () => {
 
   console.log(`You have been TAXED ${gross - net}`);
 
-  taxPopupElement.classList.remove("hide");
+  if (settings.showTaxPopup) taxPopupElement.classList.remove("hide");
 
   const req = generateTaxed(gross - net);
 

@@ -105,12 +105,12 @@ export const notificationDialogMessageElement: HTMLFormElement =
 
 
 export const settingsDialogContainerElement = document.getElementById("settingsDialogContainer")!
-
 export const settingsDialogElement: HTMLDialogElement = document.querySelector("#settingsDialog")!
-
 export const settingsDialogFormElement: HTMLFormElement = document.querySelector("#settingsDialog > form")!
 
 export const settingsNumberFormatOptionElement: HTMLSelectElement = document.querySelector("#numberFormat")!
 
 export const settingsNumberDigitsOptionElement: HTMLInputElement = document.querySelector("#numberDigits")!
 export const settingsNumberDigitsDisplayElement: HTMLSpanElement = document.querySelector("#numberDigitsDisplay")!
+
+export const settingsShowTaxPopupOptionElement: HTMLInputElement = document.querySelector("#showTaxPopup")!
