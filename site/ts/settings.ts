@@ -94,19 +94,20 @@ export const changeSettings = async (): Promise<HDCSettings> => {
     }
 
     settingsDialogElement.onclose = () => {
-      const settings = {
+      const newSettings = {
         numberOfDigits: settingsNumberDigitsOptionElement.valueAsNumber as HDCDigitCountSettingType,
         numberFormat: settingsNumberFormatOptionElement.value as HDCNumberFormatSettingType
       }
 
-      applySettings(settings)
+      applySettings(newSettings)
+      settings = newSettings
 
       // Remove listeners
       settingsNumberDigitsOptionElement.oninput = null
       settingsDialogElement.onclose = null
 
       settingsDialogContainerElement.classList.add("hide");
-      res(settings)
+      res(newSettings)
     }
   })
 }
