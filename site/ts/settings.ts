@@ -80,6 +80,11 @@ export const applySettings = (settings: HDCSettings) => {
   portalCost.runSet()
   wormholeCost.runSet()
   handleLdbd()
+
+  // Set new values in UI for settings menu
+  settingsNumberDigitsOptionElement.valueAsNumber = settings.numberOfDigits
+  settingsNumberDigitsDisplayElement.textContent = settings.numberOfDigits.toString()
+  settingsNumberFormatOptionElement.value = settings.numberFormat
 }
 
 export const changeSettings = async (): Promise<HDCSettings> => {
