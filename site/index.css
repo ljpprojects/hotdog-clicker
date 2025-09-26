@@ -64,6 +64,11 @@ body {
     overflow-y: auto;
 }
 
+body,
+button {
+    background-image: url("/icons/newDay.gif");
+}
+
 main {
     max-height: calc(100vh - var(--safe-margin));
     max-width: calc(100vw - var(--safe-margin));
