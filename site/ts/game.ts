@@ -63,6 +63,7 @@ export const formatter = new SharedMutable(
     maximumFractionDigits: 2,
     useGrouping: true,
     notation: "standard",
+    localeMatcher: "best fit"
   })
 )
 
@@ -75,6 +76,9 @@ export const notify = async (message: string): Promise<void> => {
   return new Promise(res => {
     // Change message
     notificationDialogMessageElement.textContent = message
+
+    // Scroll to top
+    window.scrollTo(0, 0)
 
     // Unhide dialog
     notificationDialogContainerElement.classList.remove("hide");

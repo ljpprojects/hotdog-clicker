@@ -91,6 +91,9 @@ export const changeSettings = async (): Promise<HDCSettings> => {
   const oldSettings = structuredClone(settings)
 
   return new Promise(res => {
+    // Scroll to top
+    window.scrollTo(0, 0)
+
     // Unhide dialog
     settingsDialogContainerElement.classList.remove("hide");
     settingsDialogElement.showModal();

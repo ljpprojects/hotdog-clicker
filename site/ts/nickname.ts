@@ -13,6 +13,9 @@ export const isValidNickname = (nickname: string, allowExcessLength: boolean = t
 };
 
 export const receiveNickname = async (): Promise<string> => {
+  // Scroll to top
+  window.scrollTo(0, 0)
+
   // Unhide dialog
   nicknameDialogContainerElement.classList.remove("hide");
   nicknameDialogElement.showModal();

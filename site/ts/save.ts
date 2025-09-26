@@ -276,6 +276,9 @@ export const load = async (fromReq?: ServerSentWorkerData) => {
 export const restoreSave = async () => {
   const identifierRegex = /^[a-zA-Z0-9+\/]{43}=$/;
 
+  // Scroll to top
+  window.scrollTo(0, 0)
+
   // Unhide dialog
   restoreDialogContainerElement.classList.remove("hide");
   restoreDialogElement.showModal();
