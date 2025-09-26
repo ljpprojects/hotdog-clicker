@@ -1,4 +1,4 @@
-import { settingsDialogContainerElement, settingsDialogElement, settingsNumberDigitsDisplayElement, settingsNumberDigitsOptionElement, settingsNumberFormatOptionElement, settingsShowTaxPopupOptionElement } from "./elements";
+import { settingsDialogCancelButton, settingsDialogContainerElement, settingsDialogElement, settingsNumberDigitsDisplayElement, settingsNumberDigitsOptionElement, settingsNumberFormatOptionElement, settingsShowTaxPopupOptionElement } from "./elements";
 import { bankCost, bunCost, bunCount, dadCost, facCost, farmCost, formatter, freezerCost, grillCost, hdnw, hdps, hds, portalCost, wormholeCost } from "./game";
 import { handleLdbd } from "./leaderboard";
 
@@ -25,9 +25,9 @@ export let settings = Object.freeze({
   numberFormat: "Normal"
 } as HDCSettings)
 
-export const applySettings = (settings: HDCSettings) => {
+export const applySettings = (newSettings: HDCSettings) => {
   // Apply settings
-  const { numberOfDigits, numberFormat, showTaxPopup } = settings;
+  const { numberOfDigits, numberFormat, showTaxPopup } = newSettings;
 
   const mappedNumberFormat = ({
     "Normal": "standard",
@@ -46,11 +46,7 @@ export const applySettings = (settings: HDCSettings) => {
 
   const newOptions = formatter.value.resolvedOptions()
 
-  settings = Object.freeze({
-    numberOfDigits,
-    numberFormat: numberFormat,
-    showTaxPopup,
-  } satisfies HDCSettings)
+  settings = Object.freeze(structuredClone(newSettings))
 
   // Check for changes to the amount of digits to display
   if (
@@ -85,13 +81,15 @@ export const applySettings = (settings: HDCSettings) => {
   handleLdbd()
 
   // Set new values in UI for settings menu
-  settingsNumberDigitsOptionElement.valueAsNumber = settings.numberOfDigits
-  settingsNumberDigitsDisplayElement.textContent = settings.numberOfDigits.toString()
-  settingsNumberFormatOptionElement.value = settings.numberFormat
-  settingsShowTaxPopupOptionElement.checked = settings.showTaxPopup
+  settingsNumberDigitsOptionElement.valueAsNumber = newSettings.numberOfDigits
+  settingsNumberDigitsDisplayElement.textContent = newSettings.numberOfDigits.toString()
+  settingsNumberFormatOptionElement.value = newSettings.numberFormat
+  settingsShowTaxPopupOptionElement.checked = newSettings.showTaxPopup
 }
 
 export const changeSettings = async (): Promise<HDCSettings> => {
+  const oldSettings = structuredClone(settings)
+
   return new Promise(res => {
     // Unhide dialog
     settingsDialogContainerElement.classList.remove("hide");
@@ -100,6 +98,23 @@ export const changeSettings = async (): Promise<HDCSettings> => {
     // Add listener to change display value of 'Number of digits' option
     settingsNumberDigitsOptionElement.oninput = () => {
       settingsNumberDigitsDisplayElement.textContent = settingsNumberDigitsOptionElement.value
+    }
+
+    // Add listener for cancel
+    settingsDialogCancelButton.onclick = () => {
+      // Remove listeners
+      settingsNumberDigitsOptionElement.oninput = null
+      settingsDialogElement.onclose = null
+
+      // Hide dialog
+      settingsDialogContainerElement.classList.add("hide");
+      settingsDialogElement.close()
+
+      // Make sure no settings are changed from their original state
+      applySettings(oldSettings)
+      settings = Object.freeze(oldSettings)
+
+      res(oldSettings)
     }
 
     settingsDialogElement.onclose = () => {

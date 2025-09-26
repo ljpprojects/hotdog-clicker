@@ -107,6 +107,7 @@ export const notificationDialogMessageElement: HTMLFormElement =
 export const settingsDialogContainerElement = document.getElementById("settingsDialogContainer")!
 export const settingsDialogElement: HTMLDialogElement = document.querySelector("#settingsDialog")!
 export const settingsDialogFormElement: HTMLFormElement = document.querySelector("#settingsDialog > form")!
+export const settingsDialogCancelButton: HTMLInputElement = document.querySelector("#settingsDialogCancel")!
 
 export const settingsNumberFormatOptionElement: HTMLSelectElement = document.querySelector("#numberFormat")!
 

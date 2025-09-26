@@ -280,18 +280,18 @@ export const restoreSave = async () => {
   restoreDialogContainerElement.classList.remove("hide");
   restoreDialogElement.showModal();
 
+  restoreDialogElement.onclose = () => {
+    // Hide dialog
+    restoreDialogContainerElement.classList.add("hide");
+
+    // Remove listeners
+    restoreDialogInputElement.onchange = null
+    restoreDialogElement.onclose = null
+  }
+
   // listen for input
   restoreDialogInputElement.onchange = async (e) => {
     e.preventDefault();
-
-    restoreDialogElement.onclose = () => {
-      // Hide dialog
-      restoreDialogContainerElement.classList.add("hide");
-
-      // Remove listeners
-      restoreDialogInputElement.onchange = null
-      restoreDialogElement.onclose = null
-    }
 
     const cleanup = () => {
       // Submit the form
