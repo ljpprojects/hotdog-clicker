@@ -25,19 +25,20 @@ export const leaderboard = async () => {
     } satisfies LeaderboardData;
   });
 
-  return ldbd.sort((a, b) => a.ldbd_rank - b.ldbd_rank);
+  return ldbd;
 };
 
 export const handleLdbd = async () => {
   const ldbd = await leaderboard();
 
-  leaderboardElements
-    .slice(ldbd.length)
-    .forEach((e) => e.classList.add("hide"));
-  leaderboardElements.slice(0, ldbd.length).forEach((e, i) => {
-    e.classList.remove("hide");
-    e.textContent = `${ldbd[i].nickname} — ${formatter.value.format(ldbd[i].net_worth)}`;
-  });
+  for (const element of leaderboardElements.slice(ldbd.length)) {
+    element.classList.add("hide")
+  }
+
+  for (const [index, element] of leaderboardElements.slice(0, ldbd.length).entries()) {
+    element.classList.remove("hide")
+    element.textContent = `${ldbd[index].nickname} — ${formatter.value.format(ldbd[index].net_worth)}`;
+  }
 
   const youLdbd = ldbd[ldbd.length - 1];
 

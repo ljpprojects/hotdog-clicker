@@ -5,7 +5,7 @@ mkdir -p site/dist/lib
 
 function buildts {
     bun ./node_modules/typescript/bin/tsc;
-    cp ./site/ts/lib/bignumber.min.js ./site/dist/lib/bignumber.js;
+    # cp ./site/ts/lib/bignumber.min.js ./site/dist/lib/bignumber.js;
     ./node_modules/esbuild/bin/esbuild --format=iife --bundle --minify --target=es6 --outfile=site/dist/bundle.js site/dist/game.js
 }
 
