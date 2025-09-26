@@ -16,12 +16,12 @@ import {
   bankCost,
   freezerCost,
   nickname,
-  setNickname,
   portalCount,
   hdnw,
   wormholeCount,
   portalCost,
   wormholeCost,
+  notify,
 } from "./game";
 
 import {
@@ -29,17 +29,27 @@ import {
   generateGet,
   AUTH_REDIRECT_URL,
   generateReport,
+  generateIdent,
+  generateRestore
 } from "./worker/interfacing";
 
-import { calcCost } from "./math";
+import { calcCost } from "./maths";
 import { DBData, ServerSentWorkerData } from "../../shared/types";
 import {
   isValidNickname,
   MAX_NICKNAME_LENGTH,
-  notify,
   PLACEHOLDER_NICKNAME,
   receiveNickname,
-} from "./dialogs";
+} from "./nickname";
+
+import {
+  restoreDialogContainerElement,
+  restoreDialogElement,
+  restoreDialogFormElement,
+  restoreDialogInputElement
+} from "./elements"
+import { applySettings, DEFAULT_SETTINGS, HDCSettings, settings } from "./settings";
+import { NaNNullCoerce } from "./utils";
 
 export interface HDCSaveData {
   /**
@@ -108,6 +118,11 @@ export interface HDCSaveData {
    * The nickname chosen by the user.
    */
   nickname: string;
+
+  /**
+   * The settings selected by the user.
+   */
+  settings: HDCSettings;
 }
 
 export const DEFAULT_SAVE_DATA: HDCSaveData = {
@@ -124,12 +139,14 @@ export const DEFAULT_SAVE_DATA: HDCSaveData = {
   ownedPortals: 0,
   ownedWormholes: 0,
   nickname: PLACEHOLDER_NICKNAME,
+  settings: DEFAULT_SETTINGS,
 };
 
 export const decodeSaveData = (data: string): HDCSaveData => {
   try {
-    const raw = atob(data);
-    const save = JSON.parse(raw) as HDCSaveData;
+    const raw = Uint8Array.fromBase64(data);
+    const decoder = new TextDecoder('utf-8');
+    const save = JSON.parse(decoder.decode(raw)) as HDCSaveData;
 
     return save;
   } catch (e) {
@@ -152,22 +169,24 @@ export const compileSave = (): HDCSaveData => {
     ownedFreezers: freezerCount.value,
     ownedPortals: portalCount.value,
     ownedWormholes: wormholeCount.value,
-    nickname: (nickname || PLACEHOLDER_NICKNAME).slice(MAX_NICKNAME_LENGTH),
+    nickname: (nickname.value || PLACEHOLDER_NICKNAME).slice(MAX_NICKNAME_LENGTH),
     hdnw: hdnw.value,
+    settings,
   };
 };
 
 export const generateEncodedSave = (from?: HDCSaveData): string => {
   const saveData = from ?? compileSave();
   const json = JSON.stringify(saveData);
-  const encoded = btoa(json);
+  const encoder = new TextEncoder();
+  const encoded = encoder.encode(json).toBase64();
 
   return encoded;
 };
 
 export const save = async (): Promise<ServerSentWorkerData> => {
   const saveData = generateEncodedSave();
-  const req = generateReport(saveData, nickname, compileSave().hdnw);
+  const req = generateReport(saveData, nickname.value, compileSave().hdnw);
 
   return await makeWorkerReq(req);
 };
@@ -199,56 +218,132 @@ export const load = async (fromReq?: ServerSentWorkerData) => {
   if (res.results && res.results[0]) {
     const saveData = decodeSaveData((res.results as DBData[])[0].encoded_save);
 
-    hds.value = Number(saveData.hdc);
-    hdps.value = Number(saveData.hdps);
+    hds.value = NaNNullCoerce(saveData.hdc);
+    hdps.value = NaNNullCoerce(saveData.hdps);
 
-    bunCount.value = saveData.ownedBuns;
+    bunCount.value = NaNNullCoerce(saveData.ownedBuns);
     bunCost.value = calcCost(bunCost.value, bunCount.value);
 
-    dadCount.value = saveData.ownedDads;
+    dadCount.value = NaNNullCoerce(saveData.ownedDads);
     dadCost.value = calcCost(dadCost.value, dadCount.value);
 
-    grillCount.value = saveData.ownedGrills;
+    grillCount.value = NaNNullCoerce(saveData.ownedGrills);
     grillCost.value = calcCost(grillCost.value, grillCount.value);
 
-    farmCount.value = saveData.ownedFarms;
+    farmCount.value = NaNNullCoerce(saveData.ownedFarms);
     farmCost.value = calcCost(farmCost.value, farmCount.value);
 
-    facCount.value = saveData.ownedFactories;
+    facCount.value = NaNNullCoerce(saveData.ownedFactories);
     facCost.value = calcCost(facCost.value, facCount.value);
 
-    bankCount.value = saveData.ownedBanks;
+    bankCount.value = NaNNullCoerce(saveData.ownedBanks);
     bankCost.value = calcCost(bankCost.value, bankCount.value);
 
-    freezerCount.value = saveData.ownedFreezers;
+    freezerCount.value = NaNNullCoerce(saveData.ownedFreezers);
     freezerCost.value = calcCost(freezerCost.value, freezerCount.value);
 
-    portalCount.value = saveData.ownedPortals;
+    portalCount.value = NaNNullCoerce(saveData.ownedPortals);
     portalCost.value = calcCost(portalCost.value, portalCount.value);
 
-    wormholeCount.value = saveData.ownedFreezers;
+    wormholeCount.value = NaNNullCoerce(saveData.ownedWormholes);
     wormholeCost.value = calcCost(wormholeCost.value, wormholeCount.value);
 
-    hdnw.value = saveData.hdnw;
+    hdnw.value = NaNNullCoerce(saveData.hdnw);
 
-    await setNickname(
+    nickname.value =
       res.results[0].nickname &&
-        res.results[0].nickname.trim() !== PLACEHOLDER_NICKNAME
+        isValidNickname(res.results[0].nickname)
         ? res.results[0].nickname
-        : await receiveNickname(),
-    );
+        : await notify(
+          "Do not reload or leave the page; your data has not been saved. " +
+          "Your nickname is either blank or exceeding the maximum length. " +
+          "You will be asked to choose a new one once this notification is acknowledged."
+        ).then(async () => nickname.value = await receiveNickname());
 
-    // If our nickname is invalid, request the user chooses a new one.
-    if (!isValidNickname(nickname, false)) {
-      console.log("INVALID", nickname)
-
-      await notify(
-        "Do not reload or leave the page; your data has not been saved. " +
-        "Your nickname is either blank or exceeding the maximum length. " +
-        "You will be asked to choose a new one once this notification is acknowledged."
-      ).then(async () => await setNickname(await receiveNickname()))
-    }
+    // Load settings
+    applySettings(saveData.settings)
 
     await save();
-  } // If we do not have a save we do not have to do anything
+  } else {
+    // If we do not have a save we need to create one
+
+    // Get a nickname and create our save
+    nickname.value = await receiveNickname()
+    await save();
+  }
 };
+
+export const restoreSave = async () => {
+  const identifierRegex = /^[a-zA-Z0-9+\/]{43}=$/;
+
+  // Unhide dialog
+  restoreDialogContainerElement.classList.remove("hide");
+  restoreDialogElement.showModal();
+
+  // listen for input
+  restoreDialogInputElement.onchange = async (e) => {
+    e.preventDefault();
+
+    restoreDialogElement.onclose = () => {
+      // Hide dialog
+      restoreDialogContainerElement.classList.add("hide");
+
+      // Remove listeners
+      restoreDialogInputElement.onchange = null
+      restoreDialogElement.onclose = null
+    }
+
+    const cleanup = () => {
+      // Submit the form
+      restoreDialogFormElement.dispatchEvent(
+        new SubmitEvent("submit", {
+          cancelable: false,
+          submitter: restoreDialogInputElement
+        })
+      );
+
+      // Hide dialog
+      restoreDialogContainerElement.classList.add("hide");
+      restoreDialogElement.close();
+
+      // Remove listeners
+      restoreDialogInputElement.onchange = null
+      restoreDialogElement.onclose = null
+    };
+
+    const recvIdentifier = restoreDialogInputElement.value.trim();
+
+    if (
+      recvIdentifier.length !== 44 ||
+      !identifierRegex.test(recvIdentifier)
+    ) {
+      notify(`Invalid identifier; ${recvIdentifier.length !== 44 ? `invalid length ${recvIdentifier.length}` : "invalid identifier"}`)
+
+      // Invalid identifier; end here.
+      return cleanup();
+    }
+
+    // Make sure there is a save to copy data into
+    await save()
+
+    // Generate the restore request
+    const req = generateRestore(recvIdentifier)
+
+    // Make the request
+    const res = await makeWorkerReq(req)
+
+    // Load the save from the returned data of the request
+    load(res)
+
+    cleanup();
+
+    notify("Save restored successfully.")
+  };
+};
+
+export const getIdentifierCode = async () => {
+  const req = generateIdent()
+  const { ident } = await makeWorkerReq(req)
+
+  return notify(`Your identifier code is '${ident}'`)
+}

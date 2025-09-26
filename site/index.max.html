@@ -281,6 +281,28 @@
                 </form>
             </dialog>
         </section>
+        <section class="dialogPopup hide" id="settingsDialogContainer">
+            <dialog id="settingsDialog">
+                <b>Settings</b>
+
+                <form method="dialog">
+                    <div style="display: flex; justify-content: space-between; gap: 2vw;">
+                        <p>Number format</p>
+                        <select id="numberFormat">
+                            <option>Normal</option>
+                            <option>Compact</option>
+                            <option>Scientific</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; gap: 2vw;">
+                        <p>Number of digits (<span id="numberDigitsDisplay">2</span>)</p>
+                        <input id="numberDigits" type="range" max="10" min="0" value="2" />
+                    </div>
+                    <br />
+                    <input type="submit" value="Confirm" />
+                </form>
+            </dialog>
+        </section>
         <section class="display" id="leaderboard">
             <h2>Leaderboard</h2>
             <p>Refreshed once every minute.</p>
@@ -315,6 +337,7 @@
                 <button id="setNickname">Change Nickname</button>
                 <button id="restoreSave">Restore Save</button>
                 <button id="getIdentifier">Get Identifier Code</button>
+                <button id="openSettings">Settings</button>
             </section>
         </section>
         <section id="taxpopup" class="fpopup hide">

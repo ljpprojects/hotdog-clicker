@@ -63,7 +63,7 @@ const getTaxBracket = (): TaxBracket => {
   return "broke";
 };
 
-// Whenever this function is ran, immediately tax the player's income
+// Whenever this function is run, immediately tax the player's income
 const taxationJoke = async () => {
   // Get the tax bracket of the player
   const bracket = getTaxBracket();
@@ -96,7 +96,7 @@ const taxationJoke = async () => {
   setTimeout(async () => {
     await makeWorkerReq(req).then((r) =>
       r.success
-        ? handleLdbd().then((_) => {
+        ? handleLdbd().then(_ => {
           taxPopupElement.classList.add("hide");
         })
         : Promise.reject(),

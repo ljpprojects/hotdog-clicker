@@ -1,9 +1,11 @@
 import { Binding } from "./Binding";
-import { increase } from "./math";
+import { increase } from "./maths";
 import {
   save,
   wipe,
   load,
+  restoreSave,
+  getIdentifierCode
 } from "./save";
 import {
   passiveClicksElement,
@@ -43,15 +45,47 @@ import {
   closeContextMenuButton,
   openContextMenuButton,
   restoreSaveButton,
-  getIdentifierButton
+  getIdentifierButton,
+  notificationDialogContainerElement,
+  notificationDialogElement,
+  notificationDialogMessageElement,
+  openSettingsButton,
 } from "./elements";
 import { handleLdbd } from "./leaderboard";
 import { doJoke } from "./jokes";
-import { getIdentifierCode, receiveNickname, restoreSave } from "./dialogs";
+import { receiveNickname } from "./nickname";
+import { SharedMutable } from "./SharedMutable";
+import { changeSettings } from "./settings";
 
-export const formatter = new Intl.NumberFormat(navigator.language, {
-  minimumFractionDigits: 2,
-});
+export const formatter = new SharedMutable(
+  new Intl.NumberFormat(navigator.language, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    useGrouping: true,
+    notation: "standard",
+  })
+)
+
+/**
+ * Displays a message to the user.
+ * The returned promise resolves when the user closes the notification popup.
+ * @param message The message to display
+ */
+export const notify = async (message: string): Promise<void> => {
+  return new Promise(res => {
+    // Change message
+    notificationDialogMessageElement.textContent = message
+
+    // Unhide dialog
+    notificationDialogContainerElement.classList.remove("hide");
+    notificationDialogElement.showModal();
+
+    notificationDialogElement.onclose = () => {
+      notificationDialogContainerElement.classList.add("hide");
+      res()
+    }
+  })
+}
 
 export const hdps = new Binding<number, number>({
   backing: 0,
@@ -60,7 +94,7 @@ export const hdps = new Binding<number, number>({
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      passiveClicksElement.textContent = formatter.format(to);
+      passiveClicksElement.textContent = formatter.value.format(to);
     });
   },
 
@@ -69,15 +103,7 @@ export const hdps = new Binding<number, number>({
   },
 });
 
-export let nickname = "<not given>";
-
-export const setNickname = async (n: string, alsoSave: boolean = false) => {
-  nickname = n;
-
-  if (alsoSave) {
-    await save().then(handleLdbd)
-  }
-};
+export const nickname = new SharedMutable("<not given>");
 
 export const hdnw = new Binding<number, number>({
   backing: 0,
@@ -86,7 +112,7 @@ export const hdnw = new Binding<number, number>({
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      netWorthElement.textContent = formatter.format(to);
+      netWorthElement.textContent = formatter.value.format(to);
     });
   },
 
@@ -110,7 +136,7 @@ export const hds = new Binding<number, number>({
     hdnw.setValue(hdnw.getValue() - (prev - to), "hds-change");
 
     this.doAsync({ needsToWait: false }, async () => {
-      clickCountElement.textContent = formatter.format(to);
+      clickCountElement.textContent = formatter.value.format(to);
       checkBuyables();
     });
 
@@ -356,7 +382,7 @@ export const bunCost = new Binding<number, number>({
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      bunPriceElement.textContent = formatter.format(to);
+      bunPriceElement.textContent = formatter.value.format(to);
     });
   },
 
@@ -373,7 +399,7 @@ export const dadCost = new Binding<number, number>({
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      dadPriceElement.textContent = formatter.format(to);
+      dadPriceElement.textContent = formatter.value.format(to);
     });
   },
 
@@ -390,7 +416,7 @@ export const grillCost = new Binding<number, number>({
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      grillPriceElement.textContent = formatter.format(to);
+      grillPriceElement.textContent = formatter.value.format(to);
     });
   },
 
@@ -407,7 +433,7 @@ export const farmCost = new Binding<number, number>({
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      farmPriceElement.textContent = formatter.format(to);
+      farmPriceElement.textContent = formatter.value.format(to);
     });
   },
 
@@ -424,7 +450,7 @@ export const facCost = new Binding<number, number>({
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      facPriceElement.textContent = formatter.format(to);
+      facPriceElement.textContent = formatter.value.format(to);
     });
   },
 
@@ -441,7 +467,7 @@ export const bankCost = new Binding<number, number>({
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      bankPriceElement.textContent = formatter.format(to);
+      bankPriceElement.textContent = formatter.value.format(to);
     });
   },
 
@@ -458,7 +484,7 @@ export const freezerCost = new Binding<number, number>({
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      freezerPriceElement.textContent = formatter.format(to);
+      freezerPriceElement.textContent = formatter.value.format(to);
     });
   },
 
@@ -475,7 +501,7 @@ export const portalCost = new Binding<number, number>({
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      portalPriceElement.textContent = formatter.format(to);
+      portalPriceElement.textContent = formatter.value.format(to);
     });
   },
 
@@ -492,7 +518,7 @@ export const wormholeCost = new Binding<number, number>({
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      wormholePriceElement.textContent = formatter.format(to);
+      wormholePriceElement.textContent = formatter.value.format(to);
     });
   },
 
@@ -500,9 +526,6 @@ export const wormholeCost = new Binding<number, number>({
     return this.getBacking()!;
   },
 });
-
-saveButton!!.onclick = save;
-wipeButton!!.onclick = wipe;
 
 const checkBuyables = () => {
   if (hds.value >= bunCost.value) {
@@ -674,9 +697,9 @@ wormholeButton?.addEventListener("click", () => {
   requestAnimationFrame(_update);
 })();
 
-(async () => console.log(await handleLdbd()))();
+(async () => await handleLdbd())();
 
-setInterval(async () => console.log(await save().then(handleLdbd)), 60e3);
+setInterval(async () => await save().then(handleLdbd), 60e3);
 
 const showContextMenu = () => {
   document.querySelector("main")?.classList.add("blur");
@@ -703,12 +726,25 @@ document.oncontextmenu = () => {
 openContextMenuButton.addEventListener("click", document.oncontextmenu)
 closeContextMenuButton.addEventListener("click", hideContextMenu)
 
-window.onbeforeunload = save;
+window.addEventListener("visibilitychange", async () => {
+  if (document.visibilityState === "hidden") {
+    await save()
+  }
+})
+
+saveButton.addEventListener("click", async () => {
+  hideContextMenu()
+
+  await save().then(async () => await notify("Saved successfully."))
+});
+
+wipeButton.addEventListener("click", wipe)
 
 changeNicknameButton.addEventListener("click", async () => {
   hideContextMenu()
 
-  await setNickname(await receiveNickname(), true)
+  nickname.value = await receiveNickname()
+  await save().then(handleLdbd)
 })
 
 restoreSaveButton.addEventListener("click", async () => {
@@ -721,4 +757,9 @@ getIdentifierButton.addEventListener("click", async () => {
   hideContextMenu()
 
   await getIdentifierCode()
+})
+
+openSettingsButton.addEventListener("click", async () => {
+  hideContextMenu()
+  await changeSettings()
 })

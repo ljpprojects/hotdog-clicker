@@ -87,6 +87,13 @@ export class Binding<V, B> {
     this.setfn.call(this.binderBacking, to, dispatcher);
   }
 
+  /**
+   * Runs the set function setup for the Binding with the value returned by Binding.getValue(dispatcher: "binding-internal")
+   */
+  public runSet() {
+    this.setfn.call(this.binderBacking, this.getValue(), "binding-internal")
+  }
+
   get value(): V {
     return this.getValue();
   }

@@ -27,6 +27,7 @@ export const saveButton = document.getElementById("save")!;
 export const changeNicknameButton = document.getElementById("setNickname")!;
 export const restoreSaveButton = document.getElementById("restoreSave")!;
 export const getIdentifierButton = document.getElementById("getIdentifier")!;
+export const openSettingsButton = document.getElementById("openSettings")!;
 export const openContextMenuButton = document.getElementById("openContextMenu")!;
 export const closeContextMenuButton = document.getElementById("closeContextMenu")!;
 
@@ -101,3 +102,15 @@ export const notificationDialogElement: HTMLDialogElement =
 
 export const notificationDialogMessageElement: HTMLFormElement =
   document.querySelector("#notificationDialog #notificationBody")!;
+
+
+export const settingsDialogContainerElement = document.getElementById("settingsDialogContainer")!
+
+export const settingsDialogElement: HTMLDialogElement = document.querySelector("#settingsDialog")!
+
+export const settingsDialogFormElement: HTMLFormElement = document.querySelector("#settingsDialog > form")!
+
+export const settingsNumberFormatOptionElement: HTMLSelectElement = document.querySelector("#numberFormat")!
+
+export const settingsNumberDigitsOptionElement: HTMLInputElement = document.querySelector("#numberDigits")!
+export const settingsNumberDigitsDisplayElement: HTMLSpanElement = document.querySelector("#numberDigitsDisplay")!

@@ -2,7 +2,7 @@ import { LeaderboardData } from "../../shared/types";
 import { generateLeaderboard, makeWorkerReq } from "./worker/interfacing";
 import { leaderboardElements, youLeaderboardElement } from "./elements";
 import { formatter } from "./game";
-import { isValidNickname, MAX_NICKNAME_LENGTH } from "./dialogs";
+import { isValidNickname, MAX_NICKNAME_LENGTH } from "./nickname";
 
 export const leaderboard = async () => {
   const req = generateLeaderboard();
@@ -36,7 +36,7 @@ export const handleLdbd = async () => {
     .forEach((e) => e.classList.add("hide"));
   leaderboardElements.slice(0, ldbd.length).forEach((e, i) => {
     e.classList.remove("hide");
-    e.textContent = `${ldbd[i].nickname} — ${formatter.format(ldbd[i].net_worth)}`;
+    e.textContent = `${ldbd[i].nickname} — ${formatter.value.format(ldbd[i].net_worth)}`;
   });
 
   const youLdbd = ldbd[ldbd.length - 1];
@@ -46,6 +46,6 @@ export const handleLdbd = async () => {
   } else {
     youLeaderboardElement.classList.remove("hide");
     youLeaderboardElement.value = youLdbd.ldbd_rank;
-    youLeaderboardElement.textContent = `You (${youLdbd.nickname}) — ${formatter.format(youLdbd.net_worth)}`;
+    youLeaderboardElement.textContent = `You (${youLdbd.nickname}) — ${formatter.value.format(youLdbd.net_worth)}`;
   }
 };
