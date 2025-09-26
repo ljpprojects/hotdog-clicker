@@ -251,7 +251,7 @@ button:hover {
 #taxpopup {
     width: calc(100vw - var(--safe-margin));
     height: calc(100vh - var(--safe-margin));
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     display: flex;
@@ -271,7 +271,7 @@ button:hover {
 .dialogPopup {
     width: 100vw;
     height: 100vh;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     display: grid;
