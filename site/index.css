@@ -252,7 +252,7 @@ button:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--dn-col-t);
+    background: var(--bg-col-t);
     backdrop-filter: blur(5rem) saturate(0);
     -webkit-backdrop-filter: blur(5rem) saturate(0);
 }
@@ -272,14 +272,9 @@ button:hover {
     display: grid;
     justify-content: center;
     align-items: center;
-    background: var(--dn-col-t);
+    background: var(--bg-col-t);
     backdrop-filter: blur(5rem) saturate(0);
     -webkit-backdrop-filter: blur(5rem) saturate(0);
-}
-
-.dialogPopup::backdrop,
-.dialogPopup::-ms-backdrop {
-    filter: blur(5rem) saturate(0);
 }
 
 .dialogPopup>dialog {
@@ -292,7 +287,7 @@ button:hover {
     display: grid;
     align-items: center;
     justify-content: center;
-    background: var(--dn-col-t);
+    background: var(--bg-col-t);
 }
 
 .dialogPopup>dialog::backdrop,
