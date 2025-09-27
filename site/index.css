@@ -64,11 +64,6 @@ body {
     overflow-y: auto;
 }
 
-body,
-button {
-    background-image: url("/icons/newDay.gif");
-}
-
 main {
     max-height: calc(100vh - var(--safe-margin));
     max-width: calc(100vw - var(--safe-margin));
@@ -153,8 +148,8 @@ button:hover {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr;
     background: var(--bg-col-t);
-    backdrop-filter: blur(5rem);
-    -webkit-backdrop-filter: blur(5rem);
+    backdrop-filter: blur(5rem) saturate(0);
+    -webkit-backdrop-filter: blur(5rem) saturate(0);
     text-align: center;
 }
 
@@ -258,8 +253,8 @@ button:hover {
     align-items: center;
     justify-content: center;
     background: var(--dn-col-t);
-    backdrop-filter: blur(5rem);
-    -webkit-backdrop-filter: blur(5rem);
+    backdrop-filter: blur(5rem) saturate(0);
+    -webkit-backdrop-filter: blur(5rem) saturate(0);
 }
 
 #taxpopup>b {
@@ -278,8 +273,13 @@ button:hover {
     justify-content: center;
     align-items: center;
     background: var(--dn-col-t);
-    backdrop-filter: blur(5rem);
-    -webkit-backdrop-filter: blur(5rem);
+    backdrop-filter: blur(5rem) saturate(0);
+    -webkit-backdrop-filter: blur(5rem) saturate(0);
+}
+
+.dialogPopup::backdrop,
+.dialogPopup::-ms-backdrop {
+    filter: blur(5rem) saturate(0);
 }
 
 .dialogPopup>dialog {
