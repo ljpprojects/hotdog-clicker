@@ -8,3 +8,5 @@ package-lock.json
 site/index.html
 bun.lock
 .build
+*lock*
+better.py

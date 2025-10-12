@@ -1,5 +1,5 @@
 import { settingsDialogCancelButton, settingsDialogContainerElement, settingsDialogElement, settingsNumberDigitsDisplayElement, settingsNumberDigitsOptionElement, settingsNumberFormatOptionElement, settingsShowTaxPopupOptionElement } from "./elements";
-import { bankCost, bunCost, bunCount, dadCost, facCost, farmCost, formatter, freezerCost, grillCost, hdnw, hdps, hds, portalCost, wormholeCost } from "./game";
+import { factoryPrice, butcherPrice, butchersOwned, standPrice, plantationPrice, truckPrice, formatter, abattoirPrice, cartPrice, hdnw, hdps, hds, restaurantPrice, franchisePrice } from "./game";
 import { handleLdbd } from "./leaderboard";
 
 export type HDCNumberFormatSettingType = "Normal" | "Compact" | "Scientific"
@@ -69,15 +69,15 @@ export const applySettings = (newSettings: HDCSettings) => {
   hds.runSet()
   hdps.runSet()
   hdnw.runSet()
-  bunCost.runSet()
-  dadCost.runSet()
-  grillCost.runSet()
-  farmCost.runSet()
-  facCost.runSet()
-  bankCost.runSet()
-  freezerCost.runSet()
-  portalCost.runSet()
-  wormholeCost.runSet()
+  butcherPrice.runSet()
+  standPrice.runSet()
+  cartPrice.runSet()
+  truckPrice.runSet()
+  plantationPrice.runSet()
+  factoryPrice.runSet()
+  abattoirPrice.runSet()
+  restaurantPrice.runSet()
+  franchisePrice.runSet()
   handleLdbd()
 
   // Set new values in UI for settings menu

@@ -8,39 +8,38 @@ import {
   getIdentifierCode
 } from "./save";
 import {
-  passiveClicksElement,
-  clickCountElement,
-  netWorthElement,
-  bunCountElement,
-  dadCountElement,
-  grillCountElement,
-  farmCountElement,
-  facCountElement,
-  bankCountElement,
-  freezerCountElement,
-  portalCountElement,
-  wormholeCountElement,
-  bunPriceElement,
-  dadPriceElement,
-  grillPriceElement,
-  farmPriceElement,
-  facPriceElement,
-  bankPriceElement,
-  freezerPriceElement,
-  portalPriceElement,
-  wormholePriceElement,
+  hdpsElement,
+  hdsElement,
+  hdnwElement,
+  butchersOwnedElement,
+  standsOwnedElement,
+  cartsOwnedElement,
+  trucksOwnedElement,
+  plantationsOwnedElement,
+  factoriesOwnedElement,
+  abattoirsOwnedElement,
+  restaurantsOwnedElement,
+  franchisesOwnedElement,
+  butcherPriceElement,
+  standPriceElement,
+  cartPriceElement,
+  truckPriceElement,
+  plantationPriceElement,
+  factoryPriceElement,
+  abattoirPriceElement,
+  restaurantPriceElement,
+  franchisePriceElement,
   wipeButton,
   saveButton,
-  hotdogButton,
-  bunButton,
-  dadButton,
-  grillButton,
-  farmButton,
-  facButton,
-  bankButton,
-  freezerButton,
-  portalButton,
-  wormholeButton,
+  butcherButtonElement,
+  standButtonElement,
+  cartButtonElement,
+  truckButtonElement,
+  plantationButtonElement,
+  factoryButtonElement,
+  abattoirButtonElement,
+  restaurantButtonElement,
+  franchiseButtonElement,
   changeNicknameButton,
   closeContextMenuButton,
   openContextMenuButton,
@@ -50,6 +49,16 @@ import {
   notificationDialogElement,
   notificationDialogMessageElement,
   openSettingsButton,
+  hotdogButtonElement,
+  butcherImageElement,
+  standImageElement,
+  cartImageElement,
+  truckImageElement,
+  plantationImageElement,
+  factoryImageElement,
+  abattoirImageElement,
+  restaurantImageElement,
+  franchiseImageElement,
 } from "./elements";
 import { handleLdbd } from "./leaderboard";
 import { doJoke } from "./jokes";
@@ -98,7 +107,7 @@ export const hdps = new Binding<number, number>({
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      passiveClicksElement.textContent = formatter.value.format(to);
+      hdpsElement.textContent = formatter.value.format(to);
     });
   },
 
@@ -116,7 +125,7 @@ export const hdnw = new Binding<number, number>({
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      netWorthElement.textContent = formatter.value.format(to);
+      hdnwElement.textContent = formatter.value.format(to);
     });
   },
 
@@ -140,7 +149,7 @@ export const hds = new Binding<number, number>({
     hdnw.setValue(hdnw.getValue() - (prev - to), "hds-change");
 
     this.doAsync({ needsToWait: false }, async () => {
-      clickCountElement.textContent = formatter.value.format(to);
+      hdsElement.textContent = formatter.value.format(to);
       checkBuyables();
     });
 
@@ -152,23 +161,23 @@ export const hds = new Binding<number, number>({
   },
 });
 
-export const bunCount = new Binding<number, number>({
+export const butchersOwned = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
     const netWorthMadeUpOfAsset =
-      (bunCost.binderBacking.getPreviousBacking() ?? 0) * curr;
-    const newNetWorthMadeUpOfAsset = bunCost.value * to;
+      (butcherPrice.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const newNetWorthMadeUpOfAsset = butcherPrice.value * to;
     hdnw.setValue(
       hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
-      "acquire-asset-bun",
+      "acquire-asset-butcher",
     );
 
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      bunCountElement.textContent = String(to);
+      butchersOwnedElement.textContent = String(to);
     });
   },
 
@@ -177,23 +186,23 @@ export const bunCount = new Binding<number, number>({
   },
 });
 
-export const dadCount = new Binding<number, number>({
+export const standsOwned = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
     const netWorthMadeUpOfAsset =
-      (dadCost.binderBacking.getPreviousBacking() ?? 0) * curr;
-    const newNetWorthMadeUpOfAsset = dadCost.value * to;
+      (standPrice.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const newNetWorthMadeUpOfAsset = standPrice.value * to;
     hdnw.setValue(
       hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
-      "acquire-asset-dad",
+      "acquire-asset-stand",
     );
 
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      dadCountElement.textContent = String(to);
+      standsOwnedElement.textContent = String(to);
     });
   },
 
@@ -202,23 +211,23 @@ export const dadCount = new Binding<number, number>({
   },
 });
 
-export const grillCount = new Binding<number, number>({
+export const cartsOwned = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
     const netWorthMadeUpOfAsset =
-      (grillCost.binderBacking.getPreviousBacking() ?? 0) * curr;
-    const newNetWorthMadeUpOfAsset = grillCost.value * to;
+      (cartPrice.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const newNetWorthMadeUpOfAsset = cartPrice.value * to;
     hdnw.setValue(
       hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
-      "acquire-asset-grill",
+      "acquire-asset-cart",
     );
 
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      grillCountElement.textContent = String(to);
+      cartsOwnedElement.textContent = String(to);
     });
   },
 
@@ -227,23 +236,23 @@ export const grillCount = new Binding<number, number>({
   },
 });
 
-export const farmCount = new Binding<number, number>({
+export const trucksOwned = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
     const netWorthMadeUpOfAsset =
-      (farmCost.binderBacking.getPreviousBacking() ?? 0) * curr;
-    const newNetWorthMadeUpOfAsset = farmCost.value * to;
+      (truckPrice.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const newNetWorthMadeUpOfAsset = truckPrice.value * to;
     hdnw.setValue(
       hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
-      "acquire-asset-farm",
+      "acquire-asset-truck",
     );
 
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      farmCountElement.textContent = String(to);
+      trucksOwnedElement.textContent = String(to);
     });
   },
 
@@ -252,23 +261,23 @@ export const farmCount = new Binding<number, number>({
   },
 });
 
-export const facCount = new Binding<number, number>({
+export const plantationsOwned = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
     const netWorthMadeUpOfAsset =
-      (facCost.binderBacking.getPreviousBacking() ?? 0) * curr;
-    const newNetWorthMadeUpOfAsset = facCost.value * to;
+      (plantationPrice.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const newNetWorthMadeUpOfAsset = plantationPrice.value * to;
     hdnw.setValue(
       hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
-      "acquire-asset-fac",
+      "acquire-asset-plantation",
     );
 
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      facCountElement.textContent = String(to);
+      plantationsOwnedElement.textContent = String(to);
     });
   },
 
@@ -277,23 +286,23 @@ export const facCount = new Binding<number, number>({
   },
 });
 
-export const bankCount = new Binding<number, number>({
+export const factoriesOwned = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
     const netWorthMadeUpOfAsset =
-      (bankCost.binderBacking.getPreviousBacking() ?? 0) * curr;
-    const newNetWorthMadeUpOfAsset = bankCost.value * to;
+      (factoryPrice.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const newNetWorthMadeUpOfAsset = factoryPrice.value * to;
     hdnw.setValue(
       hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
-      "acquire-asset-bank",
+      "acquire-asset-plantation",
     );
 
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      bankCountElement.textContent = String(to);
+      factoriesOwnedElement.textContent = String(to);
     });
   },
 
@@ -302,23 +311,23 @@ export const bankCount = new Binding<number, number>({
   },
 });
 
-export const freezerCount = new Binding<number, number>({
+export const abattoirsOwned = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
     const netWorthMadeUpOfAsset =
-      (freezerCost.binderBacking.getPreviousBacking() ?? 0) * curr;
-    const newNetWorthMadeUpOfAsset = freezerCost.value * to;
+      (abattoirPrice.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const newNetWorthMadeUpOfAsset = abattoirPrice.value * to;
     hdnw.setValue(
       hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
-      "acquire-asset-freezer",
+      "acquire-asset-abattoir",
     );
 
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      freezerCountElement.textContent = String(to);
+      abattoirsOwnedElement.textContent = String(to);
     });
   },
 
@@ -327,24 +336,24 @@ export const freezerCount = new Binding<number, number>({
   },
 });
 
-export const portalCount = new Binding<number, number>({
+export const restaurantsOwned = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
     const netWorthMadeUpOfAsset =
-      (portalCost.binderBacking.getPreviousBacking() ?? 0) * curr;
-    const newNetWorthMadeUpOfAsset = portalCost.value * to;
+      (restaurantPrice.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const newNetWorthMadeUpOfAsset = restaurantPrice.value * to;
 
     hdnw.setValue(
       hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
-      "acquire-asset-portal",
+      "acquire-asset-restaurant",
     );
 
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      portalCountElement.textContent = String(to);
+      restaurantsOwnedElement.textContent = String(to);
     });
   },
 
@@ -353,23 +362,23 @@ export const portalCount = new Binding<number, number>({
   },
 });
 
-export const wormholeCount = new Binding<number, number>({
+export const franchisesOwned = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
     const netWorthMadeUpOfAsset =
-      (wormholeCost.binderBacking.getPreviousBacking() ?? 0) * curr;
-    const newNetWorthMadeUpOfAsset = wormholeCost.value * to;
+      (franchisePrice.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const newNetWorthMadeUpOfAsset = franchisePrice.value * to;
     hdnw.setValue(
       hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
-      "acquire-asset-wormhole",
+      "acquire-asset-franchise",
     );
 
     this.setBacking(to);
 
     this.doAsync({ needsToWait: false }, async () => {
-      wormholeCountElement.textContent = String(to);
+      franchisesOwnedElement.textContent = String(to);
     });
   },
 
@@ -378,16 +387,13 @@ export const wormholeCount = new Binding<number, number>({
   },
 });
 
-export const bunRate: number = 0.2;
-export const bunCost = new Binding<number, number>({
-  backing: 10,
+export const butcherRate: number = 0.2;
+export const butcherPrice = new Binding<number, number>({
+  backing: 15,
 
   setfn(to: number) {
     this.setBacking(to);
-
-    this.doAsync({ needsToWait: false }, async () => {
-      bunPriceElement.textContent = formatter.value.format(to);
-    });
+    butcherPriceElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
@@ -395,16 +401,13 @@ export const bunCost = new Binding<number, number>({
   },
 });
 
-export const dadRate: number = 1;
-export const dadCost = new Binding<number, number>({
-  backing: 100,
+export const standRate: number = 1;
+export const standPrice = new Binding<number, number>({
+  backing: 250,
 
   setfn(to: number) {
     this.setBacking(to);
-
-    this.doAsync({ needsToWait: false }, async () => {
-      dadPriceElement.textContent = formatter.value.format(to);
-    });
+    standPriceElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
@@ -412,16 +415,13 @@ export const dadCost = new Binding<number, number>({
   },
 });
 
-export const grillRate: number = 7.5;
-export const grillCost = new Binding<number, number>({
-  backing: 500,
+export const cartRate: number = 7.5;
+export const cartPrice = new Binding<number, number>({
+  backing: 1_000,
 
   setfn(to: number) {
     this.setBacking(to);
-
-    this.doAsync({ needsToWait: false }, async () => {
-      grillPriceElement.textContent = formatter.value.format(to);
-    });
+    cartPriceElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
@@ -429,16 +429,13 @@ export const grillCost = new Binding<number, number>({
   },
 });
 
-export const farmRate: number = 15;
-export const farmCost = new Binding<number, number>({
-  backing: 5_000,
+export const truckRate: number = 15;
+export const truckPrice = new Binding<number, number>({
+  backing: 3_750,
 
   setfn(to: number) {
     this.setBacking(to);
-
-    this.doAsync({ needsToWait: false }, async () => {
-      farmPriceElement.textContent = formatter.value.format(to);
-    });
+    truckPriceElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
@@ -446,16 +443,13 @@ export const farmCost = new Binding<number, number>({
   },
 });
 
-export const facRate: number = 50;
-export const facCost = new Binding<number, number>({
-  backing: 50_000,
+export const plantationRate: number = 50;
+export const plantationPrice = new Binding<number, number>({
+  backing: 12_000,
 
   setfn(to: number) {
     this.setBacking(to);
-
-    this.doAsync({ needsToWait: false }, async () => {
-      facPriceElement.textContent = formatter.value.format(to);
-    });
+    plantationPriceElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
@@ -463,16 +457,13 @@ export const facCost = new Binding<number, number>({
   },
 });
 
-export const bankRate: number = 150;
-export const bankCost = new Binding<number, number>({
-  backing: 250_000,
+export const factoryRate: number = 150;
+export const factoryPrice = new Binding<number, number>({
+  backing: 100_000,
 
   setfn(to: number) {
     this.setBacking(to);
-
-    this.doAsync({ needsToWait: false }, async () => {
-      bankPriceElement.textContent = formatter.value.format(to);
-    });
+    factoryPriceElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
@@ -480,16 +471,13 @@ export const bankCost = new Binding<number, number>({
   },
 });
 
-export const freezerRate: number = 500;
-export const freezerCost = new Binding<number, number>({
-  backing: 1_000_000,
+export const abattoirRate: number = 500;
+export const abattoirPrice = new Binding<number, number>({
+  backing: 750_000,
 
   setfn(to: number) {
     this.setBacking(to);
-
-    this.doAsync({ needsToWait: false }, async () => {
-      freezerPriceElement.textContent = formatter.value.format(to);
-    });
+    abattoirPriceElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
@@ -497,16 +485,13 @@ export const freezerCost = new Binding<number, number>({
   },
 });
 
-export const portalRate: number = 1500;
-export const portalCost = new Binding<number, number>({
-  backing: 5_000_000,
+export const restaurantRate: number = 1500;
+export const restaurantPrice = new Binding<number, number>({
+  backing: 2_750_000,
 
   setfn(to: number) {
     this.setBacking(to);
-
-    this.doAsync({ needsToWait: false }, async () => {
-      portalPriceElement.textContent = formatter.value.format(to);
-    });
+    restaurantPriceElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
@@ -514,16 +499,13 @@ export const portalCost = new Binding<number, number>({
   },
 });
 
-export const wormholeRate: number = 10_000;
-export const wormholeCost = new Binding<number, number>({
-  backing: 75_000_000,
+export const franchiseRate: number = 10_000;
+export const franchisePrice = new Binding<number, number>({
+  backing: 27_000_000,
 
   setfn(to: number) {
     this.setBacking(to);
-
-    this.doAsync({ needsToWait: false }, async () => {
-      wormholePriceElement.textContent = formatter.value.format(to);
-    });
+    franchisePriceElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
@@ -532,58 +514,76 @@ export const wormholeCost = new Binding<number, number>({
 });
 
 const checkBuyables = () => {
-  if (hds.value >= bunCost.value) {
-    bunButton?.classList.add("buyable");
+  if (hds.value >= butcherPrice.value) {
+    butcherButtonElement.removeAttribute("data-unbuyable");
+    butcherImageElement.src = "/assets/butcher-b.svg"
   } else {
-    bunButton?.classList.remove("buyable");
+    butcherButtonElement.setAttribute("data-unbuyable", "true");
+    butcherImageElement.src = "/assets/butcher-u.svg"
   }
 
-  if (hds.value >= dadCost.value) {
-    dadButton?.classList.add("buyable");
+  if (hds.value >= standPrice.value) {
+    standButtonElement.removeAttribute("data-unbuyable");
+    standImageElement.src = "/assets/stand-b.svg"
   } else {
-    dadButton?.classList.remove("buyable");
+    standButtonElement.setAttribute("data-unbuyable", "true");
+    standImageElement.src = "/assets/stand-u.svg"
   }
 
-  if (hds.value >= grillCost.value) {
-    grillButton?.classList.add("buyable");
+  if (hds.value >= cartPrice.value) {
+    cartButtonElement.removeAttribute("data-unbuyable");
+    cartImageElement.src = "/assets/cart-b.svg"
   } else {
-    grillButton?.classList.remove("buyable");
+    cartButtonElement.setAttribute("data-unbuyable", "true");
+    cartImageElement.src = "/assets/cart-u.svg"
   }
 
-  if (hds.value >= farmCost.value) {
-    farmButton?.classList.add("buyable");
+  if (hds.value >= truckPrice.value) {
+    truckButtonElement.removeAttribute("data-unbuyable");
+    truckImageElement.src = "/assets/truck-b.svg"
   } else {
-    farmButton?.classList.remove("buyable");
+    truckButtonElement.setAttribute("data-unbuyable", "true");
+    truckImageElement.src = "/assets/truck-u.svg"
   }
 
-  if (hds.value >= facCost.value) {
-    facButton?.classList.add("buyable");
+  if (hds.value >= plantationPrice.value) {
+    plantationButtonElement.removeAttribute("data-unbuyable");
+    plantationImageElement.src = "/assets/plantation-b.svg"
   } else {
-    facButton?.classList.remove("buyable");
+    plantationButtonElement.setAttribute("data-unbuyable", "true");
+    plantationImageElement.src = "/assets/plantation-u.svg"
   }
 
-  if (hds.value >= bankCost.value) {
-    bankButton?.classList.add("buyable");
+  if (hds.value >= factoryPrice.value) {
+    factoryButtonElement.removeAttribute("data-unbuyable");
+    factoryImageElement.src = "/assets/factory-b.svg"
   } else {
-    bankButton?.classList.remove("buyable");
+    factoryButtonElement.setAttribute("data-unbuyable", "true");
+    factoryImageElement.src = "/assets/factory-u.svg"
   }
 
-  if (hds.value >= freezerCost.value) {
-    freezerButton?.classList.add("buyable");
+  if (hds.value >= abattoirPrice.value) {
+    abattoirButtonElement.removeAttribute("data-unbuyable");
+    abattoirImageElement.src = "/assets/abattoir-b.svg"
   } else {
-    freezerButton?.classList.remove("buyable");
+    abattoirButtonElement.setAttribute("data-unbuyable", "true");
+    abattoirImageElement.src = "/assets/abattoir-u.svg"
   }
 
-  if (hds.value >= portalCost.value) {
-    portalButton?.classList.add("buyable");
+  if (hds.value >= restaurantPrice.value) {
+    restaurantButtonElement.removeAttribute("data-unbuyable");
+    restaurantImageElement.src = "/assets/restaurant-b.svg"
   } else {
-    portalButton?.classList.remove("buyable");
+    restaurantButtonElement.setAttribute("data-unbuyable", "true");
+    restaurantImageElement.src = "/assets/restaurant-u.svg"
   }
 
-  if (hds.value >= wormholeCost.value) {
-    wormholeButton?.classList.add("buyable");
+  if (hds.value >= franchisePrice.value) {
+    franchiseButtonElement.removeAttribute("data-unbuyable");
+    franchiseImageElement.src = "/assets/franchise-b.svg"
   } else {
-    wormholeButton?.classList.remove("buyable");
+    franchiseButtonElement.setAttribute("data-unbuyable", "true");
+    franchiseImageElement.src = "/assets/franchise-u.svg"
   }
 };
 
@@ -591,94 +591,94 @@ load().then(doJoke);
 
 setInterval(save, 60e3);
 
-hotdogButton?.addEventListener("click", (event) => {
+hotdogButtonElement.addEventListener("click", (event) => {
   if (!event.isTrusted) return;
 
-  if (clickCountElement != null) {
+  if (hdsElement != null) {
     hds.setValue(hds.value + 1, "btn-click");
   } else {
     alert("Hotdog Clicker has encountered a fatal error.");
   }
 });
 
-bunButton?.addEventListener("click", () => {
-  if (hds.value >= bunCost.value) {
-    hds.value -= bunCost.value;
-    bunCost.value = increase(bunCost.value, bunCount.value);
-    bunCount.value++;
-    hdps.value += bunRate;
+butcherButtonElement?.addEventListener("click", () => {
+  if (hds.value >= butcherPrice.value) {
+    hds.value -= butcherPrice.value;
+    butcherPrice.value = increase(butcherPrice.value, butchersOwned.value);
+    butchersOwned.value++;
+    hdps.value += butcherRate;
   }
 });
 
-dadButton?.addEventListener("click", () => {
-  if (hds.value >= dadCost.value) {
-    hds.value -= dadCost.value;
-    dadCost.value = increase(dadCost.value, dadCount.value);
-    dadCount.value++;
-    hdps.value += dadRate;
+standButtonElement?.addEventListener("click", () => {
+  if (hds.value >= standPrice.value) {
+    hds.value -= standPrice.value;
+    standPrice.value = increase(standPrice.value, standsOwned.value);
+    standsOwned.value++;
+    hdps.value += standRate;
   }
 });
 
-grillButton?.addEventListener("click", () => {
-  if (hds.value >= grillCost.value) {
-    hds.value -= grillCost.value;
-    grillCost.value = increase(grillCost.value, grillCount.value);
-    grillCount.value++;
-    hdps.value += grillRate;
+cartButtonElement?.addEventListener("click", () => {
+  if (hds.value >= cartPrice.value) {
+    hds.value -= cartPrice.value;
+    cartPrice.value = increase(cartPrice.value, cartsOwned.value);
+    cartsOwned.value++;
+    hdps.value += cartRate;
   }
 });
 
-farmButton?.addEventListener("click", () => {
-  if (hds.value >= farmCost.value) {
-    hds.value -= farmCost.value;
-    farmCost.value = increase(farmCost.value, farmCount.value);
-    farmCount.value++;
-    hdps.value += farmRate;
+truckButtonElement?.addEventListener("click", () => {
+  if (hds.value >= truckPrice.value) {
+    hds.value -= truckPrice.value;
+    truckPrice.value = increase(truckPrice.value, trucksOwned.value);
+    trucksOwned.value++;
+    hdps.value += truckRate;
   }
 });
 
-facButton?.addEventListener("click", () => {
-  if (hds.value >= facCost.value) {
-    hds.value -= facCost.value;
-    facCost.value = increase(facCost.value, facCount.value);
-    facCount.value++;
-    hdps.value += facRate;
+plantationButtonElement?.addEventListener("click", () => {
+  if (hds.value >= plantationPrice.value) {
+    hds.value -= plantationPrice.value;
+    plantationPrice.value = increase(plantationPrice.value, plantationsOwned.value);
+    plantationsOwned.value++;
+    hdps.value += plantationRate;
   }
 });
 
-bankButton?.addEventListener("click", () => {
-  if (hds.value >= bankCost.value) {
-    hds.value -= bankCost.value;
-    bankCost.value = increase(bankCost.value, bankCount.value);
-    bankCount.value++;
-    hdps.value += bankRate;
+factoryButtonElement?.addEventListener("click", () => {
+  if (hds.value >= factoryPrice.value) {
+    hds.value -= factoryPrice.value;
+    factoryPrice.value = increase(factoryPrice.value, factoriesOwned.value);
+    factoriesOwned.value++;
+    hdps.value += factoryRate;
   }
 });
 
-freezerButton?.addEventListener("click", () => {
-  if (hds.value >= freezerCost.value) {
-    hds.value -= freezerCost.value;
-    freezerCost.value = increase(freezerCost.value, freezerCount.value);
-    freezerCount.value++;
-    hdps.value += freezerRate;
+abattoirButtonElement?.addEventListener("click", () => {
+  if (hds.value >= abattoirPrice.value) {
+    hds.value -= abattoirPrice.value;
+    abattoirPrice.value = increase(abattoirPrice.value, abattoirsOwned.value);
+    abattoirsOwned.value++;
+    hdps.value += abattoirRate;
   }
 });
 
-portalButton?.addEventListener("click", () => {
-  if (hds.value >= portalCost.value) {
-    hds.value -= portalCost.value;
-    portalCost.value = increase(portalCost.value, portalCount.value);
-    portalCount.value++;
-    hdps.value += portalRate;
+restaurantButtonElement?.addEventListener("click", () => {
+  if (hds.value >= restaurantPrice.value) {
+    hds.value -= restaurantPrice.value;
+    restaurantPrice.value = increase(restaurantPrice.value, restaurantsOwned.value);
+    restaurantsOwned.value++;
+    hdps.value += restaurantRate;
   }
 });
 
-wormholeButton?.addEventListener("click", () => {
-  if (hds.value >= wormholeCost.value) {
-    hds.value -= wormholeCost.value;
-    wormholeCost.value = increase(wormholeCost.value, wormholeCount.value);
-    wormholeCount.value++;
-    hdps.value += wormholeRate;
+franchiseButtonElement?.addEventListener("click", () => {
+  if (hds.value >= franchisePrice.value) {
+    hds.value -= franchisePrice.value;
+    franchisePrice.value = increase(franchisePrice.value, franchisesOwned.value);
+    franchisesOwned.value++;
+    hdps.value += franchiseRate;
   }
 });
 

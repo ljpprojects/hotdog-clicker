@@ -44,66 +44,6 @@ const formatClaimToken = async (
 const base64Encode = (bytes: Uint8Array): string =>
   btoa(String.fromCharCode(...bytes));
 
-const generateClaimToken = async (encodedSave: string): Promise<ClaimToken> => {
-  const bytes = new Uint8Array(CLAIM_TOKEN.LEN_B);
-  crypto.getRandomValues(bytes);
-
-  const sigKeyPair = await crypto.subtle.generateKey(
-    {
-      name: "ECDSA",
-      namedCurve: "P-521",
-    } satisfies EcKeyGenParams,
-    true,
-    ["sign", "verify"],
-  );
-
-  const sigAlgorithm: EcdsaParams = {
-    name: "ECDSA",
-    hash: { name: "SHA-512" },
-  };
-
-  const saveBytes = Uint8Array.from(encodedSave);
-
-  const sigBytes = new Uint8Array(
-    await crypto.subtle.sign(sigAlgorithm, sigKeyPair.privateKey, bytes),
-  );
-  const saveSigBytes = new Uint8Array(
-    await crypto.subtle.sign(sigAlgorithm, sigKeyPair.privateKey, saveBytes),
-  );
-
-  // Verify signatures
-  if (
-    !(await crypto.subtle.verify(
-      sigAlgorithm,
-      sigKeyPair.publicKey,
-      sigBytes,
-      bytes,
-    ))
-  ) {
-    throw "Signature of claim token ";
-  }
-
-  if (
-    !(await crypto.subtle.verify(
-      sigAlgorithm,
-      sigKeyPair.publicKey,
-      saveSigBytes,
-      saveBytes,
-    ))
-  ) {
-    throw "Signature of claim token ";
-  }
-
-  return {
-    token: { base64: base64Encode(bytes), raw: bytes },
-    tokenSignature: { base64: base64Encode(sigBytes), raw: sigBytes },
-    saveSignature: { base64: base64Encode(saveSigBytes), raw: saveSigBytes },
-    keypair: sigKeyPair,
-  };
-};
-
-let SECRET: Uint8Array<ArrayBuffer> | null = null;
-
 const IDENT_COOKIE_NAME = "identifier";
 const IDENT_COOKIE_MAX_AGE = 60 ** 2 * 24 * 31 * 6;
 
@@ -135,11 +75,6 @@ const workerData: (dat: ServerSentWorkerData) => ServerSentWorkerData = (dat) =>
 const app = new Hono<{ Bindings: Bindings }>();
 
 app.use(async (_, next) => {
-  if (SECRET == null) {
-    SECRET = new Uint8Array(48);
-    crypto.getRandomValues(SECRET);
-  }
-
   await next();
 });
 

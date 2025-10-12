@@ -3,6 +3,8 @@
   "name": "hotdog-clicker",
   "compatibility_date": "2025-04-01",
   "main": "./worker/index.ts",
+  "workers_dev": false,
+  "first_party_worker": true,
   "assets": {
     "directory": "./site",
     "not_found_handling": "none"
@@ -13,6 +15,7 @@
       "./site/ts",
       "./site/index.css",
       "./site/index.max.html",
+      "./site/assets",
       "./worker/index.ts",
       "./shared",
       "./tsconfig.json",

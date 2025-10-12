@@ -14,19 +14,120 @@
     </head>
 
     <body>
-        <svg height="100px" width="100px" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-            <filter id="noise">
-                <feTurbulence baseFrequency="1" numOctaves="1" stitchTiles="noStitch" type="fractalNoise"/>
-                <feBlend
-                    in="SourceGraphic"
-                    in2="noise"
-                    mode="overlay"
-                />
-            </filter>
-        </defs>
-        </svg>
+        <nav>
+            <button title="Main Menu">
+                <img src="/assets/main-menu.svg" width="100" draggable="false" />
+            </button>
+            <button title="Save">
+                <img src="/assets/save.svg" width="100" draggable="false" />
+            </button>
+            <button title="Wipe">
+                <img src="/assets/wipe.svg" width="100" draggable="false" />
+            </button>
+        </nav>
 
+        <main>
+            <section class="splvert">
+                <section class="card" id="stat">
+                    <div>
+                        <h2><span id="hds">0</span> hot dogs</h2>
+                        <h2><span id="hdps">0</span> hot dogs per second</h2>
+                        <h2>Net Worth: <span id="hdnw">0</span></h2>
+                    </div>
+
+                    <button id="hotdog-button">
+                        <img
+                            src="/assets/hotdog.svg"
+                            alt="Hotdog"
+                            draggable="false"
+                        />
+                    </button>
+                </section>
+                <section></section>
+            </section>
+            <section class="card" id="right-split">
+                <h1>Hot Dog Clicker</h1>
+
+                <ul id="buyables-list">
+                    <li title="Butcher" id="butcher" data-unbuyable data-button>
+                        <img src="/assets/butcher-u.svg" draggable="false" />
+                        <div>
+                            <b>Butcher</b>
+                            <span id="butchers-owned">0</span>
+                        </div>
+                        <span id="butcher-price">15</span>
+                    </li>
+                    <li title="Stand" id="stand" data-unbuyable data-button>
+                        <img src="/assets/stand-u.svg" draggable="false" />
+                        <div>
+                            <b>Stand</b>
+                            <span id="stands-owned">0</span>
+                        </div>
+                        <span id="stand-price">250</span>
+                    </li>
+                    <li title="Cart" id="cart" data-unbuyable data-button>
+                        <img src="/assets/cart-u.svg" draggable="false" />
+                        <div>
+                            <b>Cart</b>
+                            <span id="carts-owned">0</span>
+                        </div>
+                        <span id="cart-price">1,000</span>
+                    </li>
+                    <li title="Food truck" id="truck" data-unbuyable data-button>
+                        <img src="/assets/truck-u.svg" draggable="false" />
+                        <div>
+                            <b>Food truck</b>
+                            <span id="trucks-owned">0</span>
+                        </div>
+                        <span id="truck-price">3,750</span>
+                    </li>
+                    <li title="Plantation" id="plantation" data-unbuyable data-button>
+                        <img src="/assets/plantation-u.svg" draggable="false" />
+                        <div>
+                            <b>Plantation</b>
+                            <span id="plantations-owned">0</span>
+                        </div>
+                        <span id="plantation-price">12,000</span>
+                    </li>
+                    <li title="Factory" id="factory" data-unbuyable data-button>
+                        <img src="/assets/factory-u.svg" draggable="false" />
+                        <div>
+                            <b>Factory</b>
+                            <span id="factories-owned">0</span>
+                        </div>
+                        <span id="factory-price">100,000</span>
+                    </li>
+                    <li title="Abattoir" id="abattoir" data-unbuyable data-button>
+                        <img src="/assets/abattoir-u.svg" draggable="false" />
+                        <div>
+                            <b>Abattoir</b>
+                            <span id="abattoirs-owned">0</span>
+                        </div>
+                        <span id="abattoir-price">750,000</span>
+                    </li>
+                    <li title="Restaurant" id="restaurant" data-unbuyable data-button>
+                        <img src="/assets/restaurant-u.svg" draggable="false" />
+                        <div>
+                            <b>Restaurant</b>
+                            <span id="restaurants-owned">0</span>
+                        </div>
+                        <span id="restaurant-price">2,750,000</span>
+                    </li>
+                    <li title="Franchise" id="franchise" data-unbuyable data-button>
+                        <img src="/assets/franchise-u.svg" draggable="false" />
+                        <div>
+                            <b>Franchise</b>
+                            <span id="franchises-owned">0</span>
+                        </div>
+                        <span id="franchise-price">27,000,000</span>
+                    </li>
+                </ul>
+            </section>
+        </main>
+
+        <script defer src="/dist/bundle.js"></script>
+
+        <!--
         <nav class="display">
             <section>
                 <h1 class="mhide">Hot Dog Clicker</h1>
@@ -47,6 +148,7 @@
                 />
             </button>
         </nav>
+
         <main class="display">
             <div id="store">
                 <div id="buildings">
@@ -348,7 +450,7 @@
             </ol>
         </section>
         <section id="context" class="hide">
-            <!-- Padding magic -->
+            <!-- Padding magic
             <section></section>
             <h1>Main Menu</h1>
             <section>
@@ -364,7 +466,8 @@
         <section id="taxpopup" class="fpopup hide">
             <b>TAXED</b>
         </section>
-        <!-- Padding magic -->
+        <!-- Padding magic
         <section></section>
+        -->
     </body>
 </html>

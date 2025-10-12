@@ -1,26 +1,28 @@
-export const passiveClicksElement = document.getElementById("passive")!;
-export const clickCountElement = document.getElementById("clickCount")!;
-export const netWorthElement = document.getElementById("hdnw")!;
+export const hdpsElement = document.getElementById("hdps")!;
+export const hdsElement = document.getElementById("hds")!;
+export const hdnwElement = document.getElementById("hdnw")!;
 
-export const bunCountElement = document.getElementById("bunCount")!;
-export const dadCountElement = document.getElementById("dadCount")!;
-export const grillCountElement = document.getElementById("grillCount")!;
-export const farmCountElement = document.getElementById("farmCount")!;
-export const facCountElement = document.getElementById("facCount")!;
-export const bankCountElement = document.getElementById("bankCount")!;
-export const freezerCountElement = document.getElementById("freezerCount")!;
-export const portalCountElement = document.getElementById("portalCount")!;
-export const wormholeCountElement = document.getElementById("wormholeCount")!;
+export const hotdogButtonElement = document.getElementById("hotdog-button")!;
 
-export const bunPriceElement = document.getElementById("bunPrice")!;
-export const dadPriceElement = document.getElementById("dadPrice")!;
-export const grillPriceElement = document.getElementById("grillPrice")!;
-export const farmPriceElement = document.getElementById("farmPrice")!;
-export const facPriceElement = document.getElementById("facPrice")!;
-export const bankPriceElement = document.getElementById("bankPrice")!;
-export const freezerPriceElement = document.getElementById("freezerPrice")!;
-export const portalPriceElement = document.getElementById("portalPrice")!;
-export const wormholePriceElement = document.getElementById("wormholePrice")!;
+export const butchersOwnedElement = document.getElementById("butchers-owned")!;
+export const standsOwnedElement = document.getElementById("stands-owned")!;
+export const cartsOwnedElement = document.getElementById("carts-owned")!;
+export const trucksOwnedElement = document.getElementById("trucks-owned")!;
+export const plantationsOwnedElement = document.getElementById("plantations-owned")!;
+export const factoriesOwnedElement = document.getElementById("factories-owned")!;
+export const abattoirsOwnedElement = document.getElementById("abattoirs-owned")!;
+export const restaurantsOwnedElement = document.getElementById("restaurants-owned")!;
+export const franchisesOwnedElement = document.getElementById("franchises-owned")!;
+
+export const butcherPriceElement = document.getElementById("butcher-price")!;
+export const standPriceElement = document.getElementById("stand-price")!;
+export const cartPriceElement = document.getElementById("cart-price")!;
+export const truckPriceElement = document.getElementById("truck-price")!;
+export const plantationPriceElement = document.getElementById("plantation-price")!;
+export const factoryPriceElement = document.getElementById("factory-price")!;
+export const abattoirPriceElement = document.getElementById("abattoir-price")!;
+export const restaurantPriceElement = document.getElementById("restaurant-price")!;
+export const franchisePriceElement = document.getElementById("franchise-price")!;
 
 export const wipeButton = document.getElementById("wipe")!;
 export const saveButton = document.getElementById("save")!;
@@ -31,16 +33,25 @@ export const openSettingsButton = document.getElementById("openSettings")!;
 export const openContextMenuButton = document.getElementById("openContextMenu")!;
 export const closeContextMenuButton = document.getElementById("closeContextMenu")!;
 
-export const hotdogButton = document.getElementById("hotdogButton")!;
-export const bunButton = document.getElementById("bunButton")!;
-export const dadButton = document.getElementById("dadButton")!;
-export const grillButton = document.getElementById("grillButton")!;
-export const farmButton = document.getElementById("farmButton")!;
-export const facButton = document.getElementById("dogFacButton")!;
-export const bankButton = document.getElementById("dogBankButton")!;
-export const freezerButton = document.getElementById("freezerButton")!;
-export const portalButton = document.getElementById("portalButton")!;
-export const wormholeButton = document.getElementById("wormholeButton")!;
+export const butcherButtonElement = document.getElementById("butcher")!;
+export const standButtonElement = document.getElementById("stand")!;
+export const cartButtonElement = document.getElementById("cart")!;
+export const truckButtonElement = document.getElementById("truck")!;
+export const plantationButtonElement = document.getElementById("plantation")!;
+export const factoryButtonElement = document.getElementById("factory")!;
+export const abattoirButtonElement = document.getElementById("abattoir")!;
+export const restaurantButtonElement = document.getElementById("restaurant")!;
+export const franchiseButtonElement = document.getElementById("franchise")!;
+
+export const butcherImageElement: HTMLImageElement = document.querySelector("#butcher > img")!;
+export const standImageElement: HTMLImageElement = document.querySelector("#stand > img")!;
+export const cartImageElement: HTMLImageElement = document.querySelector("#cart > img")!;
+export const truckImageElement: HTMLImageElement = document.querySelector("#truck > img")!;
+export const plantationImageElement: HTMLImageElement = document.querySelector("#plantation > img")!;
+export const factoryImageElement: HTMLImageElement = document.querySelector("#factory > img")!;
+export const abattoirImageElement: HTMLImageElement = document.querySelector("#abattoir > img")!;
+export const restaurantImageElement: HTMLImageElement = document.querySelector("#restaurant > img")!;
+export const franchiseImageElement: HTMLImageElement = document.querySelector("#franchise > img")!;
 
 export const leaderboardElements = [
   document.getElementById("ldbd-pl-01")!,

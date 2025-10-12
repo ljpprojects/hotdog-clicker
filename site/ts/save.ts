@@ -1,26 +1,26 @@
 import {
   hds,
   hdps,
-  bunCount,
-  dadCount,
-  grillCount,
-  farmCount,
-  facCount,
-  bankCount,
-  freezerCount,
-  bunCost,
-  dadCost,
-  grillCost,
-  farmCost,
-  facCost,
-  bankCost,
-  freezerCost,
+  butchersOwned,
+  standsOwned,
+  cartsOwned,
+  trucksOwned,
+  plantationsOwned,
+  factoriesOwned,
+  abattoirsOwned,
+  butcherPrice,
+  standPrice,
+  cartPrice,
+  truckPrice,
+  plantationPrice,
+  factoryPrice,
+  abattoirPrice,
   nickname,
-  portalCount,
+  restaurantsOwned,
   hdnw,
-  wormholeCount,
-  portalCost,
-  wormholeCost,
+  franchisesOwned,
+  restaurantPrice,
+  franchisePrice,
   notify,
 } from "./game";
 
@@ -51,7 +51,15 @@ import {
 import { applySettings, DEFAULT_SETTINGS, HDCSettings, settings } from "./settings";
 import { NaNNullCoerce } from "./utils";
 
+export const SAVE_EDITION = 2;
+
 export interface HDCSaveData {
+  /**
+   * The edition of the save.
+   * The latest edition is 2.
+   */
+  edition: number;
+
   /**
    * The amount of Hot Dogs the user has (Hot Dog Count)
    */
@@ -126,6 +134,7 @@ export interface HDCSaveData {
 }
 
 export const DEFAULT_SAVE_DATA: HDCSaveData = {
+  edition: SAVE_EDITION,
   hdc: 0,
   hdps: 0,
   hdnw: 0,
@@ -158,17 +167,18 @@ export const decodeSaveData = (data: string): HDCSaveData => {
 
 export const compileSave = (): HDCSaveData => {
   return {
+    edition: SAVE_EDITION,
     hdc: hds.value,
     hdps: hdps.value,
-    ownedBuns: bunCount.value,
-    ownedDads: dadCount.value,
-    ownedGrills: grillCount.value,
-    ownedFarms: farmCount.value,
-    ownedFactories: facCount.value,
-    ownedBanks: bankCount.value,
-    ownedFreezers: freezerCount.value,
-    ownedPortals: portalCount.value,
-    ownedWormholes: wormholeCount.value,
+    ownedBuns: butchersOwned.value,
+    ownedDads: standsOwned.value,
+    ownedGrills: cartsOwned.value,
+    ownedFarms: trucksOwned.value,
+    ownedFactories: plantationsOwned.value,
+    ownedBanks: factoriesOwned.value,
+    ownedFreezers: abattoirsOwned.value,
+    ownedPortals: restaurantsOwned.value,
+    ownedWormholes: franchisesOwned.value,
     nickname: (nickname.value || PLACEHOLDER_NICKNAME).slice(MAX_NICKNAME_LENGTH),
     hdnw: hdnw.value,
     settings,
@@ -221,32 +231,32 @@ export const load = async (fromReq?: ServerSentWorkerData) => {
     hds.value = NaNNullCoerce(saveData.hdc);
     hdps.value = NaNNullCoerce(saveData.hdps);
 
-    bunCount.value = NaNNullCoerce(saveData.ownedBuns);
-    bunCost.value = calcCost(bunCost.value, bunCount.value);
+    butchersOwned.value = NaNNullCoerce(saveData.ownedBuns);
+    butcherPrice.value = calcCost(butcherPrice.value, butchersOwned.value);
 
-    dadCount.value = NaNNullCoerce(saveData.ownedDads);
-    dadCost.value = calcCost(dadCost.value, dadCount.value);
+    standsOwned.value = NaNNullCoerce(saveData.ownedDads);
+    standPrice.value = calcCost(standPrice.value, standsOwned.value);
 
-    grillCount.value = NaNNullCoerce(saveData.ownedGrills);
-    grillCost.value = calcCost(grillCost.value, grillCount.value);
+    cartsOwned.value = NaNNullCoerce(saveData.ownedGrills);
+    cartPrice.value = calcCost(cartPrice.value, cartsOwned.value);
 
-    farmCount.value = NaNNullCoerce(saveData.ownedFarms);
-    farmCost.value = calcCost(farmCost.value, farmCount.value);
+    trucksOwned.value = NaNNullCoerce(saveData.ownedFarms);
+    truckPrice.value = calcCost(truckPrice.value, trucksOwned.value);
 
-    facCount.value = NaNNullCoerce(saveData.ownedFactories);
-    facCost.value = calcCost(facCost.value, facCount.value);
+    plantationsOwned.value = NaNNullCoerce(saveData.ownedFactories);
+    plantationPrice.value = calcCost(plantationPrice.value, plantationsOwned.value);
 
-    bankCount.value = NaNNullCoerce(saveData.ownedBanks);
-    bankCost.value = calcCost(bankCost.value, bankCount.value);
+    factoriesOwned.value = NaNNullCoerce(saveData.ownedBanks);
+    factoryPrice.value = calcCost(factoryPrice.value, factoriesOwned.value);
 
-    freezerCount.value = NaNNullCoerce(saveData.ownedFreezers);
-    freezerCost.value = calcCost(freezerCost.value, freezerCount.value);
+    abattoirsOwned.value = NaNNullCoerce(saveData.ownedFreezers);
+    abattoirPrice.value = calcCost(abattoirPrice.value, abattoirsOwned.value);
 
-    portalCount.value = NaNNullCoerce(saveData.ownedPortals);
-    portalCost.value = calcCost(portalCost.value, portalCount.value);
+    restaurantsOwned.value = NaNNullCoerce(saveData.ownedPortals);
+    restaurantPrice.value = calcCost(restaurantPrice.value, restaurantsOwned.value);
 
-    wormholeCount.value = NaNNullCoerce(saveData.ownedWormholes);
-    wormholeCost.value = calcCost(wormholeCost.value, wormholeCount.value);
+    franchisesOwned.value = NaNNullCoerce(saveData.ownedWormholes);
+    franchisePrice.value = calcCost(franchisePrice.value, franchisesOwned.value);
 
     hdnw.value = NaNNullCoerce(saveData.hdnw);
 
