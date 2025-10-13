@@ -7,6 +7,7 @@ import {
   restoreSave,
   getIdentifierCode
 } from "./save";
+
 import {
   hdpsElement,
   hdsElement,
@@ -60,9 +61,10 @@ import {
   restaurantImageElement,
   franchiseImageElement,
 } from "./elements";
+
 import { handleLdbd } from "./leaderboard";
 import { doJoke } from "./jokes";
-import { receiveNickname } from "./nickname";
+import { PLACEHOLDER_NICKNAME, receiveNickname } from "./nickname";
 import { SharedMutable } from "./SharedMutable";
 import { changeSettings } from "./settings";
 
@@ -100,6 +102,10 @@ export const notify = async (message: string): Promise<void> => {
   })
 }
 
+/**
+ * How many hotdogs the user will earn passively (i.e. without action)
+ * in one second.
+ */
 export const hdps = new Binding<number, number>({
   backing: 0,
 
@@ -116,17 +122,25 @@ export const hdps = new Binding<number, number>({
   },
 });
 
-export const nickname = new SharedMutable("<not given>");
+/**
+ * THe nickname chosen by the user.
+ * This is a SharedMutable so it can be modified in nickname.ts
+ */
+export const nickname = new SharedMutable(PLACEHOLDER_NICKNAME);
 
+/**
+ * The total worth of the user's assets.
+ * The way assets work is similar to how shares work;
+ * when you buy a new asset each of those assets which you already owned increases
+ * to the new price of that asset. This creates a unique strategy for dominating
+ * the leaderboard.
+ */
 export const hdnw = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number, dispatcher?: string) {
     this.setBacking(to);
-
-    this.doAsync({ needsToWait: false }, async () => {
-      hdnwElement.textContent = formatter.value.format(to);
-    });
+    hdnwElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
@@ -136,6 +150,9 @@ export const hdnw = new Binding<number, number>({
 
 let hdsIncTimeoutEnd = Date.now();
 
+/**
+ * The amount of hot dogs the user has.
+ */
 export const hds = new Binding<number, number>({
   backing: 0,
 
@@ -148,10 +165,8 @@ export const hds = new Binding<number, number>({
     // The difference in hds is how much to remove from our net worth
     hdnw.setValue(hdnw.getValue() - (prev - to), "hds-change");
 
-    this.doAsync({ needsToWait: false }, async () => {
-      hdsElement.textContent = formatter.value.format(to);
-      checkBuyables();
-    });
+    hdsElement.textContent = formatter.value.format(to);
+    checkBuyables();
 
     if (dispatcher === "btn-click") hdsIncTimeoutEnd = Date.now() + 100;
   },
@@ -161,14 +176,18 @@ export const hds = new Binding<number, number>({
   },
 });
 
+// slaves?????????
 export const butchersOwned = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
+
     const netWorthMadeUpOfAsset =
       (butcherPrice.binderBacking.getPreviousBacking() ?? 0) * curr;
+
     const newNetWorthMadeUpOfAsset = butcherPrice.value * to;
+
     hdnw.setValue(
       hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
       "acquire-asset-butcher",
@@ -387,7 +406,7 @@ export const franchisesOwned = new Binding<number, number>({
   },
 });
 
-export const butcherRate: number = 0.2;
+export const butcherRate: number = 0.1;
 export const butcherPrice = new Binding<number, number>({
   backing: 15,
 
@@ -401,7 +420,7 @@ export const butcherPrice = new Binding<number, number>({
   },
 });
 
-export const standRate: number = 1;
+export const standRate: number = 5;
 export const standPrice = new Binding<number, number>({
   backing: 250,
 
@@ -415,9 +434,9 @@ export const standPrice = new Binding<number, number>({
   },
 });
 
-export const cartRate: number = 7.5;
+export const cartRate: number = 10;
 export const cartPrice = new Binding<number, number>({
-  backing: 1_000,
+  backing: 1000,
 
   setfn(to: number) {
     this.setBacking(to);
@@ -429,9 +448,9 @@ export const cartPrice = new Binding<number, number>({
   },
 });
 
-export const truckRate: number = 15;
+export const truckRate: number = 25;
 export const truckPrice = new Binding<number, number>({
-  backing: 3_750,
+  backing: 3750,
 
   setfn(to: number) {
     this.setBacking(to);
@@ -457,7 +476,7 @@ export const plantationPrice = new Binding<number, number>({
   },
 });
 
-export const factoryRate: number = 150;
+export const factoryRate: number = 250;
 export const factoryPrice = new Binding<number, number>({
   backing: 100_000,
 
@@ -471,7 +490,7 @@ export const factoryPrice = new Binding<number, number>({
   },
 });
 
-export const abattoirRate: number = 500;
+export const abattoirRate: number = 750;
 export const abattoirPrice = new Binding<number, number>({
   backing: 750_000,
 
@@ -485,7 +504,7 @@ export const abattoirPrice = new Binding<number, number>({
   },
 });
 
-export const restaurantRate: number = 1500;
+export const restaurantRate: number = 1250;
 export const restaurantPrice = new Binding<number, number>({
   backing: 2_750_000,
 
@@ -499,7 +518,7 @@ export const restaurantPrice = new Binding<number, number>({
   },
 });
 
-export const franchiseRate: number = 10_000;
+export const franchiseRate: number = 5000;
 export const franchisePrice = new Binding<number, number>({
   backing: 27_000_000,
 
@@ -592,16 +611,13 @@ load().then(doJoke);
 setInterval(save, 60e3);
 
 hotdogButtonElement.addEventListener("click", (event) => {
+  // Don't let people use .click
   if (!event.isTrusted) return;
 
-  if (hdsElement != null) {
-    hds.setValue(hds.value + 1, "btn-click");
-  } else {
-    alert("Hotdog Clicker has encountered a fatal error.");
-  }
+  hds.setValue(hds.value + 1, "btn-click");
 });
 
-butcherButtonElement?.addEventListener("click", () => {
+butcherButtonElement.addEventListener("click", () => {
   if (hds.value >= butcherPrice.value) {
     hds.value -= butcherPrice.value;
     butcherPrice.value = increase(butcherPrice.value, butchersOwned.value);
@@ -610,7 +626,7 @@ butcherButtonElement?.addEventListener("click", () => {
   }
 });
 
-standButtonElement?.addEventListener("click", () => {
+standButtonElement.addEventListener("click", () => {
   if (hds.value >= standPrice.value) {
     hds.value -= standPrice.value;
     standPrice.value = increase(standPrice.value, standsOwned.value);
@@ -619,7 +635,7 @@ standButtonElement?.addEventListener("click", () => {
   }
 });
 
-cartButtonElement?.addEventListener("click", () => {
+cartButtonElement.addEventListener("click", () => {
   if (hds.value >= cartPrice.value) {
     hds.value -= cartPrice.value;
     cartPrice.value = increase(cartPrice.value, cartsOwned.value);
@@ -628,7 +644,7 @@ cartButtonElement?.addEventListener("click", () => {
   }
 });
 
-truckButtonElement?.addEventListener("click", () => {
+truckButtonElement.addEventListener("click", () => {
   if (hds.value >= truckPrice.value) {
     hds.value -= truckPrice.value;
     truckPrice.value = increase(truckPrice.value, trucksOwned.value);
@@ -637,7 +653,7 @@ truckButtonElement?.addEventListener("click", () => {
   }
 });
 
-plantationButtonElement?.addEventListener("click", () => {
+plantationButtonElement.addEventListener("click", () => {
   if (hds.value >= plantationPrice.value) {
     hds.value -= plantationPrice.value;
     plantationPrice.value = increase(plantationPrice.value, plantationsOwned.value);
@@ -646,7 +662,7 @@ plantationButtonElement?.addEventListener("click", () => {
   }
 });
 
-factoryButtonElement?.addEventListener("click", () => {
+factoryButtonElement.addEventListener("click", () => {
   if (hds.value >= factoryPrice.value) {
     hds.value -= factoryPrice.value;
     factoryPrice.value = increase(factoryPrice.value, factoriesOwned.value);
@@ -655,7 +671,7 @@ factoryButtonElement?.addEventListener("click", () => {
   }
 });
 
-abattoirButtonElement?.addEventListener("click", () => {
+abattoirButtonElement.addEventListener("click", () => {
   if (hds.value >= abattoirPrice.value) {
     hds.value -= abattoirPrice.value;
     abattoirPrice.value = increase(abattoirPrice.value, abattoirsOwned.value);
@@ -664,7 +680,7 @@ abattoirButtonElement?.addEventListener("click", () => {
   }
 });
 
-restaurantButtonElement?.addEventListener("click", () => {
+restaurantButtonElement.addEventListener("click", () => {
   if (hds.value >= restaurantPrice.value) {
     hds.value -= restaurantPrice.value;
     restaurantPrice.value = increase(restaurantPrice.value, restaurantsOwned.value);
@@ -673,7 +689,7 @@ restaurantButtonElement?.addEventListener("click", () => {
   }
 });
 
-franchiseButtonElement?.addEventListener("click", () => {
+franchiseButtonElement.addEventListener("click", () => {
   if (hds.value >= franchisePrice.value) {
     hds.value -= franchisePrice.value;
     franchisePrice.value = increase(franchisePrice.value, franchisesOwned.value);
@@ -685,25 +701,27 @@ franchiseButtonElement?.addEventListener("click", () => {
 (() => {
   let lastTime = performance.now();
 
-  const _update = (time: number) => {
-    const delta = time - lastTime;
+  const update = (time: number) => {
     lastTime = time;
 
-    const secondsElapsed = delta / 1000;
+    // How much time has passed since the last time update was called (in s)?
+    const deltaSeconds = (time - lastTime) / 1000;
 
-    if (hdps.value !== 0) {
-      hds.value += hdps.value * secondsElapsed;
+    // Only change the element if there is something to add
+    if (hdps.value * deltaSeconds !== 0) {
+      // Add hdps adjusted for the delta time
+      hds.value += hdps.value * deltaSeconds;
     }
 
-    requestAnimationFrame(_update);
+    requestAnimationFrame(update);
   };
 
-  requestAnimationFrame(_update);
+  requestAnimationFrame(update);
 })();
 
-(async () => await handleLdbd())();
-
-setInterval(async () => await save().then(handleLdbd), 60e3);
+(async () => await handleLdbd().then(() => {
+  setInterval(async () => await save().then(handleLdbd), 60e3);
+}))();
 
 const showContextMenu = () => {
   document.querySelector("main")?.classList.add("blur");

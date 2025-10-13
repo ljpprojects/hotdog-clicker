@@ -10,7 +10,7 @@
     "not_found_handling": "none"
   },
   "build": {
-    "command": "bash ./build.sh",
+    "command": "bash ./build-guard.sh",
     "watch_dir": [
       "./site/ts",
       "./site/index.css",
@@ -21,7 +21,8 @@
       "./tsconfig.json",
       "./worker/tsconfig.json",
       "./wrangler.json",
-      "./build.sh"
+      "./build.sh",
+      "./build-guard.sh"
     ]
   },
   "d1_databases": [
