@@ -76,6 +76,7 @@ section.splvert {
     grid-template-rows: 1fr 1fr;
     grid-template-columns: none;
     padding: 0 2.5vmin 0;
+    gap: 2vmin;
 }
 
 main {
@@ -172,4 +173,20 @@ button:is([disabled]):hover,
 [disabled],
 [data-unbuyable] {
     filter: saturate(75%) brightness(50%);
+}
+
+#ldbd-pl-01 {
+    font-size: 2em;
+}
+
+#leaderboard>ul {
+    list-style-type: decimal-leading-zero;
+}
+
+#leaderboard>ul>li {
+    font-size: 1.5em;
+}
+
+#leaderboard>ul>li::marker {
+    font-weight: bold;
 }
