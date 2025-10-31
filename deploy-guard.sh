@@ -1,7 +1,7 @@
 #! /bin/bash
 
-msg="$(git log -1 --pretty=%B | tail -n 1)"
+msg="$(git log -1 --pretty=%B | tail -n 2)"
 
-if [[ "$msg" != *":no_deploy"* || -e .dev ]]; then
+if [[ "$msg" != *":no_deploy"* ]]; then
     make deploy-unguarded
 fi;
