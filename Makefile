@@ -7,5 +7,4 @@ guard:
 deploy-unguarded: site worker install_deps
 	bunx wrangler deploy
 
-deploy: guard site worker install_deps
-    make deploy-unguarded
+deploy: site worker install_deps guard deploy-unguarded
