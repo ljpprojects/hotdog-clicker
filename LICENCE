@@ -1,0 +1,109 @@
+ACOA3 Licence
+
+Copyright (c) 2023-2025 ljpprojects
+
+The "Software" refers to the source code, accompanying documentation, and/or
+    any other accompanying files.
+
+The "Licence" refers to the full ACOA3 licence.
+
+The "Licensee" refers to anyone obtaining a copy, derivative, and/or portion
+    of the Software licensed under the Licence.
+
+"Derivatives" are derivative works.
+
+The "Contributors" are anyone who is acknowledged in the Software itself as
+    having made any contribution. If this is a Derivative, the contributors of
+    the Software it is derived from are also contributors to this Derivative.
+
+The "Core Tenets" of the Licence are:
+
+    (1) Preventing the intentional restriction of access.
+
+    (2) Allowing successors.
+
+    (3) Allowing multiple included, not effective, licences.
+
+    (4) Allowing Derivatives to opt-out of an ACOA licence in at least one case.
+
+    (5) The inability to remove core tenets, and the ability to add more.
+
+Acknowledging that ACOA3 is the successor to ACOA2, and in turn, its predecessors,
+Permission is hereby granted to the Licensee - without charge - to deal in the
+Software without limitation of the rights to use, copy, modify, merge, publish,
+and/or distribute copies of the Software, provided the following conditions are
+met and upheld:
+
+    (1) The ability of others to obtain copies of the Software and to create
+        Derivatives from the Software is not intentionally restricted further
+        than the restrictions in place at time when the Software was placed under
+        the Licence, whether it be by requiring compensation to obtain copies of
+        the Software or make Derivatives from the Software, the introduction of
+        further restrictions on who is eligible to obtain copies of the Software
+        or make Derivatives from the Software, or by any other means, unless with
+        the exception of any of the cases described below:
+
+            (a) The Software exposes information which compromises the security
+                of any person, poses a risk of substantial financial loss, poses
+                a risk of serious net harm, or some other unintended adverse
+                consequence. In this case, the Licensee may restrict access to
+                the Software to any extent.
+
+            (b) The Software has been replaced or deprecated.
+                In this case, the Licensee may restrict access to the Software,
+                provided that some new version or replacement - which is licensed
+                under the ACOA2 licence or any of its successors - takes its place,
+                and that this Software remains licensed under the Licence
+                or any of its successors.
+
+            (c) The Software was accidentally released before it was intended to
+                be released. In this case, the Licensee may restrict access to
+                the Software, but no further than the restrictions in place on
+                the unreleased version.
+
+    (2) All copies and Derivatives of the Software, unless some other licence is
+        designated as an alternative to the Licence in the Software’s source code
+        or accompanying documentation - in which case the Licensee of the copy
+        or Derivative may choose which licence's terms should apply - that copy
+        or Derivative must be licensed under the Licence, and the full Licence
+        and any other included licences must accompany it.
+
+    (3) The Software remains licensed under the Licence exclusively, unless
+        some other clause of this licence permits otherwise.
+
+Permission is granted to the Licensee to designate any other licence as an option
+someone obtaining a copy of the Software or creating a Derivative from the Software
+could use to license their copy or Derivative with, by including it in an
+'EXTRA-LICENCE-...' file as a part of the source code, in addition to the full
+Licence. The Software may not, however, be licensed under any other licence
+unless with the permission of some clause in this licence.
+
+Permission is granted to the Licensee to relicense the Software under any successor
+or predecessor of the Licence. In this case, all terms of the Licence are rendered
+null and void, and are replaced by the terms of the new licence. Any copies or
+Derivatives of the Software obtained before the relicensing are not required to
+switch to the new licence. You may only relicense if the new licence meets the
+
+following criteria:
+
+    (1) The Core Tenets are upheld in the chosen licence.
+
+    (2) The chosen licence explicitly states or acknowledges that it is the successor
+        to ACOA3. If the new licence is a predecessor to a newer ACOA licence, it
+        must have a newer ACOA licence acknowledge that that newer ACOA licence
+        is the successor to the older licence.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+           _____  ____            ____
+    /\    / ____|/ __ \    /\    |___ \
+   /  \  | |    | |  | |  /  \     __) |
+  / /\ \ | |    | |  | | / /\ \   |__ <
+ / ____ \| |____| |__| |/ ____ \  ___) |
+/_/    \_\\_____|\____//_/    \_\|____/
