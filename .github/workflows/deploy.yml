@@ -11,6 +11,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Guard
+        run: make guard
+
       # Only needed for non-self-hosted
       - name: Setup bun
         uses: oven-sh/setup-bun@v2
