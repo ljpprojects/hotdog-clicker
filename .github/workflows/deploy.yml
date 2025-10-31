@@ -6,16 +6,16 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       # Only needed for non-self-hosted
-      # - name: Setup bun
-      #   uses: oven-sh/setup-bun@v2
-      #   with:
-      #     bun-version: latest
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
       - name: Deploy
         run: make deploy
