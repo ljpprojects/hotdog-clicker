@@ -17,7 +17,6 @@
     --bg-tint: #1717174a;
     --dn-tint: #dc143c4a;
     --en-tint: #7cfc004a;
-
     touch-action: none;
     scrollbar-width: none;
 }
@@ -25,7 +24,7 @@
 :root,
 button {
     height: auto;
-    font-family: "Tiny5", serif;
+    font-family: "Tiny5", sans-serif;
     color: var(--fg-col);
     text-decoration: none;
     text-wrap-mode: wrap;
@@ -62,6 +61,10 @@ nav {
     z-index: 5;
 }
 
+nav img {
+    height: 7.5vh;
+}
+
 section.card {
     background-color: var(--bg-tint);
     backdrop-filter: blur(1rem);
@@ -93,7 +96,7 @@ main {
 }
 
 #stat>button>img {
-    height: 10vmin;
+    height: 20vmin;
 }
 
 button,
@@ -126,6 +129,7 @@ button:is([disabled]):hover,
     position: absolute;
     transition: all 0.5s;
     z-index: -1;
+    margin-right: 100vw;
 }
 
 .blur {
@@ -189,4 +193,207 @@ button:is([disabled]):hover,
 
 #leaderboard>ul>li::marker {
     font-weight: bold;
+}
+
+#notification-prominent {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: var(--bg-col-t);
+    backdrop-filter: blur(1rem);
+    -webkit-backdrop-filter: blur(1rem);
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: "Tiny5", sans-serif;
+    color: var(--fg-col);
+}
+
+#notification-prominent-title {
+    font-size: 4em;
+}
+
+#notification-prominent-body {
+    font-size: 2em;
+}
+
+#notification-prominent>form>input[type="submit"] {
+    border: none;
+    width: 20vmin;
+    font-family: "Tiny5", sans-serif;
+    height: 10vmin;
+    border-radius: 1vmin;
+    background-color: var(--fg-col);
+    color: var(--bg-col);
+}
+
+#notification-popup {
+    position: fixed;
+    width: 50vw;
+    height: 50vh;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    background-color: var(--bg-col-t);
+    backdrop-filter: blur(1rem);
+    -webkit-backdrop-filter: blur(1rem);
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: "Tiny5", sans-serif;
+    color: var(--fg-col);
+}
+
+#notification-popup-title {
+    font-size: 4em;
+}
+
+#notification-popup-body {
+    font-size: 2em;
+}
+
+#notification-popup>form>input[type="submit"] {
+    border: none;
+    width: 10vmin;
+    font-family: "Tiny5", sans-serif;
+    height: 5vmin;
+    border-radius: 1vmin;
+    background-color: var(--fg-col);
+    color: var(--bg-col);
+}
+
+#notification-banner {
+    position: fixed;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    background-color: var(--bg-col-t);
+    backdrop-filter: blur(1rem);
+    -webkit-backdrop-filter: blur(1rem);
+    z-index: 6;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "Tiny5", sans-serif;
+    color: var(--fg-col);
+}
+
+#notification-banner-body {
+    font-size: 2em;
+}
+
+#notification-banner>form>input[type="submit"] {
+    border: none;
+    width: 20vmin;
+    font-family: "Tiny5", sans-serif;
+    border-radius: .5vmin;
+    background-color: var(--fg-col);
+    color: var(--bg-col);
+}
+
+#main-menu {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: var(--bg-col-t);
+    backdrop-filter: blur(1rem);
+    -webkit-backdrop-filter: blur(1rem);
+    z-index: 6;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    font-family: "Tiny5", sans-serif;
+    color: var(--fg-col);
+}
+
+#main-menu>form {
+    display: grid;
+    justify-content: center;
+    justify-items: start;
+    align-items: start;
+    gap: 2.5vmin;
+    font-family: "Tiny5", sans-serif;
+    color: var(--fg-col);
+}
+
+#main-menu-title {
+    font-size: 4em;
+}
+
+#main-menu-body {
+    font-size: 2em;
+}
+
+#main-menu>form>input[type="submit"] {
+    border: none;
+    width: 20vmin;
+    font-family: "Tiny5", sans-serif;
+    height: 10vmin;
+    border-radius: 1vmin;
+    background-color: var(--fg-col);
+    color: var(--bg-col);
+}
+
+#change-nickname,
+#restore-save-dialog {
+    position: fixed;
+    width: 50vw;
+    height: 50vh;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    background-color: var(--bg-col-t);
+    backdrop-filter: blur(1rem);
+    -webkit-backdrop-filter: blur(1rem);
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: "Tiny5", sans-serif;
+    color: var(--fg-col);
+}
+
+#change-nickname>form,
+#restore-save-dialog>form {
+    display: grid;
+    justify-content: center;
+    justify-items: start;
+    align-items: start;
+    gap: 2.5vmin;
+    font-family: "Tiny5", sans-serif;
+    color: var(--fg-col);
+}
+
+#change-nickname>form>p,
+#restore-save-dialog>form>p {
+    font-size: 2em;
+}
+
+#change-nickname>form>input[type="text"],
+#restore-save-dialog>form>input[type="text"] {
+    width: 20vmin;
+    height: 2.5vmin;
+    border: none;
+    border-radius: .5vmin;
+}
+
+#change-nickname>form>input[type="submit"],
+#restore-save-dialog>form>input[type="submit"] {
+    border: none;
+    width: 10vmin;
+    font-family: "Tiny5", sans-serif;
+    height: 5vmin;
+    border-radius: 1vmin;
+    background-color: var(--fg-col);
+    color: var(--bg-col);
 }

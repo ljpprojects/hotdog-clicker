@@ -43,7 +43,6 @@ import {
 } from "./nickname";
 
 import {
-  restoreDialogContainerElement,
   restoreDialogElement,
   restoreDialogFormElement,
   restoreDialogInputElement
@@ -180,6 +179,10 @@ export const compileSave = (): HDCSaveData => {
 };
 
 export const generateEncodedSave = (from?: HDCSaveData): string => {
+  if (from) {
+    console.log("INFO: Using given save")
+  }
+
   const saveData = from ?? compileSave();
   const json = JSON.stringify(saveData);
   const encoder = new TextEncoder();
@@ -203,7 +206,10 @@ export const wipe = async (): Promise<ServerSentWorkerData> => {
     DEFAULT_SAVE_DATA.hdnw,
   );
 
-  return await makeWorkerReq(req);
+  return await makeWorkerReq(req).then(r => {
+    console.log("WIPED")
+    return r;
+  });
 };
 
 export const load = async (fromReq?: ServerSentWorkerData) => {
@@ -289,20 +295,40 @@ export const load = async (fromReq?: ServerSentWorkerData) => {
 export const restoreSave = async () => {
   const identifierRegex = /^[a-zA-Z0-9+\/]{43}=$/;
 
+  const isValidIdentifier = (str: string) => str.length === 44 && identifierRegex.test(str);
+
   // Scroll to top
   window.scrollTo(0, 0)
 
   // Unhide dialog
-  restoreDialogContainerElement.classList.remove("hide");
+  restoreDialogElement.classList.remove("hide");
   restoreDialogElement.showModal();
 
   restoreDialogElement.onclose = () => {
     // Hide dialog
-    restoreDialogContainerElement.classList.add("hide");
+    restoreDialogElement.classList.add("hide");
 
     // Remove listeners
     restoreDialogInputElement.onchange = null
+    restoreDialogInputElement.oninput = null;
     restoreDialogElement.onclose = null
+  }
+
+  // listen for changes to input and add/remove data-unbuyable based on validity of the nickname
+  restoreDialogInputElement.oninput = (e) => {
+    e.preventDefault();
+
+    const recvIdentifier = restoreDialogInputElement.value;
+
+    const setInvalidState = (isInvalid: boolean) => {
+      if (isInvalid) {
+        restoreDialogInputElement.setAttribute("data-unbuyable", "true");
+      } else {
+        restoreDialogInputElement.removeAttribute("data-unbuyable");
+      }
+    }
+
+    setInvalidState(!isValidIdentifier(recvIdentifier));
   }
 
   // listen for input
@@ -310,16 +336,8 @@ export const restoreSave = async () => {
     e.preventDefault();
 
     const cleanup = () => {
-      // Submit the form
-      restoreDialogFormElement.dispatchEvent(
-        new SubmitEvent("submit", {
-          cancelable: false,
-          submitter: restoreDialogInputElement
-        })
-      );
-
       // Hide dialog
-      restoreDialogContainerElement.classList.add("hide");
+      restoreDialogElement.classList.add("hide");
       restoreDialogElement.close();
 
       // Remove listeners
@@ -329,10 +347,7 @@ export const restoreSave = async () => {
 
     const recvIdentifier = restoreDialogInputElement.value.trim();
 
-    if (
-      recvIdentifier.length !== 44 ||
-      !identifierRegex.test(recvIdentifier)
-    ) {
+    if (!isValidIdentifier(recvIdentifier)) {
       notify(`Invalid identifier; ${recvIdentifier.length !== 44 ? `invalid length ${recvIdentifier.length}` : "invalid identifier"}`)
 
       // Invalid identifier; end here.
@@ -350,6 +365,14 @@ export const restoreSave = async () => {
 
     // Load the save from the returned data of the request
     load(res)
+
+    // Submit the form
+    restoreDialogFormElement.dispatchEvent(
+      new SubmitEvent("submit", {
+        cancelable: false,
+        submitter: restoreDialogInputElement
+      })
+    );
 
     cleanup();
 

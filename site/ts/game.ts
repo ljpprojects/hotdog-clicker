@@ -43,7 +43,7 @@ import {
   franchiseButtonElement,
   changeNicknameButton,
   closeContextMenuButton,
-  openContextMenuButton,
+  openMainMenuButton,
   restoreSaveButton,
   getIdentifierButton,
   notificationDialogContainerElement,
@@ -62,11 +62,11 @@ import {
   franchiseImageElement,
 } from "./elements";
 
-import { handleLdbd } from "./leaderboard";
-import { doJoke } from "./jokes";
+import { updateLeaderboard } from "./leaderboard";
 import { PLACEHOLDER_NICKNAME, receiveNickname } from "./nickname";
 import { SharedMutable } from "./SharedMutable";
 import { changeSettings } from "./settings";
+import { updateWealthinessDisplay } from "./wealth";
 
 export const formatter = new SharedMutable(
   new Intl.NumberFormat(navigator.language, {
@@ -84,6 +84,7 @@ export const formatter = new SharedMutable(
  * @param message The message to display
  */
 export const notify = async (message: string): Promise<void> => {
+  /*
   return new Promise(res => {
     // Change message
     notificationDialogMessageElement.textContent = message
@@ -100,6 +101,10 @@ export const notify = async (message: string): Promise<void> => {
       res()
     }
   })
+  */
+
+  // no-op
+  return Promise.resolve();
 }
 
 /**
@@ -157,7 +162,7 @@ export const hds = new Binding<number, number>({
   backing: 0,
 
   setfn(to: number, dispatcher?: string) {
-    if (hdsIncTimeoutEnd > Date.now()) return;
+    if (hdsIncTimeoutEnd > Date.now() && dispatcher === "btn-click") return;
 
     const prev = this.getBacking() ?? 0;
     this.setBacking(to);
@@ -606,9 +611,7 @@ const checkBuyables = () => {
   }
 };
 
-load().then(doJoke);
-
-setInterval(save, 60e3);
+load().then(() => setInterval(save, 60e3));
 
 hotdogButtonElement.addEventListener("click", (event) => {
   // Don't let people use .click
@@ -701,8 +704,8 @@ franchiseButtonElement.addEventListener("click", () => {
 (() => {
   let lastTime = performance.now();
 
-  const update = (time: number) => {
-    lastTime = time;
+  const evloop = (time: number) => {
+    // First, add the delta-adjusted hdps to the hds
 
     // How much time has passed since the last time update was called (in s)?
     const deltaSeconds = (time - lastTime) / 1000;
@@ -713,28 +716,33 @@ franchiseButtonElement.addEventListener("click", () => {
       hds.value += hdps.value * deltaSeconds;
     }
 
-    requestAnimationFrame(update);
+    // Then, update the wealthiness display
+
+    updateWealthinessDisplay();
+
+    lastTime = time;
+    requestAnimationFrame(evloop);
   };
 
-  requestAnimationFrame(update);
+  requestAnimationFrame(evloop);
 })();
 
-(async () => await handleLdbd().then(() => {
-  setInterval(async () => await save().then(handleLdbd), 60e3);
+(async () => await updateLeaderboard().then(() => {
+  setInterval(async () => await save().then(updateLeaderboard), 60e3);
 }))();
 
 const showContextMenu = () => {
   document.querySelector("main")?.classList.add("blur");
   document.querySelector("nav")?.classList.add("blur");
   document.querySelector("#leaderboard")?.classList.add("blur");
-  document.getElementById("context")?.setAttribute("class", "display");
+  document.getElementById("main-menu")?.setAttribute("class", "display");
 }
 
 const hideContextMenu = () => {
   document.querySelector("main")?.classList.remove("blur");
   document.querySelector("nav")?.classList.remove("blur");
   document.querySelector("#leaderboard")?.classList.remove("blur");
-  document.getElementById("context")?.setAttribute("class", "hide");
+  document.getElementById("main-menu")?.setAttribute("class", "hide");
 }
 
 document.oncontextmenu = () => {
@@ -745,7 +753,7 @@ document.oncontextmenu = () => {
   return false;
 };
 
-openContextMenuButton.addEventListener("click", document.oncontextmenu)
+openMainMenuButton.addEventListener("click", document.oncontextmenu)
 closeContextMenuButton.addEventListener("click", hideContextMenu)
 
 window.addEventListener("visibilitychange", async () => {
@@ -754,20 +762,9 @@ window.addEventListener("visibilitychange", async () => {
   }
 })
 
-saveButton.addEventListener("click", async () => {
-  hideContextMenu()
+saveButton.addEventListener("click", async () => await save().then(async () => await notify("Saved successfully.")));
 
-  await save().then(async () => await notify("Saved successfully."))
-});
-
-wipeButton.addEventListener("click", wipe)
-
-changeNicknameButton.addEventListener("click", async () => {
-  hideContextMenu()
-
-  nickname.value = await receiveNickname()
-  await save().then(handleLdbd)
-})
+wipeButton.addEventListener("click", async () => await wipe().then(async () => await notify("Save data wiped.")).then(() => window.location.reload()));
 
 restoreSaveButton.addEventListener("click", async () => {
   hideContextMenu()
@@ -775,13 +772,13 @@ restoreSaveButton.addEventListener("click", async () => {
   await restoreSave()
 })
 
-getIdentifierButton.addEventListener("click", async () => {
-  hideContextMenu()
-
-  await getIdentifierCode()
-})
-
 openSettingsButton.addEventListener("click", async () => {
   hideContextMenu()
   await changeSettings()
+})
+
+changeNicknameButton.addEventListener("click", async () => {
+  hideContextMenu()
+  nickname.value = await receiveNickname();
+  updateLeaderboard();
 })

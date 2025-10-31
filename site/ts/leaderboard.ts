@@ -28,7 +28,7 @@ export const leaderboard = async () => {
   return ldbd;
 };
 
-export const handleLdbd = async () => {
+export const updateLeaderboard = async () => {
   const ldbd = await leaderboard();
 
   for (const element of leaderboardElements.slice(ldbd.length)) {
@@ -47,6 +47,6 @@ export const handleLdbd = async () => {
   } else {
     youLeaderboardElement.classList.remove("hide");
     youLeaderboardElement.value = youLdbd.ldbd_rank;
-    youLeaderboardElement.textContent = `You (${youLdbd.nickname}) — ${formatter.value.format(youLdbd.net_worth)}`;
+    youLeaderboardElement.textContent = `You (${youLdbd.nickname}) —z ${formatter.value.format(youLdbd.net_worth)}`;
   }
 };

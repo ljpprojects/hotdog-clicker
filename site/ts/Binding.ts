@@ -102,3 +102,21 @@ export class Binding<V, B> {
     this.setValue(to);
   }
 }
+
+export class ImmutableBinding<V> {
+  private readonly getfn: (this: ImmutableBinding<V>, dispatcher?: string) => V;
+
+  constructor(options: {
+    getfn(this: ImmutableBinding<V>, dispatcher?: string): V;
+  }) {
+    this.getfn = options.getfn;
+  }
+
+  public getValue(dispatcher?: string): V {
+    return this.getfn.call(this, dispatcher);
+  }
+
+  get value(): V {
+    return this.getValue();
+  }
+}

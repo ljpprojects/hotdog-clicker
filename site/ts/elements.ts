@@ -1,6 +1,7 @@
 export const hdpsElement = document.getElementById("hdps")!;
 export const hdsElement = document.getElementById("hds")!;
 export const hdnwElement = document.getElementById("hdnw")!;
+export const wealthinessElement = document.getElementById("wealthiness")!;
 
 export const hotdogButtonElement = document.getElementById("hotdog-button")!;
 
@@ -26,12 +27,12 @@ export const franchisePriceElement = document.getElementById("franchise-price")!
 
 export const wipeButton = document.getElementById("wipe")!;
 export const saveButton = document.getElementById("save")!;
-export const changeNicknameButton = document.getElementById("setNickname")!;
-export const restoreSaveButton = document.getElementById("restoreSave")!;
+export const changeNicknameButton = document.getElementById("change-nickname-button")!;
+export const restoreSaveButton = document.getElementById("restore-save")!;
 export const getIdentifierButton = document.getElementById("getIdentifier")!;
-export const openSettingsButton = document.getElementById("openSettings")!;
-export const openContextMenuButton = document.getElementById("openContextMenu")!;
-export const closeContextMenuButton = document.getElementById("closeContextMenu")!;
+export const openSettingsButton = document.getElementById("open-settings")!;
+export const openMainMenuButton = document.getElementById("open-main-menu")!;
+export const closeContextMenuButton = document.getElementById("close-main-menu")!;
 
 export const butcherButtonElement = document.getElementById("butcher")!;
 export const standButtonElement = document.getElementById("stand")!;
@@ -75,34 +76,24 @@ export const youLeaderboardElement: HTMLLIElement = document.getElementById(
   "ldbd-you",
 )! as HTMLLIElement;
 
-export const taxPopupElement: HTMLElement =
-  document.getElementById("taxpopup")!;
-
-export const nicknameDialogContainerElement: HTMLElement =
-  document.getElementById("nicknameDialogContainer")!;
-
-
 export const nicknameDialogElement: HTMLDialogElement =
-  document.querySelector("#nicknameDialog")!;
+  document.querySelector("#change-nickname")!;
 
 export const nicknameDialogFormElement: HTMLFormElement =
-  document.querySelector("#nicknameDialog > form")!;
+  document.querySelector("#change-nickname > form")!;
 
 export const nicknameDialogInputElement: HTMLInputElement =
-  document.querySelector("#nicknameDialog > form > input")!;
+  document.querySelector("#change-nickname > form > input")!;
 
-
-export const restoreDialogContainerElement: HTMLElement =
-  document.getElementById("restoreDialogContainer")!;
 
 export const restoreDialogElement: HTMLDialogElement =
-  document.querySelector("#restoreDialog")!;
+  document.querySelector("#restore-save-dialog")!;
 
 export const restoreDialogFormElement: HTMLFormElement =
-  document.querySelector("#restoreDialog > form")!;
+  document.querySelector("#restore-save-dialog > form")!;
 
 export const restoreDialogInputElement: HTMLInputElement =
-  document.querySelector("#restoreDialog > form > input")!;
+  document.querySelector("#restore-save-dialog > form > input")!;
 
 
 export const notificationDialogContainerElement: HTMLElement =

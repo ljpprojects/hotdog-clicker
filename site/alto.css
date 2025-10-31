@@ -1,8 +1,0 @@
-body,
-button {
-    background-image: url("https://tse1.mm.bing.net/th/id/OIP.wCuPVbsX-OBYqIFQESwHVgHaEL?r=0&pid=Api");
-}
-
-#store > #buildings > button:not(.buyable) {
-    filter: saturate(0);
-}

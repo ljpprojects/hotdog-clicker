@@ -1,6 +1,6 @@
 import { settingsDialogCancelButton, settingsDialogContainerElement, settingsDialogElement, settingsNumberDigitsDisplayElement, settingsNumberDigitsOptionElement, settingsNumberFormatOptionElement, settingsShowTaxPopupOptionElement } from "./elements";
 import { factoryPrice, butcherPrice, butchersOwned, standPrice, plantationPrice, truckPrice, formatter, abattoirPrice, cartPrice, hdnw, hdps, hds, restaurantPrice, franchisePrice } from "./game";
-import { handleLdbd } from "./leaderboard";
+import { updateLeaderboard } from "./leaderboard";
 
 export type HDCNumberFormatSettingType = "Normal" | "Compact" | "Scientific"
 
@@ -78,7 +78,7 @@ export const applySettings = (newSettings: HDCSettings) => {
   abattoirPrice.runSet()
   restaurantPrice.runSet()
   franchisePrice.runSet()
-  handleLdbd()
+  updateLeaderboard()
 
   // Set new values in UI for settings menu
   settingsNumberDigitsOptionElement.valueAsNumber = newSettings.numberOfDigits
