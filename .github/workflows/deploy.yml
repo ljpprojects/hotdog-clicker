@@ -17,9 +17,6 @@ jobs:
       #   with:
       #     bun-version: latest
 
-      - name: Install Dependencies
-        run: bun install
-
       - name: Deploy
         run: make deploy
         env:
