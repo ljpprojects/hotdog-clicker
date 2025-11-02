@@ -4,7 +4,6 @@ import type {
   ClientSentWorkerDataReportAction,
   ClientSentWorkerDataGetAction,
   ClientSentWorkerDataLeaderboardAction,
-  ClientSentWorkerDataTaxedAction,
   ClientSentWorkerDataRestoreAction,
   ClientSentWorkerDataIdentAction
 } from "../../../shared/types.d.ts";
@@ -27,13 +26,6 @@ export const generateReport = (
   encodedSaveData,
   nickname,
   netWorth: netWorth,
-});
-
-export const generateTaxed = (
-  amountPaid: number,
-): ClientSentWorkerDataTaxedAction => ({
-  action: "taxed",
-  amountPaid,
 });
 
 export const generateRestore = (

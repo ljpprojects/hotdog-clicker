@@ -11,5 +11,7 @@ export const calcCost = (startPrice: number, count: number) => {
     acc = increase(acc, i);
   }
 
+
+
   return acc;
 };

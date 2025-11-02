@@ -1,10 +1,10 @@
 install_deps:
 	bun i
 
-guard:
+guard: guard.sh
 	bash ./guard.sh
 
 deploy-unguarded: site worker install_deps
 	bunx wrangler deploy
 
-deploy: site worker install_deps guard deploy-unguarded
+deploy: site/ts worker/index.ts install_deps guard deploy-unguarded

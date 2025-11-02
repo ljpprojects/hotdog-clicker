@@ -35,9 +35,11 @@ export const updateLeaderboard = async () => {
     element.classList.add("hide")
   }
 
-  for (const [index, element] of leaderboardElements.slice(0, ldbd.length).entries()) {
+  let youAreOnLdbd = false;
+
+  for (const [rank, element] of leaderboardElements.slice(0, ldbd.length).entries()) {
     element.classList.remove("hide")
-    element.textContent = `${ldbd[index].nickname} — ${formatter.value.format(ldbd[index].net_worth)}`;
+    element.textContent = `${ldbd[rank].nickname} — ${formatter.value.format(ldbd[rank].net_worth)}`;
   }
 
   const youLdbd = ldbd[ldbd.length - 1];
@@ -47,6 +49,6 @@ export const updateLeaderboard = async () => {
   } else {
     youLeaderboardElement.classList.remove("hide");
     youLeaderboardElement.value = youLdbd.ldbd_rank;
-    youLeaderboardElement.textContent = `You (${youLdbd.nickname}) —z ${formatter.value.format(youLdbd.net_worth)}`;
+    youLeaderboardElement.textContent = `You (actual rank) — ${formatter.value.format(youLdbd.net_worth)}`;
   }
 };

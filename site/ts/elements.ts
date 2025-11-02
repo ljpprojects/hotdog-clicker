@@ -25,14 +25,19 @@ export const abattoirPriceElement = document.getElementById("abattoir-price")!;
 export const restaurantPriceElement = document.getElementById("restaurant-price")!;
 export const franchisePriceElement = document.getElementById("franchise-price")!;
 
+export const mainMenuDialogElement: HTMLDialogElement = document.querySelector("#main-menu")!;
+
 export const wipeButton = document.getElementById("wipe")!;
 export const saveButton = document.getElementById("save")!;
 export const changeNicknameButton = document.getElementById("change-nickname-button")!;
 export const restoreSaveButton = document.getElementById("restore-save")!;
-export const getIdentifierButton = document.getElementById("getIdentifier")!;
+export const getIdentifierButton = document.getElementById("get-identifier-button")!;
 export const openSettingsButton = document.getElementById("open-settings")!;
 export const openMainMenuButton = document.getElementById("open-main-menu")!;
+export const openGamblingButton = document.getElementById("open-gambling-button")!;
 export const closeContextMenuButton = document.getElementById("close-main-menu")!;
+
+export const gamblingDialog: HTMLDialogElement = document.querySelector("#gambling-dialog")!;
 
 export const butcherButtonElement = document.getElementById("butcher")!;
 export const standButtonElement = document.getElementById("stand")!;
@@ -96,15 +101,34 @@ export const restoreDialogInputElement: HTMLInputElement =
   document.querySelector("#restore-save-dialog > form > input")!;
 
 
-export const notificationDialogContainerElement: HTMLElement =
-  document.getElementById("notificationDialogContainer")!;
+// Notification elements
+export type NotificationElementSet = {
+  dialog: HTMLDialogElement,
+  form: HTMLFormElement,
+  title: HTMLElement | null,
+  body: HTMLParagraphElement,
+};
 
-export const notificationDialogElement: HTMLDialogElement =
-  document.querySelector("#notificationDialog")!;
+export const notificationProminentSet: NotificationElementSet = {
+  dialog: document.querySelector("#notification-prominent")!,
+  form: document.querySelector("#notification-prominent > form")!,
+  title: document.querySelector("#notification-prominent-title")!,
+  body: document.querySelector("#notification-prominent-body")!,
+};
 
-export const notificationDialogMessageElement: HTMLFormElement =
-  document.querySelector("#notificationDialog #notificationBody")!;
+export const notificationPopupSet: NotificationElementSet = {
+  dialog: document.querySelector("#notification-popup")!,
+  form: document.querySelector("#notification-popup > form")!,
+  title: document.querySelector("#notification-popup-title")!,
+  body: document.querySelector("#notification-popup-body")!,
+};
 
+export const notificationBannerSet: NotificationElementSet = {
+  dialog: document.querySelector("#notification-banner")!,
+  form: document.querySelector("#notification-banner > form")!,
+  title: null,
+  body: document.querySelector("#notification-banner-body")!,
+};
 
 export const settingsDialogContainerElement = document.getElementById("settingsDialogContainer")!
 export const settingsDialogElement: HTMLDialogElement = document.querySelector("#settingsDialog")!
@@ -117,3 +141,11 @@ export const settingsNumberDigitsOptionElement: HTMLInputElement = document.quer
 export const settingsNumberDigitsDisplayElement: HTMLSpanElement = document.querySelector("#numberDigitsDisplay")!
 
 export const settingsShowTaxPopupOptionElement: HTMLInputElement = document.querySelector("#showTaxPopup")!
+
+export const slotBoxes: [HTMLSpanElement, HTMLSpanElement, HTMLSpanElement] = [
+  document.querySelector("#slot-1")!,
+  document.querySelector("#slot-2")!,
+  document.querySelector("#slot-3")!,
+];
+
+export const spinSlotsButton: HTMLButtonElement = document.querySelector("#spin-slots")!;

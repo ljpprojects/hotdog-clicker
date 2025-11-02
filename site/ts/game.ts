@@ -5,7 +5,8 @@ import {
   wipe,
   load,
   restoreSave,
-  getIdentifierCode
+  getAndShowIdentifierCode,
+  DEFAULT_SAVE_DATA
 } from "./save";
 
 import {
@@ -46,9 +47,6 @@ import {
   openMainMenuButton,
   restoreSaveButton,
   getIdentifierButton,
-  notificationDialogContainerElement,
-  notificationDialogElement,
-  notificationDialogMessageElement,
   openSettingsButton,
   hotdogButtonElement,
   butcherImageElement,
@@ -60,13 +58,20 @@ import {
   abattoirImageElement,
   restaurantImageElement,
   franchiseImageElement,
+  notificationPopupSet,
+  mainMenuDialogElement,
+  openGamblingButton,
+  gamblingDialog,
 } from "./elements";
 
 import { updateLeaderboard } from "./leaderboard";
-import { PLACEHOLDER_NICKNAME, receiveNickname } from "./nickname";
+import { nickname, PLACEHOLDER_NICKNAME, receiveNickname } from "./nickname";
 import { SharedMutable } from "./SharedMutable";
 import { changeSettings } from "./settings";
 import { updateWealthinessDisplay } from "./wealth";
+import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
+import './pokies';
+import { GAMBLING_NW_THRESHOLD } from "./pokies";
 
 export const formatter = new SharedMutable(
   new Intl.NumberFormat(navigator.language, {
@@ -77,35 +82,6 @@ export const formatter = new SharedMutable(
     localeMatcher: "best fit"
   })
 )
-
-/**
- * Displays a message to the user.
- * The returned promise resolves when the user closes the notification popup.
- * @param message The message to display
- */
-export const notify = async (message: string): Promise<void> => {
-  /*
-  return new Promise(res => {
-    // Change message
-    notificationDialogMessageElement.textContent = message
-
-    // Scroll to top
-    window.scrollTo(0, 0)
-
-    // Unhide dialog
-    notificationDialogContainerElement.classList.remove("hide");
-    notificationDialogElement.showModal();
-
-    notificationDialogElement.onclose = () => {
-      notificationDialogContainerElement.classList.add("hide");
-      res()
-    }
-  })
-  */
-
-  // no-op
-  return Promise.resolve();
-}
 
 /**
  * How many hotdogs the user will earn passively (i.e. without action)
@@ -126,12 +102,6 @@ export const hdps = new Binding<number, number>({
     return this.getBacking()!;
   },
 });
-
-/**
- * THe nickname chosen by the user.
- * This is a SharedMutable so it can be modified in nickname.ts
- */
-export const nickname = new SharedMutable(PLACEHOLDER_NICKNAME);
 
 /**
  * The total worth of the user's assets.
@@ -611,8 +581,6 @@ const checkBuyables = () => {
   }
 };
 
-load().then(() => setInterval(save, 60e3));
-
 hotdogButtonElement.addEventListener("click", (event) => {
   // Don't let people use .click
   if (!event.isTrusted) return;
@@ -701,6 +669,8 @@ franchiseButtonElement.addEventListener("click", () => {
   }
 });
 
+let canGamble = true;
+
 (() => {
   let lastTime = performance.now();
 
@@ -710,7 +680,7 @@ franchiseButtonElement.addEventListener("click", () => {
     // How much time has passed since the last time update was called (in s)?
     const deltaSeconds = (time - lastTime) / 1000;
 
-    // Only change the element if there is something to add
+    // Only change if there is something to add
     if (hdps.value * deltaSeconds !== 0) {
       // Add hdps adjusted for the delta time
       hds.value += hdps.value * deltaSeconds;
@@ -720,11 +690,43 @@ franchiseButtonElement.addEventListener("click", () => {
 
     updateWealthinessDisplay();
 
+    // Check if we should allow gambling (> 50 hdnw)
+    if (hdnw.value >= GAMBLING_NW_THRESHOLD && !canGamble) {
+      canGamble = true;
+
+      openGamblingButton.removeAttribute("disabled")
+      openGamblingButton.removeAttribute("data-unbuyable")
+
+      notify({
+        body: "You can gamble now.",
+        prominence: NotificationProminence.Banner,
+        dismissalMode: NotificationDismissalMode.Automatic,
+        dismissalTime: 1000,
+        pauseGame: false,
+      })
+    } else if (hdnw.value < GAMBLING_NW_THRESHOLD && canGamble) {
+      canGamble = false;
+
+      openGamblingButton.setAttribute("disabled", "true")
+      openGamblingButton.setAttribute("data-unbuyable", "true")
+
+      // Kick the player out of the casino
+      if (gamblingDialog.open) {
+        gamblingDialog.close();
+
+        notify({
+          body: "You have been kicked out of the casino for being too poor.",
+          prominence: NotificationProminence.Banner,
+          dismissalMode: NotificationDismissalMode.Automatic,
+        })
+      }
+    }
+
     lastTime = time;
     requestAnimationFrame(evloop);
   };
 
-  requestAnimationFrame(evloop);
+  load().then(() => setInterval(save, 60e3)).then(() => requestAnimationFrame(evloop));
 })();
 
 (async () => await updateLeaderboard().then(() => {
@@ -735,20 +737,24 @@ const showContextMenu = () => {
   document.querySelector("main")?.classList.add("blur");
   document.querySelector("nav")?.classList.add("blur");
   document.querySelector("#leaderboard")?.classList.add("blur");
-  document.getElementById("main-menu")?.setAttribute("class", "display");
+  mainMenuDialogElement.showModal();
 }
 
-const hideContextMenu = () => {
+export const hideContextMenu = () => {
   document.querySelector("main")?.classList.remove("blur");
   document.querySelector("nav")?.classList.remove("blur");
   document.querySelector("#leaderboard")?.classList.remove("blur");
-  document.getElementById("main-menu")?.setAttribute("class", "hide");
+  mainMenuDialogElement.close();
 }
 
 document.oncontextmenu = () => {
   showContextMenu()
 
-  document.addEventListener("dblclick", hideContextMenu);
+  document.ondblclick = () => {
+    hideContextMenu();
+
+    document.ondblclick = null;
+  };
 
   return false;
 };
@@ -762,9 +768,37 @@ window.addEventListener("visibilitychange", async () => {
   }
 })
 
-saveButton.addEventListener("click", async () => await save().then(async () => await notify("Saved successfully.")));
+saveButton.addEventListener(
+  "click",
+  async () =>
+    await save().then(
+      async () =>
+        await notify({
+          body: "Saved successfully.",
+          prominence: NotificationProminence.Banner,
+          dismissalMode: NotificationDismissalMode.Automatic,
+        })
+    )
+);
 
-wipeButton.addEventListener("click", async () => await wipe().then(async () => await notify("Save data wiped.")).then(() => window.location.reload()));
+
+wipeButton.addEventListener(
+  "click",
+  async () =>
+    await wipe().then(
+      async () =>
+        await notify({
+          body: "Save data has been wiped.",
+          prominence: NotificationProminence.Banner,
+          dismissalMode: NotificationDismissalMode.Automatic,
+        }).then(async () => {
+          await save(DEFAULT_SAVE_DATA);
+          await load();
+
+          window.location.reload()
+        })
+    )
+);
 
 restoreSaveButton.addEventListener("click", async () => {
   hideContextMenu()
@@ -777,8 +811,11 @@ openSettingsButton.addEventListener("click", async () => {
   await changeSettings()
 })
 
-changeNicknameButton.addEventListener("click", async () => {
+getIdentifierButton.addEventListener("click", async () => {
   hideContextMenu()
-  nickname.value = await receiveNickname();
-  updateLeaderboard();
+  const ident = await getAndShowIdentifierCode();
+
+  // Hack to make the identifier code display monospace
+  // This approach sucks because it is vulnerable to XSS
+  notificationPopupSet.body.innerHTML = `Your identifier code is <code>${ident}</code>`
 })

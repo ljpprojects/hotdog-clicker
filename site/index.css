@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tiny5&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 :root {
     --safe-margin: 10px;
@@ -29,6 +29,19 @@ button {
     text-decoration: none;
     text-wrap-mode: wrap;
 }
+
+code {
+    height: auto;
+    font-family: "Space Mono", monospace;
+    color: var(--bg-col);
+    background-color: var(--fg-col);
+    border: none;
+    border-radius: 0.5vmin;
+    padding: 0 1vmin;
+    text-decoration: none;
+    text-wrap-mode: wrap;
+}
+
 
 h1 {
     font-size: 3em;
@@ -86,7 +99,7 @@ main {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: none;
-    overflow: clip;
+    overflow: auto;
 }
 
 #stat {
@@ -114,8 +127,12 @@ button:not([disabled]):active,
 
 button:hover:not(:active),
 [data-button]:hover:not(:active),
+button:focus:not(:active),
+[data-button]:focus:not(:active),
 button:is([disabled]):hover,
-[data-button]:is([data-unbuyable]):hover {
+[data-button]:is([data-unbuyable]):hover,
+button:is([disabled]):focus,
+[data-button]:is([data-unbuyable]):focus {
     transform: scale(1.1);
 }
 
@@ -124,7 +141,8 @@ button:is([disabled]):hover,
     transition-duration: 1s;
 }
 
-.hide {
+.hide,
+dialog:not([open]) {
     opacity: 0;
     position: absolute;
     transition: all 0.5s;
@@ -269,6 +287,7 @@ button:is([disabled]):hover,
 }
 
 #notification-banner {
+    margin: 0;
     position: fixed;
     width: 100vw;
     top: 0;
@@ -276,13 +295,17 @@ button:is([disabled]):hover,
     background-color: var(--bg-col-t);
     backdrop-filter: blur(1rem);
     -webkit-backdrop-filter: blur(1rem);
-    z-index: 6;
+    z-index: -1;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     font-family: "Tiny5", sans-serif;
     color: var(--fg-col);
+}
+
+#notification-banner[open] {
+    z-index: 6;
 }
 
 #notification-banner-body {
@@ -344,10 +367,11 @@ button:is([disabled]):hover,
 }
 
 #change-nickname,
-#restore-save-dialog {
+#restore-save-dialog,
+#gambling-dialog {
     position: fixed;
     width: 50vw;
-    height: 50vh;
+    min-height: 50vh;
     top: 50%;
     transform: translateY(-50%);
     left: 0;
@@ -364,7 +388,8 @@ button:is([disabled]):hover,
 }
 
 #change-nickname>form,
-#restore-save-dialog>form {
+#restore-save-dialog>form,
+#gambling-dialog>form {
     display: grid;
     justify-content: center;
     justify-items: start;
@@ -379,6 +404,18 @@ button:is([disabled]):hover,
     font-size: 2em;
 }
 
+#gambling-dialog {
+    padding: 10vmin 0;
+}
+
+#gambling-dialog>form>p {
+    font-size: 1.2em;
+}
+
+#gambling-dialog>form>b {
+    font-size: 2em;
+}
+
 #change-nickname>form>input[type="text"],
 #restore-save-dialog>form>input[type="text"] {
     width: 20vmin;
@@ -388,7 +425,9 @@ button:is([disabled]):hover,
 }
 
 #change-nickname>form>input[type="submit"],
-#restore-save-dialog>form>input[type="submit"] {
+#restore-save-dialog>form>input[type="submit"],
+#gambling-dialog>form>input[type="submit"],
+#gambling-dialog>form>[data-button] {
     border: none;
     width: 10vmin;
     font-family: "Tiny5", sans-serif;
@@ -396,4 +435,29 @@ button:is([disabled]):hover,
     border-radius: 1vmin;
     background-color: var(--fg-col);
     color: var(--bg-col);
+}
+
+#slots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1vw;
+}
+
+#spin-slots {
+    background-color: var(--en-col) !important;
+}
+
+.squ-box {
+    aspect-ratio: 1/1;
+    width: 10vmin;
+    height: 10vmin;
+    background-color: var(--fg-col);
+    color: var(--bg-col);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em;
+    border: none;
+    border-radius: 1vmin;
 }

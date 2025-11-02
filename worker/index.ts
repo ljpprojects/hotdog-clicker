@@ -1,48 +1,20 @@
 import { Hono, Context } from "hono";
+import { trimTrailingSlash } from 'hono/trailing-slash'
+import { cors } from 'hono/cors';
+import { csrf } from 'hono/csrf';
 import { getCookie, setCookie } from "hono/cookie";
 import { logger } from "hono/logger";
 import type {
   DBData,
   LeaderboardData,
-  ClaimToken,
   ServerSentWorkerData,
   ClientSentWorkerData,
-  ErrorAbbrev,
   ClientSentWorkerDataReportAction,
   DBDataFull,
-  ClientSentWorkerDataTaxedAction,
   ClientSentWorkerDataRestoreAction,
 } from "../shared/types.d.ts";
 
 import { CookieOptions } from "hono/utils/cookie";
-
-const CLAIM_TOKEN = {
-  LEN_B: 256,
-  SEPARATOR: ".",
-};
-
-const TAXES_USER_IDENTIFIER = "taxes|user";
-
-/**
- * Formats a claim token.
- * ## Format
- * [signature].[save-signature].[token]
- * All components are base64 encoded.
- *
- * @param claimToken The claim token to format
- * @returns An object with the formatted token string and the PEM file for the signature's public key.
- */
-const formatClaimToken = async (
-  claimToken: ClaimToken,
-): Promise<{ tokenstr: string; pemkey: string }> => {
-  return {
-    pemkey: `-----BEGIN PUBLIC KEY-----\n${base64Encode(new Uint8Array(await crypto.subtle.exportKey("spki", claimToken.keypair.publicKey)))}\n-----END PUBLIC KEY-----`,
-    tokenstr: `${claimToken.tokenSignature.base64}${CLAIM_TOKEN.SEPARATOR}${claimToken.saveSignature.base64}${CLAIM_TOKEN.SEPARATOR}${claimToken.token.base64}`,
-  };
-};
-
-const base64Encode = (bytes: Uint8Array): string =>
-  btoa(String.fromCharCode(...bytes));
 
 const IDENT_COOKIE_NAME = "identifier";
 const IDENT_COOKIE_MAX_AGE = 60 ** 2 * 24 * 31 * 6;
@@ -51,8 +23,8 @@ const COOKIE_OPTS: (age: number) => CookieOptions = (age: number) => ({
   httpOnly: true,
   sameSite: "Strict",
   maxAge: age,
-  //secure: true,
-  //prefix: "secure",
+  secure: true,
+  prefix: "secure",
   path: "/",
   // domain: "hdc.ljpprojects.org"
 });
@@ -74,9 +46,26 @@ const workerData: (dat: ServerSentWorkerData) => ServerSentWorkerData = (dat) =>
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-app.use(async (_, next) => {
-  await next();
-});
+app.use(trimTrailingSlash());
+
+app.use(csrf({
+  origin: [
+    'https://hdc.ljpprojects.org',
+    'https://dev.hdc.ljpprojects.org',
+  ],
+}))
+
+app.use(cors({
+  origin: [
+    'https://hdc.ljpprojects.org',
+    'https://dev.hdc.ljpprojects.org',
+  ],
+  allowHeaders: ['X-Custom-Header', 'Upgrade-Insecure-Requests'],
+  allowMethods: ['POST', 'GET'],
+  exposeHeaders: ['Content-Length', 'X-Kuma-Revision'],
+  maxAge: 600,
+  credentials: true,
+}))
 
 app.use(logger());
 
@@ -271,65 +260,6 @@ app.post("/action", async (c) => {
           results,
         }),
       );
-    case "taxed":
-      const { amountPaid } = body as ClientSentWorkerDataTaxedAction;
-
-      // Add the amount paid to the designated user
-
-      const taxQuery = `
-        update savedat
-        set
-          net_worth = net_worth + ?2
-        where identifier = ?1;
-      `.trim();
-
-      try {
-        let res: D1Result<Record<string, unknown>> = await c.env.DB.prepare(
-          taxQuery,
-        )
-          .bind(TAXES_USER_IDENTIFIER, amountPaid)
-          .run();
-
-        if (res == null) {
-          break;
-        }
-
-        if (res.error) {
-          return c.json(
-            workerData({
-              success: false,
-              error: {
-                abbrev: "EQURY",
-                message: `D1 returned an error: ${res.error}`,
-              },
-            }),
-          );
-
-          break;
-        }
-
-        const results = (res.results as DBDataFull[]).map((dirty) =>
-          sanitiseDBData(dirty),
-        );
-
-        return c.json(
-          workerData({
-            success: true,
-            results,
-          }),
-        );
-      } catch (e) {
-        return c.json(
-          workerData({
-            success: false,
-            error: {
-              abbrev: "EQURY",
-              message: `D1 returned an error: ${e}`,
-            },
-          }),
-        );
-      }
-
     case "restore":
       const { oldIdentifier } = body as ClientSentWorkerDataRestoreAction;
 

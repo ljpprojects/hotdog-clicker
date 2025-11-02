@@ -25,7 +25,7 @@ export type ClaimToken = {
 };
 
 export interface ClientSentWorkerData {
-  action: "report" | "get" | "leaderboard" | "taxed" | "restore" | "ident";
+  action: "report" | "get" | "leaderboard" | "restore" | "ident";
 }
 
 export interface ClientSentWorkerDataReportAction extends ClientSentWorkerData {
@@ -33,11 +33,6 @@ export interface ClientSentWorkerDataReportAction extends ClientSentWorkerData {
   encodedSaveData: string;
   nickname: string;
   netWorth: number;
-}
-
-export interface ClientSentWorkerDataTaxedAction extends ClientSentWorkerData {
-  action: "taxed";
-  amountPaid: number;
 }
 
 export interface ClientSentWorkerDataLeaderboardAction

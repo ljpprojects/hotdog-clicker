@@ -14,14 +14,14 @@
 
     <body>
         <nav>
-            <button title="Main Menu" id="open-main-menu">
-                <img src="/assets/main-menu.svg" width="100" draggable="false" />
+            <button title="Main Menu" id="open-main-menu" aria-label="Open Main Menu">
+                <img src="/assets/main-menu.svg" width="100" draggable="false" alt="" />
             </button>
-            <button title="Save" id="save">
-                <img src="/assets/save.svg" width="100" draggable="false" />
+            <button title="Save" id="save" aria-label="Save">
+                <img src="/assets/save.svg" width="100" draggable="false" alt="" />
             </button>
-            <button title="Wipe" id="wipe">
-                <img src="/assets/wipe.svg" width="100" draggable="false" />
+            <button title="Wipe" id="wipe" aria-label="Wipe Save">
+                <img src="/assets/wipe.svg" width="100" draggable="false" alt="" />
             </button>
         </nav>
 
@@ -35,7 +35,7 @@
                         <h2>Wealthiness: <span id="wealthiness">broke</span></h2>
                     </div>
 
-                    <button id="hotdog-button">
+                    <button id="hotdog-button" data-button role="button">
                         <img
                             src="/assets/hotdog.svg"
                             alt="Hotdog"
@@ -68,72 +68,72 @@
                 <h1>Hot Dog Clicker</h1>
 
                 <ul id="buyables-list">
-                    <li title="Butcher — 0.1/s" id="butcher" data-unbuyable data-button>
-                        <img src="/assets/butcher-u.svg" draggable="false" />
+                    <li title="Butcher — 0.1/s" id="butcher" data-unbuyable data-button aria-label="Buy a 'Butcher' generator" role="button" tabindex="0">
+                        <img src="/assets/butcher-u.svg" draggable="false" aria-hidden="true" />
                         <div>
                             <b>Butcher</b>
                             <span id="butchers-owned">0</span>
                         </div>
                         <span id="butcher-price">15</span>
                     </li>
-                    <li title="Stand — 5/s" id="stand" data-unbuyable data-button>
-                        <img src="/assets/stand-u.svg" draggable="false" />
+                    <li title="Stand — 5/s" id="stand" data-unbuyable data-button aria-label="Buy a 'Stand' generator" role="button" tabindex="0">
+                        <img src="/assets/stand-u.svg" draggable="false" aria-hidden="true" />
                         <div>
                             <b>Stand</b>
                             <span id="stands-owned">0</span>
                         </div>
                         <span id="stand-price">250</span>
                     </li>
-                    <li title="Cart — 10/s" id="cart" data-unbuyable data-button>
-                        <img src="/assets/cart-u.svg" draggable="false" />
+                    <li title="Cart — 10/s" id="cart" data-unbuyable data-button aria-label="Buy a 'Cart' generator" role="button" tabindex="0">
+                        <img src="/assets/cart-u.svg" draggable="false" aria-hidden="true" />
                         <div>
                             <b>Cart</b>
                             <span id="carts-owned">0</span>
                         </div>
                         <span id="cart-price">1,000</span>
                     </li>
-                    <li title="Food truck — 25/s" id="truck" data-unbuyable data-button>
-                        <img src="/assets/truck-u.svg" draggable="false" />
+                    <li title="Food truck — 25/s" id="truck" data-unbuyable data-button aria-label="Buy a 'Food truck' generator" role="button" tabindex="0">
+                        <img src="/assets/truck-u.svg" draggable="false" aria-hidden="true" />
                         <div>
                             <b>Food truck</b>
                             <span id="trucks-owned">0</span>
                         </div>
                         <span id="truck-price">3,750</span>
                     </li>
-                    <li title="Plantation — 50/s" id="plantation" data-unbuyable data-button>
-                        <img src="/assets/plantation-u.svg" draggable="false" />
+                    <li title="Plantation — 50/s" id="plantation" data-unbuyable data-button aria-label="Buy a 'Plantation' generator" role="button" tabindex="0">
+                        <img src="/assets/plantation-u.svg" draggable="false" aria-hidden="true" />
                         <div>
                             <b>Plantation</b>
                             <span id="plantations-owned">0</span>
                         </div>
                         <span id="plantation-price">12,000</span>
                     </li>
-                    <li title="Factory — 250/s" id="factory" data-unbuyable data-button>
-                        <img src="/assets/factory-u.svg" draggable="false" />
+                    <li title="Factory — 250/s" id="factory" data-unbuyable data-button aria-label="Buy a 'Factory' generator" role="button" tabindex="0">
+                        <img src="/assets/factory-u.svg" draggable="false" aria-hidden="true" />
                         <div>
                             <b>Factory</b>
                             <span id="factories-owned">0</span>
                         </div>
                         <span id="factory-price">100,000</span>
                     </li>
-                    <li title="Abattoir — 750/s" id="abattoir" data-unbuyable data-button>
-                        <img src="/assets/abattoir-u.svg" draggable="false" />
+                    <li title="Abattoir — 750/s" id="abattoir" data-unbuyable data-button aria-label="Buy a 'Abattoir' generator" role="button" tabindex="0">
+                        <img src="/assets/abattoir-u.svg" draggable="false" aria-hidden="true" />
                         <div>
                             <b>Abattoir</b>
                             <span id="abattoirs-owned">0</span>
                         </div>
                         <span id="abattoir-price">750,000</span>
                     </li>
-                    <li title="Restaurant — 1,250/s" id="restaurant" data-unbuyable data-button>
-                        <img src="/assets/restaurant-u.svg" draggable="false" />
+                    <li title="Restaurant — 1,250/s" id="restaurant" data-unbuyable data-button aria-label="Buy a 'Restauarant' generator" role="button" tabindex="0">
+                        <img src="/assets/restaurant-u.svg" draggable="false" aria-hidden="true" />
                         <div>
                             <b>Restaurant</b>
                             <span id="restaurants-owned">0</span>
                         </div>
                         <span id="restaurant-price">2,750,000</span>
                     </li>
-                    <li title="Franchise — 5,000/s" id="franchise" data-unbuyable data-button>
-                        <img src="/assets/franchise-u.svg" draggable="false" />
+                    <li title="Franchise — 5,000/s" id="franchise" data-unbuyable data-button aria-label="Buy a 'Franchise' generator" role="button" tabindex="0">
+                        <img src="/assets/franchise-u.svg" draggable="false" aria-hidden="true" />
                         <div>
                             <b>Franchise</b>
                             <span id="franchises-owned">0</span>
@@ -144,7 +144,7 @@
             </section>
         </main>
 
-        <dialog id="notification-prominent" class="hide">
+        <dialog id="notification-prominent">
             <form method="dialog">
                 <b id="notification-prominent-title">Oh no!</b>
                 <p id="notification-prominent-body">You are not meant to be seeing this message, that's a bug.</p>
@@ -152,7 +152,7 @@
             </form>
         </dialog>
 
-        <dialog id="notification-popup" class="hide">
+        <dialog id="notification-popup">
             <form method="dialog">
                 <b id="notification-popup-title">Oh no!</b>
                 <p id="notification-popup-body">You are not meant to be seeing this message, that's a bug.</p>
@@ -160,23 +160,47 @@
             </form>
         </dialog>
 
-        <dialog id="notification-banner" class="hide">
+        <dialog id="notification-banner">
             <form method="dialog">
                 <p id="notification-banner-body">You are not meant to be seeing this message, that's a bug.</p>
                 <input type="submit" value="OK" data-button />
             </form>
         </dialog>
 
-        <dialog id="change-nickname" class="hide">
+        <dialog id="change-nickname">
             <!-- Do NOT submit on enter -->
-            <form method="dialog" onkeydown="return event.key != 'Enter'">
+            <form method="dialog" onkeydown="return event.key !== 'Enter'">
                 <p>Enter a non-empty nickname that is less than 15 characters long.</p>
                 <input type="text" maxlength="15" data-unbuyable />
                 <input type="submit" value="Change" data-button />
             </form>
         </dialog>
 
-        <dialog id="restore-save-dialog" class="hide">
+        <dialog id="gambling-dialog">
+            <!-- Do NOT submit on enter -->
+            <form method="dialog" onkeydown="return event.key !== 'Enter'">
+                <b>Gambling!!</b>
+                <p>Getting 3 of the same digit will give you 50% of your hdnw or 1 billion hds, whatever is higher</p>
+                <p>Getting 2 of the same digit in a row will give you 10% of your hdnw</p>
+                <p>Getting 2 of the same digit not in a row will give you 1% of your hdnw</p>
+                <small>Not getting anything will lose you 5% of your hdnw 🤫</small>
+                <div id="slots">
+                    <div class="squ-box">
+                        <span id="slot-1">0</span>
+                    </div>
+                    <div class="squ-box">
+                        <span id="slot-2">0</span>
+                    </div>
+                    <div class="squ-box">
+                        <span id="slot-3">0</span>
+                    </div>
+                </div>
+                <button data-button id="spin-slots" onclick="return false;">SPIN!!!!!</button>
+                <input type="submit" value="nvm" data-button />
+            </form>
+        </dialog>
+
+        <dialog id="restore-save-dialog">
             <!-- Do NOT submit on enter -->
             <form method="dialog" onkeydown="return event.key != 'Enter'">
                 <p>Enter your old identifier code. This will copy the data from that save to your save.</p>
@@ -190,7 +214,7 @@
             </form>
         </dialog>
 
-        <dialog id="main-menu" class="hide">
+        <dialog id="main-menu">
             <form method="dialog">
                 <b id="main-menu-title">Main Menu</b>
                 <button title="Restore Save" id="restore-save">
@@ -201,6 +225,12 @@
                 </button>
                 <button id="change-nickname-button">
                     Change Nickname
+                </button>
+                <button id="get-identifier-button">
+                    Get Identifier Code
+                </button>
+                <button id="open-gambling-button">
+                    Gamble (you WILL go into debt, please don't)
                 </button>
                 <input type="submit" value="Close" id="close-main-menu" data-button />
             </form>

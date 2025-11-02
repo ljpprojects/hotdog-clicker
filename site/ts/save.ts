@@ -15,13 +15,11 @@ import {
   plantationPrice,
   factoryPrice,
   abattoirPrice,
-  nickname,
   restaurantsOwned,
   hdnw,
   franchisesOwned,
   restaurantPrice,
   franchisePrice,
-  notify,
 } from "./game";
 
 import {
@@ -38,8 +36,11 @@ import { DBData, ServerSentWorkerData } from "../../shared/types";
 import {
   isValidNickname,
   MAX_NICKNAME_LENGTH,
+  selectNickname,
+  nickname,
   PLACEHOLDER_NICKNAME,
   receiveNickname,
+  setNickname,
 } from "./nickname";
 
 import {
@@ -51,6 +52,7 @@ import { applySettings, DEFAULT_SETTINGS, HDCSettings, settings } from "./settin
 import { NaNNullCoerce } from "./utils";
 import { startTransition } from "./transition";
 import { enterBuyMode } from "./mode";
+import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
 
 /**
  * Major save editions are incremented when a previous save edition with the
@@ -172,17 +174,13 @@ export const compileSave = (): HDCSaveData => {
     ownedAbattoirs: abattoirsOwned.value,
     ownedRestaurants: restaurantsOwned.value,
     ownedFranchises: franchisesOwned.value,
-    nickname: (nickname.value || PLACEHOLDER_NICKNAME).slice(MAX_NICKNAME_LENGTH),
+    nickname: (nickname || PLACEHOLDER_NICKNAME).slice(MAX_NICKNAME_LENGTH),
     hdnw: hdnw.value,
     settings,
   };
 };
 
 export const generateEncodedSave = (from?: HDCSaveData): string => {
-  if (from) {
-    console.log("INFO: Using given save")
-  }
-
   const saveData = from ?? compileSave();
   const json = JSON.stringify(saveData);
   const encoder = new TextEncoder();
@@ -191,9 +189,9 @@ export const generateEncodedSave = (from?: HDCSaveData): string => {
   return encoded;
 };
 
-export const save = async (): Promise<ServerSentWorkerData> => {
-  const saveData = generateEncodedSave();
-  const req = generateReport(saveData, nickname.value, compileSave().hdnw);
+export const save = async (from?: HDCSaveData): Promise<ServerSentWorkerData> => {
+  const saveData = generateEncodedSave(from);
+  const req = generateReport(saveData, nickname, compileSave().hdnw);
 
   return await makeWorkerReq(req);
 };
@@ -269,15 +267,7 @@ export const load = async (fromReq?: ServerSentWorkerData) => {
 
     hdnw.value = NaNNullCoerce(saveData.hdnw, 0);
 
-    nickname.value =
-      res.results[0].nickname &&
-        isValidNickname(res.results[0].nickname)
-        ? res.results[0].nickname
-        : await notify(
-          "Do not reload or leave the page; your data has not been saved. " +
-          "Your nickname is either blank or exceeding the maximum length. " +
-          "You will be asked to choose a new one once this notification is acknowledged."
-        ).then(async () => nickname.value = await receiveNickname());
+    selectNickname(res);
 
     // Load settings
     applySettings(saveData.settings)
@@ -286,8 +276,10 @@ export const load = async (fromReq?: ServerSentWorkerData) => {
   } else {
     // If we do not have a save we need to create one
 
-    // Get a nickname and create our save
-    nickname.value = await receiveNickname()
+    // Set our nickname
+    setNickname();
+
+    // And create a save
     await save();
   }
 };
@@ -348,10 +340,9 @@ export const restoreSave = async () => {
     const recvIdentifier = restoreDialogInputElement.value.trim();
 
     if (!isValidIdentifier(recvIdentifier)) {
-      notify(`Invalid identifier; ${recvIdentifier.length !== 44 ? `invalid length ${recvIdentifier.length}` : "invalid identifier"}`)
+      restoreDialogInputElement.value = "";
 
-      // Invalid identifier; end here.
-      return cleanup();
+      return;
     }
 
     // Make sure there is a save to copy data into
@@ -376,13 +367,26 @@ export const restoreSave = async () => {
 
     cleanup();
 
-    notify("Save restored successfully.")
+    notify({
+      body: "Save restored successfully.",
+      prominence: NotificationProminence.Banner,
+      dismissalMode: NotificationDismissalMode.Automatic,
+    })
   };
 };
 
-export const getIdentifierCode = async () => {
-  const req = generateIdent()
-  const { ident } = await makeWorkerReq(req)
+export const getAndShowIdentifierCode = async (): Promise<string> => {
+  return new Promise(async res => {
+    const req = generateIdent()
+    const { ident } = await makeWorkerReq(req)
 
-  return notify(`Your identifier code is '${ident}'`)
+    res(ident!)
+
+    await notify({
+      title: "",
+      body: `Your identifier code is '${ident}'`,
+      prominence: NotificationProminence.Popup,
+      dismissalMode: NotificationDismissalMode.Manual,
+    })
+  })
 }

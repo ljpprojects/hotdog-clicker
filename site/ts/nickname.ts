@@ -1,17 +1,27 @@
+import { ServerSentWorkerData } from "../../shared/types";
 import {
+  changeNicknameButton,
   nicknameDialogElement,
   nicknameDialogFormElement,
   nicknameDialogInputElement,
 } from "./elements";
-import { conatainsHtml } from "./html";
+import { hideContextMenu } from "./game";
+import { conatainsHtmlTags } from "./html";
+import { updateLeaderboard } from "./leaderboard";
+import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
 
 export const MAX_NICKNAME_LENGTH = 15;
 export const PLACEHOLDER_NICKNAME = "<not given>";
 
+/**
+ * The nickname chosen by the user.
+ */
+export let nickname = PLACEHOLDER_NICKNAME;
+
 export const isValidNickname = (nickname: string, allowExcessLength: boolean = true) => {
   const nonEmptyCondition = nickname.trim().length > 0;
   const lengthCondition = allowExcessLength || nickname.length <= MAX_NICKNAME_LENGTH;
-  const notXssCondition = !conatainsHtml(nickname);
+  const notXssCondition = !conatainsHtmlTags(nickname);
 
   return nonEmptyCondition && lengthCondition && notXssCondition;
 };
@@ -88,7 +98,7 @@ export const receiveNickname = async (rejectOnInvalid: boolean = false): Promise
 
         cleanup();
 
-        res(recvNickname.slice(0, MAX_NICKNAME_LENGTH));
+        updateLeaderboard().then(() => res(recvNickname));
       } else {
         nicknameDialogInputElement.value = "";
       }
@@ -97,3 +107,27 @@ export const receiveNickname = async (rejectOnInvalid: boolean = false): Promise
     setTimeout(() => rej("Operation timed out."), 60e3)
   });
 };
+
+changeNicknameButton.addEventListener("click", async () => {
+  hideContextMenu()
+  nickname = await receiveNickname();
+})
+
+export const selectNickname = async (res: ServerSentWorkerData) => {
+  nickname =
+    res.results![0].nickname &&
+      isValidNickname(res.results![0].nickname)
+      ? res.results![0].nickname
+      : await notify({
+        body: "Your data has not been saved. " +
+          "Your nickname is invalid or you have not chosen one. " +
+          "You will be asked to choose a new one once this notification is acknowledged.",
+        title: "Your nickname is invalid.",
+        prominence: NotificationProminence.Prominent,
+        dismissalMode: NotificationDismissalMode.Manual,
+      }).then(async () => nickname = await receiveNickname());
+}
+
+export const setNickname = async () => {
+  nickname = await receiveNickname()
+}
