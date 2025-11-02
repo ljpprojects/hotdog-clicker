@@ -21,7 +21,7 @@ The identifier cookie is *not* used for any of the purposes below:
 * Associating data with any user outside of that which is described elsewhere in this document
 * Any other purpose not outlined in this document.
 
-## How do I check the validity of these claims?
+## How do I check the validity of your claims?
 
 If you would like to check the validity of this document, you can look through the source code
 of the Cloudflare Worker. There, you can see exactly what data is stored in association with
