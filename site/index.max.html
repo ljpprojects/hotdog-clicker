@@ -217,20 +217,22 @@
         <dialog id="main-menu">
             <form method="dialog">
                 <b id="main-menu-title">Main Menu</b>
-                <button title="Restore Save" id="restore-save">
+                <button title="Restore Save" id="restore-save" aria-label="Open 'restore save' menu">
                     <img src="/assets/save.svg" width="100" draggable="false" style="filter: saturate(0);" />
                 </button>
-                <button title="Open Settings" id="open-settings">
+                <!--
+                <button title="Open Settings" id="open-settings" aria-label="Open settings">
                     <img src="/assets/settings.svg" width="100" draggable="false" />
                 </button>
-                <button id="change-nickname-button">
-                    Change Nickname
+                -->
+                <button title="Change Nickname" id="change-nickname-button" aria-label="Open 'change nickname' menu">
+                    <img src="/assets/change-nickname.svg" width="100" draggable="false" />
                 </button>
-                <button id="get-identifier-button">
-                    Get Identifier Code
+                <button title="Get Identifier" id="get-identifier-button" aria-label="Open 'get identifier' menu">
+                    <img src="/assets/get-identifier.svg" width="100" draggable="false" />
                 </button>
-                <button id="open-gambling-button">
-                    Gamble (you WILL go into debt, please don't)
+                <button title="Gamble" id="open-gambling-button" aria-label="Open 'gambling' menu">
+                    <img src="/assets/pokies-button.svg" width="100" draggable="false" />
                 </button>
                 <input type="submit" value="Close" id="close-main-menu" data-button />
             </form>

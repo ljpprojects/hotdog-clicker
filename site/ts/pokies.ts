@@ -1,3 +1,5 @@
+// Not so boring now, is it, bitch?
+
 import { Binding } from "./Binding";
 import { gamblingDialog, openGamblingButton, slotBoxes, spinSlotsButton } from "./elements";
 import { formatter, hdnw, hds, hideContextMenu } from "./game";

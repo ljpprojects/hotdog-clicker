@@ -4,6 +4,7 @@
   "compatibility_date": "2025-04-01",
   "main": "./worker/index.ts",
   "workers_dev": false,
+  "send_metrics": false,
   "first_party_worker": true,
   "assets": {
     "directory": "./site",
@@ -29,7 +30,7 @@
     {
       "binding": "DB",
       "database_name": "hotdog-clicker-db",
-      "database_id": "323937b2-8bb1-4f6d-a7cd-fc1a9146acb1"
+      "database_id": "323937b2-8bb1-4f6d-a7cd-fc1a9146acb1",
     }
   ]
 }

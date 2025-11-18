@@ -444,10 +444,6 @@ dialog:not([open]) {
     gap: 1vw;
 }
 
-#spin-slots {
-    background-color: var(--en-col) !important;
-}
-
 .squ-box {
     aspect-ratio: 1/1;
     width: 10vmin;
@@ -460,4 +456,12 @@ dialog:not([open]) {
     font-size: 3em;
     border: none;
     border-radius: 1vmin;
+}
+
+#spin-slots:not([data-unsafe]) {
+    background-color: var(--en-col) !important;
+}
+
+#spin-slots[data-unsafe] {
+    background-color: var(--dn-col) !important;
 }

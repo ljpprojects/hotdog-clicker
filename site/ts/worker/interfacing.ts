@@ -7,6 +7,7 @@ import type {
   ClientSentWorkerDataRestoreAction,
   ClientSentWorkerDataIdentAction
 } from "../../../shared/types.d.ts";
+import { Mode, ModeBasedAction } from "../mode.js";
 
 export const AUTH_REDIRECT_URL = `/auth?callback=${encodeURIComponent(window.location.href)}`;
 
@@ -42,11 +43,23 @@ export const generateIdent = (): ClientSentWorkerDataIdentAction => ({
 export const makeWorkerReq = async (
   action: ClientSentWorkerData,
 ): Promise<ServerSentWorkerData> => {
-  return await fetch("/action", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(action),
-  }).then(h => h.json());
+  return new Promise(async (res, rej) => {
+    const dat = await ModeBasedAction.empty<Promise<ServerSentWorkerData>>()
+      .actionForAllBut([Mode.TRANSITION_MODE], async () => await fetch("/action", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(action),
+      }).then(h => h.json()))
+      .do();
+
+    if (dat == null) {
+      rej("In mode which does not allow requests to the backend.")
+
+      return
+    }
+
+    res(dat);
+  })
 };

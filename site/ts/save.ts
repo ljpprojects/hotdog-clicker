@@ -57,6 +57,8 @@ import { NotificationDismissalMode, NotificationProminence, notify } from "./not
 /**
  * Major save editions are incremented when a previous save edition with the
  * previous major edition cannot be converted automatically to this new edition.
+ *
+ * The 0 edition is the unknown edition.
  */
 export type SaveEditionMajor = "0" | 2 | "3";
 
@@ -83,7 +85,91 @@ export const SAVE_EDITION: SaveEdition = "3";
  */
 export const compatibleEditions: SaveEdition[] = [];
 
-export interface HDCSaveData {
+export interface HDCGeneralSave {
+  edition: number | SaveEdition;
+}
+
+export interface HDCOldSaveData extends HDCGeneralSave {
+  /**
+   * The edition of the save.
+   * The edition of the HDCOldSaveData is 2.
+   */
+  edition: number;
+
+  /**
+   * The amount of Hot Dogs the user has (Hot Dog Count)
+   */
+  hdc: number;
+
+  /**
+   * The amount of Hot Dogs per second the user gets (Hot Dogs Per Second)
+   */
+  hdps: number;
+
+  /**
+   * The total worth of all assets owned by the user (Hot Dog Net Worth). This includes:
+   * - Hot Dog count
+   * - The summed cost of generators (e.g. Bun, Grill, Freezer)
+   */
+  hdnw: number;
+
+  /**
+   * The amount of "Bun" generators owned by the user.
+   */
+  ownedBuns: number;
+
+  /**
+   * The amount of "Dad" generators owned by the user.
+   */
+  ownedDads: number;
+
+  /**
+   * The amount of "Grill" generators owned by the user.
+   */
+  ownedGrills: number;
+
+  /**
+   * The amount of "Farm" generators owned by the user.
+   */
+  ownedFarms: number;
+
+  /**
+   * The amount of "Factory" generators owned by the user.
+   */
+  ownedFactories: number;
+
+  /**
+   * The amount of "Bank" generators owned by the user.
+   */
+  ownedBanks: number;
+
+  /**
+   * The amount of "Freezer" generators owned by the user.
+   */
+  ownedFreezers: number;
+
+  /**
+   * The amount of "Portal" generators owned by the user.
+   */
+  ownedPortals: number;
+
+  /**
+   * The amount of "Wormhole" generators owned by the user.
+   */
+  ownedWormholes: number;
+
+  /**
+   * The nickname chosen by the user.
+   */
+  nickname: string;
+
+  /**
+   * The settings selected by the user.
+   */
+  settings: HDCSettings;
+}
+
+export interface HDCSaveData extends HDCGeneralSave {
   /**
    * The edition of the save.
    * The latest edition is 3.
@@ -146,11 +232,11 @@ export const DEFAULT_SAVE_DATA: HDCSaveData = {
   settings: DEFAULT_SETTINGS,
 };
 
-export const decodeSaveData = (data: string): HDCSaveData => {
+export const decodeSaveData = function _a<T extends HDCGeneralSave>(data: string): T | HDCSaveData {
   try {
     const raw = Uint8Array.fromBase64(data);
     const decoder = new TextDecoder('utf-8');
-    const save = JSON.parse(decoder.decode(raw)) as HDCSaveData;
+    const save = JSON.parse(decoder.decode(raw)) as T;
 
     return save;
   } catch (e) {
@@ -210,6 +296,43 @@ export const wipe = async (): Promise<ServerSentWorkerData> => {
   });
 };
 
+export const loadFromSave = (saveData: HDCSaveData) => {
+  hds.value = NaNNullCoerce(saveData.hdc, 0);
+  hdps.value = NaNNullCoerce(saveData.hdps, 0);
+
+  butchersOwned.value = NaNNullCoerce(saveData.ownedButchers, 0);
+  butcherPrice.value = calcCost(butcherPrice.value, butchersOwned.value);
+
+  standsOwned.value = NaNNullCoerce(saveData.ownedStands, 0);
+  standPrice.value = calcCost(standPrice.value, standsOwned.value);
+
+  cartsOwned.value = NaNNullCoerce(saveData.ownedCarts, 0);
+  cartPrice.value = calcCost(cartPrice.value, cartsOwned.value);
+
+  trucksOwned.value = NaNNullCoerce(saveData.ownedTrucks, 0);
+  truckPrice.value = calcCost(truckPrice.value, trucksOwned.value);
+
+  plantationsOwned.value = NaNNullCoerce(saveData.ownedPlantations, 0);
+  plantationPrice.value = calcCost(plantationPrice.value, plantationsOwned.value);
+
+  factoriesOwned.value = NaNNullCoerce(saveData.ownedFactories, 0);
+  factoryPrice.value = calcCost(factoryPrice.value, factoriesOwned.value);
+
+  abattoirsOwned.value = NaNNullCoerce(saveData.ownedAbattoirs, 0);
+  abattoirPrice.value = calcCost(abattoirPrice.value, abattoirsOwned.value);
+
+  restaurantsOwned.value = NaNNullCoerce(saveData.ownedRestaurants, 0);
+  restaurantPrice.value = calcCost(restaurantPrice.value, restaurantsOwned.value);
+
+  franchisesOwned.value = NaNNullCoerce(saveData.ownedFranchises, 0);
+  franchisePrice.value = calcCost(franchisePrice.value, franchisesOwned.value);
+
+  hdnw.value = NaNNullCoerce(saveData.hdnw, 0);
+
+  // Load settings
+  applySettings(saveData.settings)
+}
+
 export const load = async (fromReq?: ServerSentWorkerData) => {
   const res = fromReq ?? await makeWorkerReq(generateGet());
 
@@ -224,53 +347,22 @@ export const load = async (fromReq?: ServerSentWorkerData) => {
 
   // Check if we already have a save
   if (res.results && res.results[0]) {
-    const saveData = decodeSaveData((res.results as DBData[])[0].encoded_save);
-    const edition = NaNNullCoerce(saveData.edition, "0");
+    const generalSaveData = decodeSaveData((res.results as DBData[])[0].encoded_save);
+    const edition = NaNNullCoerce(generalSaveData.edition, "0");
 
     // Check if the save is the newest edition or at least compatible with the newest edition
     // If it isn't, begin a transition
-    if (edition != SAVE_EDITION && !compatibleEditions.includes(edition)) {
-      startTransition();
+    if (edition != SAVE_EDITION && !compatibleEditions.includes(edition.toString() as SaveEdition) || true) {
+      startTransition(generalSaveData as HDCOldSaveData);
+
+      return;
     }
+
+    const saveData = generalSaveData as HDCSaveData;
 
     enterBuyMode();
 
-    hds.value = NaNNullCoerce(saveData.hdc, 0);
-    hdps.value = NaNNullCoerce(saveData.hdps, 0);
-
-    butchersOwned.value = NaNNullCoerce(saveData.ownedButchers, 0);
-    butcherPrice.value = calcCost(butcherPrice.value, butchersOwned.value);
-
-    standsOwned.value = NaNNullCoerce(saveData.ownedStands, 0);
-    standPrice.value = calcCost(standPrice.value, standsOwned.value);
-
-    cartsOwned.value = NaNNullCoerce(saveData.ownedCarts, 0);
-    cartPrice.value = calcCost(cartPrice.value, cartsOwned.value);
-
-    trucksOwned.value = NaNNullCoerce(saveData.ownedTrucks, 0);
-    truckPrice.value = calcCost(truckPrice.value, trucksOwned.value);
-
-    plantationsOwned.value = NaNNullCoerce(saveData.ownedPlantations, 0);
-    plantationPrice.value = calcCost(plantationPrice.value, plantationsOwned.value);
-
-    factoriesOwned.value = NaNNullCoerce(saveData.ownedFactories, 0);
-    factoryPrice.value = calcCost(factoryPrice.value, factoriesOwned.value);
-
-    abattoirsOwned.value = NaNNullCoerce(saveData.ownedAbattoirs, 0);
-    abattoirPrice.value = calcCost(abattoirPrice.value, abattoirsOwned.value);
-
-    restaurantsOwned.value = NaNNullCoerce(saveData.ownedRestaurants, 0);
-    restaurantPrice.value = calcCost(restaurantPrice.value, restaurantsOwned.value);
-
-    franchisesOwned.value = NaNNullCoerce(saveData.ownedFranchises, 0);
-    franchisePrice.value = calcCost(franchisePrice.value, franchisesOwned.value);
-
-    hdnw.value = NaNNullCoerce(saveData.hdnw, 0);
-
-    selectNickname(res);
-
-    // Load settings
-    applySettings(saveData.settings)
+    loadFromSave(saveData)
 
     await save();
   } else {

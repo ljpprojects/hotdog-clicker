@@ -62,6 +62,7 @@ import {
   mainMenuDialogElement,
   openGamblingButton,
   gamblingDialog,
+  spinSlotsButton,
 } from "./elements";
 
 import { updateLeaderboard } from "./leaderboard";
@@ -72,6 +73,8 @@ import { updateWealthinessDisplay } from "./wealth";
 import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
 import './pokies';
 import { GAMBLING_NW_THRESHOLD } from "./pokies";
+import { mode, Mode, ModeBasedAction } from "./mode";
+import { butcherIconSet, standIconSet } from "./assets";
 
 export const formatter = new SharedMutable(
   new Intl.NumberFormat(navigator.language, {
@@ -124,6 +127,7 @@ export const hdnw = new Binding<number, number>({
 });
 
 let hdsIncTimeoutEnd = Date.now();
+let slotsAreSafe = true;
 
 /**
  * The amount of hot dogs the user has.
@@ -137,11 +141,27 @@ export const hds = new Binding<number, number>({
     const prev = this.getBacking() ?? 0;
     this.setBacking(to);
 
-    // The difference in hds is how much to remove from our net worth
-    hdnw.setValue(hdnw.getValue() - (prev - to), "hds-change");
+    hdnw.setValue(
+      Math.abs(hdnw.getValue() - (prev - to)),
+      "hds-change"
+    )
 
     hdsElement.textContent = formatter.value.format(to);
+
     checkBuyables();
+
+    // Check if it is 'safe' to spin slots
+    // It is 'safe' if the hds is more than 5% of the hdnw (which is the most you can lose)
+    if (to < hdnw.value / 20 && slotsAreSafe) {
+      console.log("UNSAFE 4 SLOTS")
+
+      slotsAreSafe = false;
+      spinSlotsButton.setAttribute("data-unsafe", "true");
+    } else if (to > hdnw.value / 20 && !slotsAreSafe) {
+      console.log("SAFE 4 SLOTS")
+
+      spinSlotsButton.removeAttribute("data-unsafe")
+    }
 
     if (dispatcher === "btn-click") hdsIncTimeoutEnd = Date.now() + 100;
   },
@@ -164,7 +184,10 @@ export const butchersOwned = new Binding<number, number>({
     const newNetWorthMadeUpOfAsset = butcherPrice.value * to;
 
     hdnw.setValue(
-      hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+      ModeBasedAction.empty<number>()
+        .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
+        .transitionAction(() => hdnw.getValue() + butcherPrice.value)
+        .do()!,
       "acquire-asset-butcher",
     );
 
@@ -510,18 +533,18 @@ export const franchisePrice = new Binding<number, number>({
 const checkBuyables = () => {
   if (hds.value >= butcherPrice.value) {
     butcherButtonElement.removeAttribute("data-unbuyable");
-    butcherImageElement.src = "/assets/butcher-b.svg"
+    butcherImageElement.src = butcherIconSet.buyable.loadedUrl;
   } else {
     butcherButtonElement.setAttribute("data-unbuyable", "true");
-    butcherImageElement.src = "/assets/butcher-u.svg"
+    butcherImageElement.src = butcherIconSet.unbuyable.loadedUrl;
   }
 
   if (hds.value >= standPrice.value) {
     standButtonElement.removeAttribute("data-unbuyable");
-    standImageElement.src = "/assets/stand-b.svg"
+    standImageElement.src = standIconSet.buyable.loadedUrl
   } else {
     standButtonElement.setAttribute("data-unbuyable", "true");
-    standImageElement.src = "/assets/stand-u.svg"
+    standImageElement.src = standIconSet.unbuyable.loadedUrl
   }
 
   if (hds.value >= cartPrice.value) {
@@ -585,7 +608,9 @@ hotdogButtonElement.addEventListener("click", (event) => {
   // Don't let people use .click
   if (!event.isTrusted) return;
 
-  hds.setValue(hds.value + 1, "btn-click");
+  ModeBasedAction.empty()
+    .actionFor([Mode.BUY_MODE, Mode.SELL_MODE], () => hds.setValue(hds.value + 1, "btn-click"))
+    .do()
 });
 
 butcherButtonElement.addEventListener("click", () => {
@@ -670,67 +695,78 @@ franchiseButtonElement.addEventListener("click", () => {
 });
 
 let canGamble = true;
+let lastTime = performance.now();
+export const shouldQuitEventLoop = new SharedMutable(false);
 
-(() => {
-  let lastTime = performance.now();
+export const evloop = (time: number) => {
+  // First, add the delta-adjusted hdps to the hds
 
-  const evloop = (time: number) => {
-    // First, add the delta-adjusted hdps to the hds
+  // How much time has passed since the last time update was called (in s)?
+  const deltaSeconds = (time - lastTime) / 1000;
 
-    // How much time has passed since the last time update was called (in s)?
-    const deltaSeconds = (time - lastTime) / 1000;
+  // Only change if there is something to add
+  if (hdps.value * deltaSeconds !== 0) {
+    // Add hdps adjusted for the delta time
+    hds.value += hdps.value * deltaSeconds;
+  }
 
-    // Only change if there is something to add
-    if (hdps.value * deltaSeconds !== 0) {
-      // Add hdps adjusted for the delta time
-      hds.value += hdps.value * deltaSeconds;
-    }
+  // Then, update the wealthiness display
 
-    // Then, update the wealthiness display
+  updateWealthinessDisplay();
 
-    updateWealthinessDisplay();
+  // Check if we should allow gambling (> 50 hdnw)
+  if (hdnw.value >= GAMBLING_NW_THRESHOLD && !canGamble) {
+    canGamble = true;
 
-    // Check if we should allow gambling (> 50 hdnw)
-    if (hdnw.value >= GAMBLING_NW_THRESHOLD && !canGamble) {
-      canGamble = true;
+    openGamblingButton.removeAttribute("disabled")
+    openGamblingButton.removeAttribute("data-unbuyable")
+    openGamblingButton.title = "Gamble";
 
-      openGamblingButton.removeAttribute("disabled")
-      openGamblingButton.removeAttribute("data-unbuyable")
+    notify({
+      body: "You can gamble now.",
+      prominence: NotificationProminence.Banner,
+      dismissalMode: NotificationDismissalMode.Automatic,
+      dismissalTime: 1000,
+      pauseGame: false,
+    })
+  } else if (hdnw.value < GAMBLING_NW_THRESHOLD && canGamble) {
+    canGamble = false;
+
+    openGamblingButton.setAttribute("disabled", "true")
+    openGamblingButton.setAttribute("data-unbuyable", "true")
+    openGamblingButton.title = "Gamble (LOCKED)";
+
+    // Kick the player out of the casino
+    if (gamblingDialog.open) {
+      gamblingDialog.close();
 
       notify({
-        body: "You can gamble now.",
+        body: "You have been kicked out of the casino for being too poor.",
         prominence: NotificationProminence.Banner,
         dismissalMode: NotificationDismissalMode.Automatic,
-        dismissalTime: 1000,
-        pauseGame: false,
       })
-    } else if (hdnw.value < GAMBLING_NW_THRESHOLD && canGamble) {
-      canGamble = false;
-
-      openGamblingButton.setAttribute("disabled", "true")
-      openGamblingButton.setAttribute("data-unbuyable", "true")
-
-      // Kick the player out of the casino
-      if (gamblingDialog.open) {
-        gamblingDialog.close();
-
-        notify({
-          body: "You have been kicked out of the casino for being too poor.",
-          prominence: NotificationProminence.Banner,
-          dismissalMode: NotificationDismissalMode.Automatic,
-        })
-      }
     }
+  }
 
-    lastTime = time;
+  lastTime = time;
+
+  if (!shouldQuitEventLoop.value) {
     requestAnimationFrame(evloop);
-  };
+  }
+};
 
-  load().then(() => setInterval(save, 60e3)).then(() => requestAnimationFrame(evloop));
-})();
+load().then(() => setInterval(save, 60e3)).then(() => requestAnimationFrame(evloop));
+
+// #BeaverMoon 2025e
 
 (async () => await updateLeaderboard().then(() => {
-  setInterval(async () => await save().then(updateLeaderboard), 60e3);
+  setInterval(
+    async () =>
+      ModeBasedAction.empty()
+        .buyAction(async () => await save().then(updateLeaderboard))
+        .do(),
+    60e3
+  );
 }))();
 
 const showContextMenu = () => {
@@ -817,5 +853,6 @@ getIdentifierButton.addEventListener("click", async () => {
 
   // Hack to make the identifier code display monospace
   // This approach sucks because it is vulnerable to XSS
+  // if someone manages to change their identifier on the backend (which should not be possible, but must be considered)
   notificationPopupSet.body.innerHTML = `Your identifier code is <code>${ident}</code>`
 })
