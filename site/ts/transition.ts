@@ -1,3 +1,4 @@
+import { hotdogButtonElement } from "./elements";
 import { shouldQuitEventLoop } from "./game";
 import { Mode, mode, setTransitionMode } from "./mode";
 import { DEFAULT_SAVE_DATA, HDCOldSaveData, load, loadFromSave } from "./save";
@@ -25,6 +26,9 @@ export const startTransition = (oldSave: HDCOldSaveData) => {
 
   // load the tempNewSave
   loadFromSave(tempNewSave)
+
+  hotdogButtonElement.setAttribute("data-unbuyable", "true");
+  hotdogButtonElement.setAttribute("disabled", "true");
 
   console.log("In transition mode")
 };

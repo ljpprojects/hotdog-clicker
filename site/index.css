@@ -328,8 +328,8 @@ dialog:not([open]) {
     top: 0;
     left: 0;
     background-color: var(--bg-col-t);
-    backdrop-filter: blur(1rem);
-    -webkit-backdrop-filter: blur(1rem);
+    backdrop-filter: blur(3rem);
+    -webkit-backdrop-filter: blur(3rem);
     z-index: 6;
     display: grid;
     justify-content: center;
