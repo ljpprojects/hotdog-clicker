@@ -71,10 +71,11 @@ import { SharedMutable } from "./SharedMutable";
 import { changeSettings } from "./settings";
 import { updateWealthinessDisplay } from "./wealth";
 import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
-import './pokies';
 import { GAMBLING_NW_THRESHOLD } from "./pokies";
 import { mode, Mode, ModeBasedAction } from "./mode";
 import { butcherIconSet, standIconSet } from "./assets";
+
+import "./sound";
 
 export const formatter = new SharedMutable(
   new Intl.NumberFormat(navigator.language, {

@@ -24,9 +24,5 @@ The identifier cookie is *not* used for any of the purposes below:
 ## How do I check the validity of your claims?
 
 If you would like to check the validity of this document, you can look through the source code
-of the Cloudflare Worker. There, you can see exactly what data is stored in association with
-the identifier cookie (in [schemas/schema.sql](worker/schemas/schema.sql)).
-
-## Why can't I reject them?
-
-They are essential for the game to function properly and serve a purely functional purpose.
+of the Cloudflare Worker. You can see exactly what data is stored in association with
+the identifier cookie in [schemas/schema.sql](worker/schemas/schema.sql).

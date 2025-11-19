@@ -17,13 +17,6 @@ export type LeaderboardData = {
   ldbd_rank: number;
 };
 
-export type ClaimToken = {
-  token: { base64: string; raw: Uint8Array };
-  keypair: CryptoKeyPair;
-  tokenSignature: { base64: string; raw: Uint8Array };
-  saveSignature: { base64: string; raw: Uint8Array };
-};
-
 export interface ClientSentWorkerData {
   action: "report" | "get" | "leaderboard" | "restore" | "ident";
 }

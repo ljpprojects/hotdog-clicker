@@ -1,3 +1,4 @@
+import { hotdogButtonElement } from "./elements";
 import { shouldQuitEventLoop } from "./game";
 import { Mode, mode, setTransitionMode } from "./mode";
 import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
@@ -33,6 +34,9 @@ export const startTransition = async (oldSave: HDCOldSaveData) => {
 
   // load the tempNewSave
   loadFromSave(tempNewSave)
+
+  hotdogButtonElement.setAttribute("data-unbuyable", "true");
+  hotdogButtonElement.setAttribute("disabled", "true");
 
   console.log("In transition mode")
 };

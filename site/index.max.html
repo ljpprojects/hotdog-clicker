@@ -14,13 +14,13 @@
 
     <body>
         <nav>
-            <button title="Main Menu" id="open-main-menu" aria-label="Open Main Menu">
+            <button title="Main Menu" id="open-main-menu" data-click-sound data-hover-sound aria-label="Open Main Menu">
                 <img src="/assets/main-menu.svg" width="100" draggable="false" alt="" />
             </button>
-            <button title="Save" id="save" aria-label="Save">
+            <button title="Save" id="save" data-click-sound data-hover-sound aria-label="Save">
                 <img src="/assets/save.svg" width="100" draggable="false" alt="" />
             </button>
-            <button title="Wipe" id="wipe" aria-label="Wipe Save">
+            <button title="Wipe" id="wipe" data-click-sound data-hover-sound aria-label="Wipe Save">
                 <img src="/assets/wipe.svg" width="100" draggable="false" alt="" />
             </button>
         </nav>
@@ -35,7 +35,7 @@
                         <h2>Wealthiness: <span id="wealthiness">broke</span></h2>
                     </div>
 
-                    <button id="hotdog-button" data-button role="button">
+                    <button id="hotdog-button" data-button data-click-sound data-hover-sound role="button">
                         <img
                             src="/assets/hotdog.svg"
                             alt="Hotdog"
@@ -68,7 +68,7 @@
                 <h1>Hot Dog Clicker</h1>
 
                 <ul id="buyables-list">
-                    <li title="Butcher — 0.1/s" id="butcher" data-unbuyable data-button aria-label="Buy a 'Butcher' generator" role="button" tabindex="0">
+                    <li title="Butcher — 0.1/s" id="butcher" data-unbuyable data-button data-click-sound data-hover-sound aria-label="Buy a 'Butcher' generator" role="button" tabindex="0">
                         <img src="/assets/butcher-u.svg" draggable="false" aria-hidden="true" />
                         <div>
                             <b>Butcher</b>
@@ -76,7 +76,7 @@
                         </div>
                         <span id="butcher-price">15</span>
                     </li>
-                    <li title="Stand — 5/s" id="stand" data-unbuyable data-button aria-label="Buy a 'Stand' generator" role="button" tabindex="0">
+                    <li title="Stand — 5/s" id="stand" data-unbuyable data-button data-click-sound data-hover-sound aria-label="Buy a 'Stand' generator" role="button" tabindex="0">
                         <img src="/assets/stand-u.svg" draggable="false" aria-hidden="true" />
                         <div>
                             <b>Stand</b>
@@ -84,7 +84,7 @@
                         </div>
                         <span id="stand-price">250</span>
                     </li>
-                    <li title="Cart — 10/s" id="cart" data-unbuyable data-button aria-label="Buy a 'Cart' generator" role="button" tabindex="0">
+                    <li title="Cart — 10/s" id="cart" data-unbuyable data-button data-click-sound data-hover-sound aria-label="Buy a 'Cart' generator" role="button" tabindex="0">
                         <img src="/assets/cart-u.svg" draggable="false" aria-hidden="true" />
                         <div>
                             <b>Cart</b>
@@ -92,7 +92,7 @@
                         </div>
                         <span id="cart-price">1,000</span>
                     </li>
-                    <li title="Food truck — 25/s" id="truck" data-unbuyable data-button aria-label="Buy a 'Food truck' generator" role="button" tabindex="0">
+                    <li title="Food truck — 25/s" id="truck" data-unbuyable data-button data-click-sound data-hover-sound aria-label="Buy a 'Food truck' generator" role="button" tabindex="0">
                         <img src="/assets/truck-u.svg" draggable="false" aria-hidden="true" />
                         <div>
                             <b>Food truck</b>
@@ -100,7 +100,7 @@
                         </div>
                         <span id="truck-price">3,750</span>
                     </li>
-                    <li title="Plantation — 50/s" id="plantation" data-unbuyable data-button aria-label="Buy a 'Plantation' generator" role="button" tabindex="0">
+                    <li title="Plantation — 50/s" id="plantation" data-unbuyable data-button data-click-sound data-hover-sound aria-label="Buy a 'Plantation' generator" role="button" tabindex="0">
                         <img src="/assets/plantation-u.svg" draggable="false" aria-hidden="true" />
                         <div>
                             <b>Plantation</b>
@@ -108,7 +108,7 @@
                         </div>
                         <span id="plantation-price">12,000</span>
                     </li>
-                    <li title="Factory — 250/s" id="factory" data-unbuyable data-button aria-label="Buy a 'Factory' generator" role="button" tabindex="0">
+                    <li title="Factory — 250/s" id="factory" data-unbuyable data-button data-click-sound data-hover-sound aria-label="Buy a 'Factory' generator" role="button" tabindex="0">
                         <img src="/assets/factory-u.svg" draggable="false" aria-hidden="true" />
                         <div>
                             <b>Factory</b>
@@ -116,7 +116,7 @@
                         </div>
                         <span id="factory-price">100,000</span>
                     </li>
-                    <li title="Abattoir — 750/s" id="abattoir" data-unbuyable data-button aria-label="Buy a 'Abattoir' generator" role="button" tabindex="0">
+                    <li title="Abattoir — 750/s" id="abattoir" data-unbuyable data-button data-click-sound data-hover-sound aria-label="Buy a 'Abattoir' generator" role="button" tabindex="0">
                         <img src="/assets/abattoir-u.svg" draggable="false" aria-hidden="true" />
                         <div>
                             <b>Abattoir</b>
@@ -124,7 +124,7 @@
                         </div>
                         <span id="abattoir-price">750,000</span>
                     </li>
-                    <li title="Restaurant — 1,250/s" id="restaurant" data-unbuyable data-button aria-label="Buy a 'Restauarant' generator" role="button" tabindex="0">
+                    <li title="Restaurant — 1,250/s" id="restaurant" data-unbuyable data-button data-click-sound data-hover-sound aria-label="Buy a 'Restauarant' generator" role="button" tabindex="0">
                         <img src="/assets/restaurant-u.svg" draggable="false" aria-hidden="true" />
                         <div>
                             <b>Restaurant</b>
@@ -132,7 +132,7 @@
                         </div>
                         <span id="restaurant-price">2,750,000</span>
                     </li>
-                    <li title="Franchise — 5,000/s" id="franchise" data-unbuyable data-button aria-label="Buy a 'Franchise' generator" role="button" tabindex="0">
+                    <li title="Franchise — 5,000/s" id="franchise" data-unbuyable data-button data-click-sound data-hover-sound aria-label="Buy a 'Franchise' generator" role="button" tabindex="0">
                         <img src="/assets/franchise-u.svg" draggable="false" aria-hidden="true" />
                         <div>
                             <b>Franchise</b>
@@ -144,7 +144,7 @@
             </section>
         </main>
 
-        <dialog id="notification-prominent">
+        <dialog id="notification-prominent" data-alert-sound>
             <form method="dialog">
                 <b id="notification-prominent-title">Oh no!</b>
                 <p id="notification-prominent-body">You are not meant to be seeing this message, that's a bug.</p>
@@ -152,7 +152,7 @@
             </form>
         </dialog>
 
-        <dialog id="notification-popup">
+        <dialog id="notification-popup" data-alert-sound>
             <form method="dialog">
                 <b id="notification-popup-title">Oh no!</b>
                 <p id="notification-popup-body">You are not meant to be seeing this message, that's a bug.</p>
@@ -160,14 +160,14 @@
             </form>
         </dialog>
 
-        <dialog id="notification-banner">
+        <dialog id="notification-banner" data-alert-sound>
             <form method="dialog">
                 <p id="notification-banner-body">You are not meant to be seeing this message, that's a bug.</p>
                 <input type="submit" value="OK" data-button />
             </form>
         </dialog>
 
-        <dialog id="change-nickname">
+        <dialog id="change-nickname" data-alert-sound>
             <!-- Do NOT submit on enter -->
             <form method="dialog" onkeydown="return event.key !== 'Enter'">
                 <p>Enter a non-empty nickname that is less than 15 characters long.</p>
@@ -176,7 +176,7 @@
             </form>
         </dialog>
 
-        <dialog id="gambling-dialog">
+        <dialog id="gambling-dialog" data-alert-sound>
             <!-- Do NOT submit on enter -->
             <form method="dialog" onkeydown="return event.key !== 'Enter'">
                 <b>Gambling!!</b>
@@ -200,7 +200,7 @@
             </form>
         </dialog>
 
-        <dialog id="restore-save-dialog">
+        <dialog id="restore-save-dialog" data-alert-sound>
             <!-- Do NOT submit on enter -->
             <form method="dialog" onkeydown="return event.key != 'Enter'">
                 <p>Enter your old identifier code. This will copy the data from that save to your save.</p>
@@ -214,27 +214,27 @@
             </form>
         </dialog>
 
-        <dialog id="main-menu">
+        <dialog id="main-menu" data-alert-sound>
             <form method="dialog">
                 <b id="main-menu-title">Main Menu</b>
-                <button title="Restore Save" id="restore-save" aria-label="Open 'restore save' menu">
+                <button title="Restore Save" id="restore-save" data-click-sound data-hover-sound aria-label="Open 'restore save' menu">
                     <img src="/assets/save.svg" width="100" draggable="false" style="filter: saturate(0);" />
                 </button>
-                <!--
+                <!-- TODO: Implement settings
                 <button title="Open Settings" id="open-settings" aria-label="Open settings">
                     <img src="/assets/settings.svg" width="100" draggable="false" />
                 </button>
                 -->
-                <button title="Change Nickname" id="change-nickname-button" aria-label="Open 'change nickname' menu">
+                <button title="Change Nickname" id="change-nickname-button" data-click-sound data-hover-sound aria-label="Open 'change nickname' menu">
                     <img src="/assets/change-nickname.svg" width="100" draggable="false" />
                 </button>
-                <button title="Get Identifier" id="get-identifier-button" aria-label="Open 'get identifier' menu">
+                <button title="Get Identifier" id="get-identifier-button" data-click-sound data-hover-sound aria-label="Open 'get identifier' menu">
                     <img src="/assets/get-identifier.svg" width="100" draggable="false" />
                 </button>
-                <button title="Gamble" id="open-gambling-button" aria-label="Open 'gambling' menu">
+                <button title="Gamble" id="open-gambling-button" data-click-sound data-hover-sound aria-label="Open 'gambling' menu">
                     <img src="/assets/pokies-button.svg" width="100" draggable="false" />
                 </button>
-                <input type="submit" value="Close" id="close-main-menu" data-button />
+                <input type="submit" value="Close" id="close-main-menu" data-click-sound data-hover-sound data-button />
             </form>
         </dialog>
 
