@@ -353,7 +353,7 @@ export const load = async (fromReq?: ServerSentWorkerData) => {
     // Check if the save is the newest edition or at least compatible with the newest edition
     // If it isn't, begin a transition
     if (edition != SAVE_EDITION && !compatibleEditions.includes(edition.toString() as SaveEdition) || true) {
-      startTransition(generalSaveData as HDCOldSaveData);
+      await startTransition(generalSaveData as HDCOldSaveData);
 
       return;
     }

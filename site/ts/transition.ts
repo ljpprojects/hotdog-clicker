@@ -1,11 +1,19 @@
 import { shouldQuitEventLoop } from "./game";
 import { Mode, mode, setTransitionMode } from "./mode";
+import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
 import { DEFAULT_SAVE_DATA, HDCOldSaveData, load, loadFromSave } from "./save";
 
 export let tempNewSave = DEFAULT_SAVE_DATA;
 
-export const startTransition = (oldSave: HDCOldSaveData) => {
+export const startTransition = async (oldSave: HDCOldSaveData) => {
   setTransitionMode();
+
+  await notify({
+    title: "Mode changed automatically.",
+    body: "You are in transition mode. This is so you can manually migrate between game editions when it cannot be done automatically. Press SHIFT + ENTER to complete the transition.",
+    prominence: NotificationProminence.Prominent,
+    dismissalMode: NotificationDismissalMode.Manual,
+  });
 
   // Just in case
   tempNewSave = DEFAULT_SAVE_DATA;
