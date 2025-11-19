@@ -23,8 +23,8 @@ const COOKIE_OPTS: (age: number) => CookieOptions = (age: number) => ({
   httpOnly: true,
   sameSite: "Strict",
   maxAge: age,
-  secure: true,
-  prefix: "secure",
+  //secure: true,
+  //prefix: "secure",
   path: "/",
   // domain: "hdc.ljpprojects.org"
 });
@@ -48,14 +48,14 @@ const app = new Hono<{ Bindings: Bindings }>();
 
 app.use(trimTrailingSlash());
 
-app.use(csrf({
+/*app.use(csrf({
   origin: [
     'https://hdc.ljpprojects.org',
     'https://dev.hdc.ljpprojects.org',
   ],
 }))
 
-app.use(cors({
+/*app.use(cors({
   origin: [
     'https://hdc.ljpprojects.org',
     'https://dev.hdc.ljpprojects.org',
@@ -65,7 +65,7 @@ app.use(cors({
   exposeHeaders: ['Content-Length', 'X-Kuma-Revision'],
   maxAge: 600,
   credentials: true,
-}))
+}))*/
 
 app.use(logger());
 
@@ -93,7 +93,7 @@ app.get("/auth", async (c) => {
   });
 });
 
-app.post("/action", async (c) => {
+app.post("/api", async (c) => {
   let body: ClientSentWorkerData;
 
   try {

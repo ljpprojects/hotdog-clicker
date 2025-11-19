@@ -76,6 +76,7 @@ import { mode, Mode, ModeBasedAction } from "./mode";
 import { butcherIconSet, standIconSet } from "./assets";
 
 import "./sound";
+import { beginLoading, endLoading } from "./ui";
 
 export const formatter = new SharedMutable(
   new Intl.NumberFormat(navigator.language, {
@@ -758,17 +759,15 @@ export const evloop = (time: number) => {
 
 load().then(() => setInterval(save, 60e3)).then(() => requestAnimationFrame(evloop));
 
-// #BeaverMoon 2025e
+// #BeaverMoon 2025
 
-(async () => await updateLeaderboard().then(() => {
-  setInterval(
-    async () =>
-      ModeBasedAction.empty()
-        .buyAction(async () => await save().then(updateLeaderboard))
-        .do(),
-    60e3
-  );
-}))();
+setInterval(
+  async () =>
+    ModeBasedAction.empty()
+      .buyAction(async () => await save().then(updateLeaderboard))
+      .do(),
+  60e3
+);
 
 const showContextMenu = () => {
   document.querySelector("main")?.classList.add("blur");
@@ -807,8 +806,10 @@ window.addEventListener("visibilitychange", async () => {
 
 saveButton.addEventListener(
   "click",
-  async () =>
-    await save().then(
+  async () => {
+    beginLoading()
+
+    await save().then(endLoading).then(
       async () =>
         await notify({
           body: "Saved successfully.",
@@ -816,6 +817,7 @@ saveButton.addEventListener(
           dismissalMode: NotificationDismissalMode.Automatic,
         })
     )
+  }
 );
 
 

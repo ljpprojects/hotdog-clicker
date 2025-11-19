@@ -9,7 +9,7 @@ import type {
 } from "../../../shared/types.d.ts";
 import { Mode, ModeBasedAction } from "../mode.js";
 
-export const AUTH_REDIRECT_URL = `/auth?callback=${encodeURIComponent(window.location.href)}`;
+export const API_PATH = "/api";
 
 export const generateGet = (): ClientSentWorkerDataGetAction => ({
   action: "get",
@@ -44,22 +44,15 @@ export const makeWorkerReq = async (
   action: ClientSentWorkerData,
 ): Promise<ServerSentWorkerData> => {
   return new Promise(async (res, rej) => {
-    const dat = await ModeBasedAction.empty<Promise<ServerSentWorkerData>>()
-      .actionForAllBut([Mode.TRANSITION_MODE], async () => await fetch("/action", {
+    await ModeBasedAction.empty<Promise<void>>()
+      .actionForAllBut([Mode.TRANSITION_MODE], async () => res(await fetch(API_PATH, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(action),
-      }).then(h => h.json()))
+      }).then(h => h.json())))
+      .transitionAction(async () => rej("In mode which does not allow requests to the backend."))
       .do();
-
-    if (dat == null) {
-      rej("In mode which does not allow requests to the backend.")
-
-      return
-    }
-
-    res(dat);
   })
 };

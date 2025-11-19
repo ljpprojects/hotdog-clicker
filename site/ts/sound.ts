@@ -51,7 +51,15 @@ const hoverSoundElements: NodeListOf<HTMLElement> = document.querySelectorAll("[
 const alertSoundElements: NodeListOf<HTMLDialogElement> = document.querySelectorAll("[data-alert-sound]")
 
 for (const el of clickSoundElements) {
-  el.addEventListener("mousedown", async () => playSound(Sound.Click))
+  el.addEventListener("mousedown", async e => {
+    const target = e.target;
+
+    if (!(target instanceof HTMLElement)) {
+      return
+    }
+
+    playSound(Sound.Click)
+  })
 }
 
 for (const el of hoverSoundElements) {

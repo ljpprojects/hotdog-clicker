@@ -25,7 +25,6 @@ import {
 import {
   makeWorkerReq,
   generateGet,
-  AUTH_REDIRECT_URL,
   generateReport,
   generateIdent,
   generateRestore
@@ -39,7 +38,6 @@ import {
   selectNickname,
   nickname,
   PLACEHOLDER_NICKNAME,
-  receiveNickname,
   setNickname,
 } from "./nickname";
 
@@ -236,7 +234,11 @@ export const decodeSaveData = function _a<T extends HDCGeneralSave>(data: string
   try {
     const raw = Uint8Array.fromBase64(data);
     const decoder = new TextDecoder('utf-8');
-    const save = JSON.parse(decoder.decode(raw)) as T;
+    const text = decoder.decode(raw);
+
+    console.log(text)
+
+    const save = JSON.parse(text) as T;
 
     return save;
   } catch (e) {
@@ -339,7 +341,7 @@ export const load = async (fromReq?: ServerSentWorkerData) => {
   if (!res.success) {
     switch (res.error?.abbrev) {
       case "EAUTH":
-        window.location.href = AUTH_REDIRECT_URL;
+        await fetch("/auth");
 
         break;
     }
@@ -352,7 +354,7 @@ export const load = async (fromReq?: ServerSentWorkerData) => {
 
     // Check if the save is the newest edition or at least compatible with the newest edition
     // If it isn't, begin a transition
-    if (edition != SAVE_EDITION && !compatibleEditions.includes(edition.toString() as SaveEdition) || true) {
+    if (edition !== SAVE_EDITION && !compatibleEditions.includes(edition.toString() as SaveEdition)) {
       await startTransition(generalSaveData as HDCOldSaveData);
 
       return;
@@ -370,6 +372,8 @@ export const load = async (fromReq?: ServerSentWorkerData) => {
 
     // Set our nickname
     setNickname();
+
+    enterBuyMode();
 
     // And create a save
     await save();

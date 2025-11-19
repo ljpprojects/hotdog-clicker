@@ -148,7 +148,7 @@
             <form method="dialog">
                 <b id="notification-prominent-title">Oh no!</b>
                 <p id="notification-prominent-body">You are not meant to be seeing this message, that's a bug.</p>
-                <input type="submit" value="OK" data-button />
+                <input type="submit" value="OK" data-button data-click-sound data-hover-sound />
             </form>
         </dialog>
 
@@ -156,14 +156,14 @@
             <form method="dialog">
                 <b id="notification-popup-title">Oh no!</b>
                 <p id="notification-popup-body">You are not meant to be seeing this message, that's a bug.</p>
-                <input type="submit" value="OK" data-button />
+                <input type="submit" value="OK" data-button data-click-sound data-hover-sound />
             </form>
         </dialog>
 
         <dialog id="notification-banner" data-alert-sound>
             <form method="dialog">
                 <p id="notification-banner-body">You are not meant to be seeing this message, that's a bug.</p>
-                <input type="submit" value="OK" data-button />
+                <input type="submit" value="OK" data-button data-click-sound data-hover-sound />
             </form>
         </dialog>
 
@@ -172,7 +172,7 @@
             <form method="dialog" onkeydown="return event.key !== 'Enter'">
                 <p>Enter a non-empty nickname that is less than 15 characters long.</p>
                 <input type="text" maxlength="15" data-unbuyable />
-                <input type="submit" value="Change" data-button />
+                <input type="submit" value="Change" data-button data-click-sound data-hover-sound />
             </form>
         </dialog>
 
@@ -196,7 +196,7 @@
                     </div>
                 </div>
                 <button data-button id="spin-slots" onclick="return false;">SPIN!!!!!</button>
-                <input type="submit" value="nvm" data-button />
+                <input type="submit" value="nvm" data-button data-click-sound data-hover-sound />
             </form>
         </dialog>
 
@@ -210,7 +210,7 @@
                     minlength="44"
                     placeholder="identifier code"
                 />
-                <input type="submit" value="Change" data-button />
+                <input type="submit" value="Change" data-button data-click-sound data-hover-sound />
             </form>
         </dialog>
 
