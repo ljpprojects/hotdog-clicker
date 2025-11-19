@@ -477,4 +477,5 @@ dialog:not([open]) {
 
 #spin-slots[data-unsafe] {
     background-color: var(--dn-col) !important;
+    cursor: wait;
 }

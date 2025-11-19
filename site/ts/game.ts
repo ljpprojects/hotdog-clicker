@@ -845,10 +845,10 @@ restoreSaveButton.addEventListener("click", async () => {
   await restoreSave()
 })
 
-openSettingsButton.addEventListener("click", async () => {
+/*openSettingsButton.addEventListener("click", async () => {
   hideContextMenu()
   await changeSettings()
-})
+})*/
 
 getIdentifierButton.addEventListener("click", async () => {
   hideContextMenu()

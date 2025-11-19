@@ -9,6 +9,7 @@ import { hideContextMenu } from "./game";
 import { conatainsHtmlTags } from "./html";
 import { updateLeaderboard } from "./leaderboard";
 import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
+import { save } from "./save";
 
 export const MAX_NICKNAME_LENGTH = 15;
 export const PLACEHOLDER_NICKNAME = "<not given>";
@@ -66,7 +67,7 @@ export const receiveNickname = async (rejectOnInvalid: boolean = false): Promise
     }
 
     // listen for input submission
-    nicknameDialogInputElement.onchange = (e) => {
+    nicknameDialogFormElement.onsubmit = (e) => {
       e.preventDefault();
 
       const cleanup = () => {
@@ -75,7 +76,8 @@ export const receiveNickname = async (rejectOnInvalid: boolean = false): Promise
         nicknameDialogElement.close();
 
         // Remove listeners
-        nicknameDialogInputElement.onchange = null
+        nicknameDialogInputElement.oninput = null
+        nicknameDialogFormElement.onsubmit = null
         nicknameDialogElement.onclose = null
       };
 
@@ -128,6 +130,10 @@ export const selectNickname = async (res: ServerSentWorkerData) => {
       }).then(async () => nickname = await receiveNickname());
 }
 
-export const setNickname = async () => {
-  nickname = await receiveNickname()
+export const setNickname = async (to?: string) => {
+  nickname = to ?? await receiveNickname()
+
+  if (to == null) {
+    await save()
+  }
 }

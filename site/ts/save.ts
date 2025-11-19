@@ -360,13 +360,13 @@ export const load = async (fromReq?: ServerSentWorkerData) => {
       return;
     }
 
+    setNickname(res.results[0].nickname)
+
     const saveData = generalSaveData as HDCSaveData;
 
     enterBuyMode();
 
     loadFromSave(saveData)
-
-    await save();
   } else {
     // If we do not have a save we need to create one
 
