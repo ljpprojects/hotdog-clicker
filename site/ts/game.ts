@@ -73,7 +73,7 @@ import { updateWealthinessDisplay } from "./wealth";
 import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
 import { GAMBLING_NW_THRESHOLD } from "./pokies";
 import { mode, Mode, ModeBasedAction } from "./mode";
-import { butcherIconSet, standIconSet } from "./assets";
+import { abattoirIconSet, butcherIconSet, cartIconSet, factoryIconSet, franchiseIconSet, plantationIconSet, restaurantIconSet, standIconSet, truckIconSet } from "./assets";
 
 import "./sound";
 import { beginLoading, endLoading } from "./ui";
@@ -143,10 +143,12 @@ export const hds = new Binding<number, number>({
     const prev = this.getBacking() ?? 0;
     this.setBacking(to);
 
-    hdnw.setValue(
-      Math.abs(hdnw.getValue() - (prev - to)),
-      "hds-change"
-    )
+    ModeBasedAction.empty()
+      .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.setValue(
+        Math.abs(hdnw.getValue() - (prev - to)),
+        "hds-change"
+      ))
+      .do();
 
     hdsElement.textContent = formatter.value.format(to);
 
@@ -180,24 +182,20 @@ export const butchersOwned = new Binding<number, number>({
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
 
-    const netWorthMadeUpOfAsset =
-      (butcherPrice.binderBacking.getPreviousBacking() ?? 0) * curr;
-
+    const prevPrice = butcherPrice.binderBacking.getPreviousBacking() ?? 0;
+    const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = butcherPrice.value * to;
 
     hdnw.setValue(
       ModeBasedAction.empty<number>()
         .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
-        .transitionAction(() => hdnw.getValue() + butcherPrice.value)
+        .transitionAction(() => hdnw.getValue() + prevPrice)
         .do()!,
       "acquire-asset-butcher",
     );
 
     this.setBacking(to);
-
-    this.doAsync({ needsToWait: false }, async () => {
-      butchersOwnedElement.textContent = String(to);
-    });
+    butchersOwnedElement.textContent = to.toFixed(0);
   },
 
   getfn(): number {
@@ -210,19 +208,21 @@ export const standsOwned = new Binding<number, number>({
 
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
-    const netWorthMadeUpOfAsset =
-      (standPrice.binderBacking.getPreviousBacking() ?? 0) * curr;
+
+    const prevPrice = standPrice.binderBacking.getPreviousBacking() ?? 0;
+    const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = standPrice.value * to;
+
     hdnw.setValue(
-      hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+      ModeBasedAction.empty<number>()
+        .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
+        .transitionAction(() => hdnw.getValue() + prevPrice)
+        .do()!,
       "acquire-asset-stand",
     );
 
     this.setBacking(to);
-
-    this.doAsync({ needsToWait: false }, async () => {
-      standsOwnedElement.textContent = String(to);
-    });
+    standsOwnedElement.textContent = to.toFixed(0);
   },
 
   getfn(dispatcher): number {
@@ -235,11 +235,15 @@ export const cartsOwned = new Binding<number, number>({
 
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
-    const netWorthMadeUpOfAsset =
-      (cartPrice.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const prevPrice = cartPrice.binderBacking.getPreviousBacking() ?? 0;
+    const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = cartPrice.value * to;
+
     hdnw.setValue(
-      hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+      ModeBasedAction.empty<number>()
+        .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
+        .transitionAction(() => hdnw.getValue() + prevPrice)
+        .do()!,
       "acquire-asset-cart",
     );
 
@@ -260,11 +264,15 @@ export const trucksOwned = new Binding<number, number>({
 
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
-    const netWorthMadeUpOfAsset =
-      (truckPrice.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const prevPrice = truckPrice.binderBacking.getPreviousBacking() ?? 0;
+    const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = truckPrice.value * to;
+
     hdnw.setValue(
-      hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+      ModeBasedAction.empty<number>()
+        .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
+        .transitionAction(() => hdnw.getValue() + prevPrice)
+        .do()!,
       "acquire-asset-truck",
     );
 
@@ -285,11 +293,15 @@ export const plantationsOwned = new Binding<number, number>({
 
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
-    const netWorthMadeUpOfAsset =
-      (plantationPrice.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const prevPrice = plantationPrice.binderBacking.getPreviousBacking() ?? 0;
+    const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = plantationPrice.value * to;
+
     hdnw.setValue(
-      hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+      ModeBasedAction.empty<number>()
+        .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
+        .transitionAction(() => hdnw.getValue() + prevPrice)
+        .do()!,
       "acquire-asset-plantation",
     );
 
@@ -310,11 +322,15 @@ export const factoriesOwned = new Binding<number, number>({
 
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
-    const netWorthMadeUpOfAsset =
-      (factoryPrice.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const prevPrice = factoryPrice.binderBacking.getPreviousBacking() ?? 0;
+    const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = factoryPrice.value * to;
+
     hdnw.setValue(
-      hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+      ModeBasedAction.empty<number>()
+        .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
+        .transitionAction(() => hdnw.getValue() + prevPrice)
+        .do()!,
       "acquire-asset-plantation",
     );
 
@@ -335,11 +351,15 @@ export const abattoirsOwned = new Binding<number, number>({
 
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
-    const netWorthMadeUpOfAsset =
-      (abattoirPrice.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const prevPrice = abattoirPrice.binderBacking.getPreviousBacking() ?? 0;
+    const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = abattoirPrice.value * to;
+
     hdnw.setValue(
-      hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+      ModeBasedAction.empty<number>()
+        .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
+        .transitionAction(() => hdnw.getValue() + prevPrice)
+        .do()!,
       "acquire-asset-abattoir",
     );
 
@@ -360,12 +380,15 @@ export const restaurantsOwned = new Binding<number, number>({
 
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
-    const netWorthMadeUpOfAsset =
-      (restaurantPrice.binderBacking.getPreviousBacking() ?? 0) * curr;
+    const prevPrice = restaurantPrice.binderBacking.getPreviousBacking() ?? 0;
+    const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = restaurantPrice.value * to;
 
     hdnw.setValue(
-      hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+      ModeBasedAction.empty<number>()
+        .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
+        .transitionAction(() => hdnw.getValue() + prevPrice)
+        .do()!,
       "acquire-asset-restaurant",
     );
 
@@ -386,11 +409,16 @@ export const franchisesOwned = new Binding<number, number>({
 
   setfn(to: number) {
     const curr = this.getBacking() ?? 0;
-    const netWorthMadeUpOfAsset =
-      (franchisePrice.binderBacking.getPreviousBacking() ?? 0) * curr;
+
+    const prevPrice = franchisePrice.binderBacking.getPreviousBacking() ?? 0;
+    const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = franchisePrice.value * to;
+
     hdnw.setValue(
-      hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+      ModeBasedAction.empty<number>()
+        .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
+        .transitionAction(() => hdnw.getValue() + prevPrice)
+        .do()!,
       "acquire-asset-franchise",
     );
 
@@ -543,66 +571,66 @@ const checkBuyables = () => {
 
   if (hds.value >= standPrice.value) {
     standButtonElement.removeAttribute("data-unbuyable");
-    standImageElement.src = standIconSet.buyable.loadedUrl
+    standImageElement.src = standIconSet.buyable.loadedUrl;
   } else {
     standButtonElement.setAttribute("data-unbuyable", "true");
-    standImageElement.src = standIconSet.unbuyable.loadedUrl
+    standImageElement.src = standIconSet.unbuyable.loadedUrl;
   }
 
   if (hds.value >= cartPrice.value) {
     cartButtonElement.removeAttribute("data-unbuyable");
-    cartImageElement.src = "/assets/cart-b.svg"
+    cartImageElement.src = cartIconSet.buyable.loadedUrl;
   } else {
     cartButtonElement.setAttribute("data-unbuyable", "true");
-    cartImageElement.src = "/assets/cart-u.svg"
+    cartImageElement.src = cartIconSet.unbuyable.loadedUrl;
   }
 
   if (hds.value >= truckPrice.value) {
     truckButtonElement.removeAttribute("data-unbuyable");
-    truckImageElement.src = "/assets/truck-b.svg"
+    truckImageElement.src = truckIconSet.buyable.loadedUrl;
   } else {
     truckButtonElement.setAttribute("data-unbuyable", "true");
-    truckImageElement.src = "/assets/truck-u.svg"
+    truckImageElement.src = truckIconSet.unbuyable.loadedUrl;
   }
 
   if (hds.value >= plantationPrice.value) {
     plantationButtonElement.removeAttribute("data-unbuyable");
-    plantationImageElement.src = "/assets/plantation-b.svg"
+    plantationImageElement.src = plantationIconSet.buyable.loadedUrl;
   } else {
     plantationButtonElement.setAttribute("data-unbuyable", "true");
-    plantationImageElement.src = "/assets/plantation-u.svg"
+    plantationImageElement.src = plantationIconSet.unbuyable.loadedUrl;
   }
 
   if (hds.value >= factoryPrice.value) {
     factoryButtonElement.removeAttribute("data-unbuyable");
-    factoryImageElement.src = "/assets/factory-b.svg"
+    factoryImageElement.src = factoryIconSet.buyable.loadedUrl;
   } else {
     factoryButtonElement.setAttribute("data-unbuyable", "true");
-    factoryImageElement.src = "/assets/factory-u.svg"
+    factoryImageElement.src = factoryIconSet.unbuyable.loadedUrl;
   }
 
   if (hds.value >= abattoirPrice.value) {
     abattoirButtonElement.removeAttribute("data-unbuyable");
-    abattoirImageElement.src = "/assets/abattoir-b.svg"
+    abattoirImageElement.src = abattoirIconSet.buyable.loadedUrl;
   } else {
     abattoirButtonElement.setAttribute("data-unbuyable", "true");
-    abattoirImageElement.src = "/assets/abattoir-u.svg"
+    abattoirImageElement.src = abattoirIconSet.unbuyable.loadedUrl;
   }
 
   if (hds.value >= restaurantPrice.value) {
     restaurantButtonElement.removeAttribute("data-unbuyable");
-    restaurantImageElement.src = "/assets/restaurant-b.svg"
+    restaurantImageElement.src = restaurantIconSet.buyable.loadedUrl;
   } else {
     restaurantButtonElement.setAttribute("data-unbuyable", "true");
-    restaurantImageElement.src = "/assets/restaurant-u.svg"
+    restaurantImageElement.src = restaurantIconSet.unbuyable.loadedUrl;
   }
 
   if (hds.value >= franchisePrice.value) {
     franchiseButtonElement.removeAttribute("data-unbuyable");
-    franchiseImageElement.src = "/assets/franchise-b.svg"
+    franchiseImageElement.src = franchiseIconSet.buyable.loadedUrl;
   } else {
     franchiseButtonElement.setAttribute("data-unbuyable", "true");
-    franchiseImageElement.src = "/assets/franchise-u.svg"
+    franchiseImageElement.src = franchiseIconSet.unbuyable.loadedUrl;
   }
 };
 
@@ -728,7 +756,7 @@ export const evloop = (time: number) => {
       body: "You can gamble now.",
       prominence: NotificationProminence.Banner,
       dismissalMode: NotificationDismissalMode.Automatic,
-      dismissalTime: 1000,
+      dismissalTimeMs: 1000,
       pauseGame: false,
     })
   } else if (hdnw.value < GAMBLING_NW_THRESHOLD && canGamble) {
@@ -769,14 +797,14 @@ setInterval(
   60e3
 );
 
-const showContextMenu = () => {
+const openMainMenu = () => {
   document.querySelector("main")?.classList.add("blur");
   document.querySelector("nav")?.classList.add("blur");
   document.querySelector("#leaderboard")?.classList.add("blur");
   mainMenuDialogElement.showModal();
 }
 
-export const hideContextMenu = () => {
+export const closeMainMenu = () => {
   document.querySelector("main")?.classList.remove("blur");
   document.querySelector("nav")?.classList.remove("blur");
   document.querySelector("#leaderboard")?.classList.remove("blur");
@@ -784,10 +812,10 @@ export const hideContextMenu = () => {
 }
 
 document.oncontextmenu = () => {
-  showContextMenu()
+  openMainMenu()
 
   document.ondblclick = () => {
-    hideContextMenu();
+    closeMainMenu();
 
     document.ondblclick = null;
   };
@@ -796,7 +824,7 @@ document.oncontextmenu = () => {
 };
 
 openMainMenuButton.addEventListener("click", document.oncontextmenu)
-closeContextMenuButton.addEventListener("click", hideContextMenu)
+closeContextMenuButton.addEventListener("click", closeMainMenu)
 
 window.addEventListener("visibilitychange", async () => {
   if (document.visibilityState === "hidden") {
@@ -840,7 +868,7 @@ wipeButton.addEventListener(
 );
 
 restoreSaveButton.addEventListener("click", async () => {
-  hideContextMenu()
+  closeMainMenu()
 
   await restoreSave()
 })
@@ -851,7 +879,7 @@ restoreSaveButton.addEventListener("click", async () => {
 })*/
 
 getIdentifierButton.addEventListener("click", async () => {
-  hideContextMenu()
+  closeMainMenu()
   const ident = await getAndShowIdentifierCode();
 
   // Hack to make the identifier code display monospace

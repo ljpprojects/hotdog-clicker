@@ -360,7 +360,7 @@ export const load = async (fromReq?: ServerSentWorkerData) => {
       return;
     }
 
-    setNickname(res.results[0].nickname)
+    setNickname(res.results![0].nickname)
 
     const saveData = generalSaveData as HDCSaveData;
 

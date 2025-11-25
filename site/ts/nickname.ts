@@ -5,7 +5,7 @@ import {
   nicknameDialogFormElement,
   nicknameDialogInputElement,
 } from "./elements";
-import { hideContextMenu } from "./game";
+import { closeMainMenu } from "./game";
 import { conatainsHtmlTags } from "./html";
 import { updateLeaderboard } from "./leaderboard";
 import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
@@ -111,7 +111,7 @@ export const receiveNickname = async (rejectOnInvalid: boolean = false): Promise
 };
 
 changeNicknameButton.addEventListener("click", async () => {
-  hideContextMenu()
+  closeMainMenu()
   nickname = await receiveNickname();
 })
 

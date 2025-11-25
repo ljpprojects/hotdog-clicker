@@ -2,7 +2,7 @@
 
 import { Binding } from "./Binding";
 import { gamblingDialog, openGamblingButton, slotBoxes, spinSlotsButton } from "./elements";
-import { formatter, hdnw, hds, hideContextMenu } from "./game";
+import { formatter, hdnw, hds, closeMainMenu } from "./game";
 import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
 import { wait, wrappingAdd } from "./utils";
 
@@ -96,7 +96,7 @@ spinSlotsButton.addEventListener("click", async () => {
       body: `You won the JACKPOT of ${formatter.value.format(amountWon)}`,
       prominence: NotificationProminence.Banner,
       dismissalMode: NotificationDismissalMode.Manual,
-      dismissalTime: 3000,
+      dismissalTimeMs: 3000,
     }, 500)
   } else if (digits.some((d, i, a) => i < a.length - 1 && d === a[i + 1])) { // Check if we have two consecutive same digits
     // WE WIN
@@ -109,7 +109,7 @@ spinSlotsButton.addEventListener("click", async () => {
       body: `You win ${formatter.value.format(amountWon)}`,
       prominence: NotificationProminence.Banner,
       dismissalMode: NotificationDismissalMode.Automatic,
-      dismissalTime: 3000,
+      dismissalTimeMs: 3000,
     }, 500)
   } else if (new Set(digits).size !== digits.length) { // Check if we have two same digits
     // WE WIN
@@ -122,7 +122,7 @@ spinSlotsButton.addEventListener("click", async () => {
       body: `You win ${formatter.value.format(amountWon)}`,
       prominence: NotificationProminence.Banner,
       dismissalMode: NotificationDismissalMode.Automatic,
-      dismissalTime: 3000,
+      dismissalTimeMs: 3000,
     }, 500)
   } else { // YOU LOSSSSSSSSSSSSSEEEEEE!!!!!!!!!!! 😭😭😭😭😭😭😭 imagine
     const amountLost = hdnw.value / 20;
@@ -133,7 +133,7 @@ spinSlotsButton.addEventListener("click", async () => {
       body: `lol you lost ${formatter.value.format(amountLost)}`,
       prominence: NotificationProminence.Banner,
       dismissalMode: NotificationDismissalMode.Automatic,
-      dismissalTime: 3000,
+      dismissalTimeMs: 3000,
     }, 500)
   }
 
@@ -145,6 +145,6 @@ spinSlotsButton.addEventListener("click", async () => {
 })
 
 openGamblingButton.addEventListener("click", () => {
-  hideContextMenu();
+  closeMainMenu();
   gamblingDialog.showModal();
 })

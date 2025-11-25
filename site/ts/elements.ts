@@ -36,6 +36,7 @@ export const openSettingsButton = document.getElementById("open-settings")!;
 export const openMainMenuButton = document.getElementById("open-main-menu")!;
 export const openGamblingButton = document.getElementById("open-gambling-button")!;
 export const closeContextMenuButton = document.getElementById("close-main-menu")!;
+export const completeSaveTransitionButton = document.getElementById("complete-transition-button")!;
 
 export const gamblingDialog: HTMLDialogElement = document.querySelector("#gambling-dialog")!;
 

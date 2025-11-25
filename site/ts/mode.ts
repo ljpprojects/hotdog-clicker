@@ -1,3 +1,4 @@
+import { evloop, shouldQuitEventLoop } from "./game";
 import { updateLeaderboard } from "./leaderboard";
 
 /**
@@ -129,8 +130,16 @@ export const setTransitionMode = () => {
   mode = Mode.TRANSITION_MODE;
 };
 
+export const setMode = (to: Mode) => {
+  mode = to;
+};
+
 export const enterBuyMode = () => {
   mode = Mode.BUY_MODE;
+
+  // Start the event loop
+  shouldQuitEventLoop.value = false;
+  requestAnimationFrame(evloop)
 
   updateLeaderboard()
 }
