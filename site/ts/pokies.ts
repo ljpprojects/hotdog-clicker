@@ -67,6 +67,71 @@ spinSlotsButton.addEventListener("click", async () => {
 
   let endTime = performance.now() + TIME_TO_WAIT_MS;
 
+  const digits = [slot1Binding.value.toPrecision(1), slot2Binding.value.toPrecision(1), slot3Binding.value.toPrecision(1)];
+
+  // Check fi we have 777
+  if (digits.every(d => d === "7")) {
+    // SUPER JACKPOT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    // WE WINNNNNNN
+    const amountWon = Math.max(hdnw.value, 10e9);
+    hds.value += amountWon;
+
+    await notify({
+      body: `You won the SUPER JACKPOT of ${formatter.value.format(amountWon)}`,
+      prominence: NotificationProminence.Banner,
+      dismissalMode: NotificationDismissalMode.Manual,
+    }, 500)
+  } else if (digits.every(d => d === slot1Binding.value.toPrecision(1))) { // Check if all digits are the same
+    // JACKPOT
+
+    // WE WINNNNNNN
+    const amountWon = Math.max(hdnw.value / 2, 1e9);
+    hds.value += amountWon;
+
+    await notify({
+      body: `You won the JACKPOT of ${formatter.value.format(amountWon)}`,
+      prominence: NotificationProminence.Banner,
+      dismissalMode: NotificationDismissalMode.Manual,
+    }, 500)
+  } else if (digits.some((d, i, a) => i < a.length - 1 && d === a[i + 1])) { // Check if we have two consecutive same digits
+    // WE WIN
+
+    const amountWon = hdnw.value / 10;
+    hds.value += amountWon;
+
+    await notify({
+      body: `You win ${formatter.value.format(amountWon)}`,
+      prominence: NotificationProminence.Banner,
+      dismissalMode: NotificationDismissalMode.Automatic,
+      dismissalTimeMs: 3000,
+    }, 500)
+  } else if (new Set(digits).size !== digits.length) { // Check if we have two same digits
+    // WE WIN
+
+    const amountWon = hdnw.value / 100;
+    hds.value += amountWon;
+
+    await notify({
+      body: `You win ${formatter.value.format(amountWon)}`,
+      prominence: NotificationProminence.Banner,
+      dismissalMode: NotificationDismissalMode.Automatic,
+      dismissalTimeMs: 3000,
+    }, 500)
+  } else { // YOU LOSSSSSSSSSSSSSEEEEEE!!!!!!!!!!! 😭😭😭😭😭😭😭 imagine
+    const amountLost = hdnw.value / 20;
+    hds.value -= amountLost;
+
+    await notify({
+      body: `lol you lost ${formatter.value.format(amountLost)}`,
+      prominence: NotificationProminence.Banner,
+      dismissalMode: NotificationDismissalMode.Automatic,
+      dismissalTimeMs: 3000,
+    }, 500)
+  }
+
+  await save();
+
   for (let i = 0; ; i++) {
     if (performance.now() - (endTime - LOOP_DELAY * i) > 0) {
       slot1Binding.value = digit1;
@@ -82,78 +147,6 @@ spinSlotsButton.addEventListener("click", async () => {
 
     await wait(LOOP_DELAY);
   }
-
-  const digits = [slot1Binding.value.toPrecision(1), slot2Binding.value.toPrecision(1), slot3Binding.value.toPrecision(1)];
-
-  // Check fi we have 777
-  if (digits.every(d => d === "7")) {
-    // SUPER JACKPOT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    // WE WINNNNNNN
-    const amountWon = Math.max(hdnw.value, 10e9);
-    hds.value += amountWon;
-
-    await notify({
-      title: "SUPER JACKPOT!!!!!!!!!",
-      body: `You won the SUPER JACKPOT of ${formatter.value.format(amountWon)}`,
-      prominence: NotificationProminence.Banner,
-      dismissalMode: NotificationDismissalMode.Manual,
-    }, 500)
-  }
-  // Check if all digits are the same
-  else if (digits.every(d => d === slot1Binding.value.toPrecision(1))) {
-    // JACKPOT
-
-    // WE WINNNNNNN
-    const amountWon = Math.max(hdnw.value / 2, 1e9);
-    hds.value += amountWon;
-
-    await notify({
-      title: "JACKPOT!!!!",
-      body: `You won the JACKPOT of ${formatter.value.format(amountWon)}`,
-      prominence: NotificationProminence.Banner,
-      dismissalMode: NotificationDismissalMode.Manual,
-    }, 500)
-  } else if (digits.some((d, i, a) => i < a.length - 1 && d === a[i + 1])) { // Check if we have two consecutive same digits
-    // WE WIN
-
-    const amountWon = hdnw.value / 10;
-    hds.value += amountWon;
-
-    await notify({
-      title: "WINNER!!!!",
-      body: `You win ${formatter.value.format(amountWon)}`,
-      prominence: NotificationProminence.Banner,
-      dismissalMode: NotificationDismissalMode.Automatic,
-      dismissalTimeMs: 3000,
-    }, 500)
-  } else if (new Set(digits).size !== digits.length) { // Check if we have two same digits
-    // WE WIN
-
-    const amountWon = hdnw.value / 100;
-    hds.value += amountWon;
-
-    await notify({
-      title: "winner?",
-      body: `You win ${formatter.value.format(amountWon)}`,
-      prominence: NotificationProminence.Banner,
-      dismissalMode: NotificationDismissalMode.Automatic,
-      dismissalTimeMs: 3000,
-    }, 500)
-  } else { // YOU LOSSSSSSSSSSSSSEEEEEE!!!!!!!!!!! 😭😭😭😭😭😭😭 imagine
-    const amountLost = hdnw.value / 20;
-    hds.value -= amountLost;
-
-    await notify({
-      title: "LOOOOOSSSSEEERRRR!",
-      body: `lol you lost ${formatter.value.format(amountLost)}`,
-      prominence: NotificationProminence.Banner,
-      dismissalMode: NotificationDismissalMode.Automatic,
-      dismissalTimeMs: 3000,
-    }, 500)
-  }
-
-  await save();
 
   setTimeout(() => {
     spinSlotsButton.removeAttribute("disabled");
