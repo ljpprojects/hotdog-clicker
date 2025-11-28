@@ -67,6 +67,22 @@ spinSlotsButton.addEventListener("click", async () => {
 
   let endTime = performance.now() + TIME_TO_WAIT_MS;
 
+  for (let i = 0; ; i++) {
+    if (performance.now() - (endTime - LOOP_DELAY * i) > 0) {
+      slot1Binding.value = digit1;
+      slot2Binding.value = digit2;
+      slot3Binding.value = digit3;
+
+      break
+    }
+
+    slot1Binding.value = wrappingAdd(1, slot1Binding.value, 10);
+    slot2Binding.value = wrappingAdd(1, slot2Binding.value, 10);
+    slot3Binding.value = wrappingAdd(1, slot3Binding.value, 10);
+
+    await wait(LOOP_DELAY);
+  }
+
   const digits = [slot1Binding.value.toPrecision(1), slot2Binding.value.toPrecision(1), slot3Binding.value.toPrecision(1)];
 
   // Check fi we have 777
@@ -131,22 +147,6 @@ spinSlotsButton.addEventListener("click", async () => {
   }
 
   await save();
-
-  for (let i = 0; ; i++) {
-    if (performance.now() - (endTime - LOOP_DELAY * i) > 0) {
-      slot1Binding.value = digit1;
-      slot2Binding.value = digit2;
-      slot3Binding.value = digit3;
-
-      break
-    }
-
-    slot1Binding.value = wrappingAdd(1, slot1Binding.value, 10);
-    slot2Binding.value = wrappingAdd(1, slot2Binding.value, 10);
-    slot3Binding.value = wrappingAdd(1, slot3Binding.value, 10);
-
-    await wait(LOOP_DELAY);
-  }
 
   setTimeout(() => {
     spinSlotsButton.removeAttribute("disabled");
