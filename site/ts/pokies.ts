@@ -95,6 +95,7 @@ spinSlotsButton.addEventListener("click", async () => {
     const amountWon = Math.max(hdnw.value, 10e9);
     hds.value += amountWon;
 
+    await save();
     await notify({
       body: `You won the SUPER JACKPOT of ${formatter.value.format(amountWon)}`,
       prominence: NotificationProminence.Banner,
@@ -107,6 +108,7 @@ spinSlotsButton.addEventListener("click", async () => {
     const amountWon = Math.max(hdnw.value / 2, 1e9);
     hds.value += amountWon;
 
+    await save();
     await notify({
       body: `You won the JACKPOT of ${formatter.value.format(amountWon)}`,
       prominence: NotificationProminence.Banner,
@@ -118,6 +120,7 @@ spinSlotsButton.addEventListener("click", async () => {
     const amountWon = hdnw.value / 10;
     hds.value += amountWon;
 
+    await save();
     await notify({
       body: `You win ${formatter.value.format(amountWon)}`,
       prominence: NotificationProminence.Banner,
@@ -130,6 +133,7 @@ spinSlotsButton.addEventListener("click", async () => {
     const amountWon = hdnw.value / 100;
     hds.value += amountWon;
 
+    await save();
     await notify({
       body: `You win ${formatter.value.format(amountWon)}`,
       prominence: NotificationProminence.Banner,
@@ -140,6 +144,7 @@ spinSlotsButton.addEventListener("click", async () => {
     const amountLost = hdnw.value / 20;
     hds.value -= amountLost;
 
+    await save();
     await notify({
       body: `lol you lost ${formatter.value.format(amountLost)}`,
       prominence: NotificationProminence.Banner,
@@ -147,8 +152,6 @@ spinSlotsButton.addEventListener("click", async () => {
       dismissalTimeMs: 3000,
     }, 500)
   }
-
-  await save();
 
   setTimeout(() => {
     spinSlotsButton.removeAttribute("disabled");
