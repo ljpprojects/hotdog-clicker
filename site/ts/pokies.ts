@@ -84,8 +84,23 @@ spinSlotsButton.addEventListener("click", async () => {
 
   const digits = [slot1Binding.value.toPrecision(1), slot2Binding.value.toPrecision(1), slot3Binding.value.toPrecision(1)];
 
+  // Check fi we have 777
+  if (digits.every(d => d === "7")) {
+    // SUPER JACKPOT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    // WE WINNNNNNN
+    const amountWon = Math.max(hdnw.value, 10e9);
+    hds.value += amountWon;
+
+    await notify({
+      title: "SUPER JACKPOT!!!!!!!!!",
+      body: `You won the SUPER JACKPOT of ${formatter.value.format(amountWon)}`,
+      prominence: NotificationProminence.Banner,
+      dismissalMode: NotificationDismissalMode.Manual,
+    }, 500)
+  }
   // Check if all digits are the same
-  if (digits.every(d => d === slot1Binding.value.toPrecision(1))) {
+  else if (digits.every(d => d === slot1Binding.value.toPrecision(1))) {
     // JACKPOT
 
     // WE WINNNNNNN
@@ -97,7 +112,6 @@ spinSlotsButton.addEventListener("click", async () => {
       body: `You won the JACKPOT of ${formatter.value.format(amountWon)}`,
       prominence: NotificationProminence.Banner,
       dismissalMode: NotificationDismissalMode.Manual,
-      dismissalTimeMs: 3000,
     }, 500)
   } else if (digits.some((d, i, a) => i < a.length - 1 && d === a[i + 1])) { // Check if we have two consecutive same digits
     // WE WIN
