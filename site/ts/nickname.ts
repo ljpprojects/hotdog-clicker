@@ -5,7 +5,7 @@ import {
   nicknameDialogFormElement,
   nicknameDialogInputElement,
 } from "./elements";
-import { closeMainMenu } from "./game";
+import { closeMainMenu } from "./ui";
 import { conatainsHtmlTags } from "./html";
 import { updateLeaderboard } from "./leaderboard";
 import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";

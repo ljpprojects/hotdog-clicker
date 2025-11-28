@@ -2,9 +2,10 @@
 
 import { Binding } from "./Binding";
 import { gamblingDialog, openGamblingButton, slotBoxes, spinSlotsButton } from "./elements";
-import { formatter, hdnw, hds, closeMainMenu } from "./game";
+import { formatter, hdnw, hds } from "./game";
 import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
 import { wait, wrappingAdd } from "./utils";
+import { closeMainMenu } from "./ui";
 
 export const GAMBLING_NW_THRESHOLD = 250;
 

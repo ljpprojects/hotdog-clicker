@@ -51,7 +51,7 @@ export const notify = async (notification: HDCNotification, delayMs: number = 0)
       dialogElement.show();
     }
 
-    let tId: number;
+    let tId: number = -1;
 
     formElement.addEventListener("submit", () => {
       clearTimeout(tId);

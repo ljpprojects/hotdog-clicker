@@ -1,8 +1,9 @@
 import { completeSaveTransitionButton, hotdogButtonElement } from "./elements";
-import { evloop, hdnw, hds, closeMainMenu, shouldQuitEventLoop } from "./game";
-import { enterBuyMode, Mode, mode, setMode, setTransitionMode } from "./mode";
+import { evloop, hdnw, hds, shouldQuitEventLoop } from "./game";
+import { enterBuyMode, Mode, setMode, setTransitionMode } from "./mode";
 import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
-import { compileSave, DEFAULT_SAVE_DATA, generateEncodedSave, HDCOldSaveData, load, loadFromSave, save } from "./save";
+import { compileSave, DEFAULT_SAVE_DATA, HDCOldSaveData, loadFromSave, save } from "./save";
+import { closeMainMenu } from "./ui";
 
 export const startTransition = async (oldSave: HDCOldSaveData) => {
   setTransitionMode();
