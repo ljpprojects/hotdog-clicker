@@ -67,23 +67,7 @@ spinSlotsButton.addEventListener("click", async () => {
 
   let endTime = performance.now() + TIME_TO_WAIT_MS;
 
-  for (let i = 0; ; i++) {
-    if (performance.now() - (endTime - LOOP_DELAY * i) > 0) {
-      slot1Binding.value = digit1;
-      slot2Binding.value = digit2;
-      slot3Binding.value = digit3;
-
-      break
-    }
-
-    slot1Binding.value = wrappingAdd(1, slot1Binding.value, 10);
-    slot2Binding.value = wrappingAdd(1, slot2Binding.value, 10);
-    slot3Binding.value = wrappingAdd(1, slot3Binding.value, 10);
-
-    await wait(LOOP_DELAY);
-  }
-
-  const digits = [slot1Binding.value.toPrecision(1), slot2Binding.value.toPrecision(1), slot3Binding.value.toPrecision(1)];
+  const digits = [digit1.toPrecision(1), digit2.toPrecision(1), digit3.toPrecision(1)];
 
   // Check fi we have 777
   if (digits.every(d => d === "7")) {
@@ -144,6 +128,22 @@ spinSlotsButton.addEventListener("click", async () => {
       dismissalMode: NotificationDismissalMode.Automatic,
       dismissalTimeMs: 3000,
     }, 500)
+  }
+
+  for (let i = 0; ; i++) {
+    if (performance.now() - (endTime - LOOP_DELAY * i) > 0) {
+      slot1Binding.value = digit1;
+      slot2Binding.value = digit2;
+      slot3Binding.value = digit3;
+
+      break
+    }
+
+    slot1Binding.value = wrappingAdd(1, slot1Binding.value, 10);
+    slot2Binding.value = wrappingAdd(1, slot2Binding.value, 10);
+    slot3Binding.value = wrappingAdd(1, slot3Binding.value, 10);
+
+    await wait(LOOP_DELAY);
   }
 
   await save();
