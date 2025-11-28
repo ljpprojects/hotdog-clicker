@@ -1,3 +1,6 @@
+import { evloop, shouldQuitEventLoop } from "./game";
+import { updateLeaderboard } from "./leaderboard";
+
 /**
  * A mode the game can be in.
  * The mode dictates what happens when the user performs actions.
@@ -127,8 +130,18 @@ export const setTransitionMode = () => {
   mode = Mode.TRANSITION_MODE;
 };
 
+export const setMode = (to: Mode) => {
+  mode = to;
+};
+
 export const enterBuyMode = () => {
   mode = Mode.BUY_MODE;
+
+  // Start the event loop
+  shouldQuitEventLoop.value = false;
+  requestAnimationFrame(evloop)
+
+  updateLeaderboard()
 }
 
 export const ALL_MODES = [Mode.BUY_MODE, Mode.SELL_MODE, Mode.FREEZE_MODE, Mode.TRANSITION_MODE];

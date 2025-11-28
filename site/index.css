@@ -21,6 +21,10 @@
     scrollbar-width: none;
 }
 
+body[data-progress] {
+    cursor: progress;
+}
+
 :root,
 button {
     height: auto;
@@ -125,6 +129,10 @@ button:not([disabled]):active,
     transform: scale(0.9);
 }
 
+[data-button]:not([data-unbuyable]):not(:active) {
+    cursor: pointer;
+}
+
 button:hover:not(:active),
 [data-button]:hover:not(:active),
 button:focus:not(:active),
@@ -195,6 +203,7 @@ dialog:not([open]) {
 [disabled],
 [data-unbuyable] {
     filter: saturate(75%) brightness(50%);
+    cursor: not-allowed;
 }
 
 #ldbd-pl-01 {
@@ -237,6 +246,10 @@ dialog:not([open]) {
 
 #notification-prominent-body {
     font-size: 2em;
+}
+
+#notification-prominent>form {
+    padding: 0 10vmin;
 }
 
 #notification-prominent>form>input[type="submit"] {
@@ -464,4 +477,5 @@ dialog:not([open]) {
 
 #spin-slots[data-unsafe] {
     background-color: var(--dn-col) !important;
+    cursor: wait;
 }

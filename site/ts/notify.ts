@@ -19,7 +19,7 @@ export type HDCNotification = {
   body: string,
   prominence: NotificationProminence,
   dismissalMode: NotificationDismissalMode,
-  dismissalTime?: number,
+  dismissalTimeMs?: number,
   pauseGame?: boolean,
 }
 
@@ -51,7 +51,7 @@ export const notify = async (notification: HDCNotification, delayMs: number = 0)
       dialogElement.show();
     }
 
-    let tId: number;
+    let tId: number = -1;
 
     formElement.addEventListener("submit", () => {
       clearTimeout(tId);
@@ -61,7 +61,7 @@ export const notify = async (notification: HDCNotification, delayMs: number = 0)
     if (dismissalMode === NotificationDismissalMode.Automatic) {
       tId = setTimeout(() => {
         formElement.submit();
-      }, notification.dismissalTime ?? AUTOMATIC_DISMISSAL_TIMEOUT_MS) as unknown as number;
+      }, notification.dismissalTimeMs ?? AUTOMATIC_DISMISSAL_TIMEOUT_MS) as unknown as number;
     }
   })
 }
