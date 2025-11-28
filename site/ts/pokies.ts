@@ -6,6 +6,7 @@ import { formatter, hdnw, hds } from "./game";
 import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
 import { wait, wrappingAdd } from "./utils";
 import { closeMainMenu } from "./ui";
+import { save } from "./save";
 
 export const GAMBLING_NW_THRESHOLD = 250;
 
@@ -151,6 +152,8 @@ spinSlotsButton.addEventListener("click", async () => {
       dismissalTimeMs: 3000,
     }, 500)
   }
+
+  await save();
 
   setTimeout(() => {
     spinSlotsButton.removeAttribute("disabled");
