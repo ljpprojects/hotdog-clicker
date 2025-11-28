@@ -23,5 +23,5 @@ export const randomUint32 = (): number => {
   const randomBytes = new Uint32Array(1);
   crypto.getRandomValues(randomBytes);
 
-  return 7//randomBytes[0]
+  return randomBytes[0]
 };
