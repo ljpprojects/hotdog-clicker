@@ -7,6 +7,7 @@ import { NotificationDismissalMode, NotificationProminence, notify } from "./not
 import { wait, wrappingAdd } from "./utils";
 import { closeMainMenu } from "./ui";
 import { save } from "./save";
+import { randomUint32 } from "./rand";
 
 export const GAMBLING_NW_THRESHOLD = 250;
 
@@ -52,14 +53,10 @@ spinSlotsButton.addEventListener("click", async () => {
   spinSlotsButton.setAttribute("disabled", "true");
   spinSlotsButton.setAttribute("data-unbuyable", "true");
 
-  // Get 3 random digits
-  const randomBytes = new Uint8Array(3);
-  crypto.getRandomValues(randomBytes);
-
-  // Extract digits, ensuring they are within 0-9 (using mod 10)
-  const digit1 = randomBytes[0] % 10;
-  const digit2 = randomBytes[1] % 10;
-  const digit3 = randomBytes[2] % 10;
+  // Get random digits
+  const digit1 = randomUint32() % 10;
+  const digit2 = randomUint32() % 10;
+  const digit3 = randomUint32() % 10;
 
   // The (approximate) time to wait before showing results
   const TIME_TO_WAIT_MS = 1000;
