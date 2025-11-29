@@ -203,8 +203,7 @@ app.post("/api", async (c) => {
   }
 
   const session = getCookie(c, SESSION_COOKIE_NAME);
-  const identifier = getCookie(c, SESSION_COOKIE_NAME);
-  if (session == null || identifier == null) {
+  if (session == null) {
     return c.json(
       workerData({
         success: false,
@@ -228,6 +227,8 @@ app.post("/api", async (c) => {
       }),
     );
   }
+
+  const identifier = sessionData.identifier;
 
   switch (body.action) {
     case "leaderboard":
