@@ -78,7 +78,7 @@ console.log(env.ENVIRONMENT);
 if (env.ENVIRONMENT.startsWith("prod:")) {
   app.use(cors({
     origin: "*",//env.ENVIRONMENT === "prod:release" ? 'https://hdc.ljpprojects.org' : 'https://dev.hdc.ljpprojects.org',
-    allowMethods: ['POST', 'GET'],
+    allowMethods: ["POST", "GET", "OPTIONS"],
   }))
 }
 
