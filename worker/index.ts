@@ -125,11 +125,6 @@ const checkSession = async (
   sessionCode: string
 ): Promise<SessionData | null> => {
   const identifierRegex = /^[a-zA-Z0-9+\/]{43}=$/;
-  const sessionRegex = /^[a-zA-Z0-9+\/]{171}=$/;
-
-  if (!sessionRegex.test(sessionCode)) {
-    return null
-  }
 
   const sessionData = await env.SESSIONS.get<SessionData>(`session:${sessionCode}`, "json");
   if (sessionData == null) {
