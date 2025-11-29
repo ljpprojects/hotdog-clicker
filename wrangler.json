@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "hotdog-clicker",
-  "compatibility_date": "2025-04-01",
+  "compatibility_date": "2025-11-17",
   "main": "./worker/index.ts",
   "workers_dev": false,
   "send_metrics": false,
