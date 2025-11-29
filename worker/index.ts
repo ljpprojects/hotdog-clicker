@@ -214,7 +214,7 @@ app.post("/api", async (c) => {
         success: false,
         error: {
           abbrev: "EAUTH",
-          message: "Must be authenticated to run an action.",
+          message: "Must be authenticated to run an action; your session is invalid.",
         },
       }),
     );
