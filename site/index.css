@@ -17,6 +17,7 @@
     --bg-tint: #1717174a;
     --dn-tint: #dc143c4a;
     --en-tint: #7cfc004a;
+
     touch-action: none;
     scrollbar-width: none;
 }
@@ -383,21 +384,27 @@ dialog:not([open]) {
 #restore-save-dialog,
 #gambling-dialog {
     position: fixed;
+    inset: 0;
+    margin: auto;
+
     width: 50vw;
     min-height: 50vh;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 0;
+    max-height: 70vh;
+
     background-color: var(--bg-col-t);
+
     backdrop-filter: blur(1rem);
     -webkit-backdrop-filter: blur(1rem);
-    z-index: 6;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
     font-family: "Tiny5", sans-serif;
     color: var(--fg-col);
+
+    overflow: auto;
 }
 
 #change-nickname>form,
@@ -408,6 +415,7 @@ dialog:not([open]) {
     justify-items: start;
     align-items: start;
     gap: 2.5vmin;
+
     font-family: "Tiny5", sans-serif;
     color: var(--fg-col);
 }
@@ -418,7 +426,7 @@ dialog:not([open]) {
 }
 
 #gambling-dialog {
-    padding: 10vmin 0;
+    padding: 5vmin;
 }
 
 #gambling-dialog>form>p {

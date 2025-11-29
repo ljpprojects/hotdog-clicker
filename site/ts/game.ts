@@ -29,6 +29,7 @@ import {
   openGamblingButton,
   gamblingDialog,
   spinSlotsButton,
+  pokiesWagerSlider,
 } from "./elements";
 
 import { updateLeaderboard } from "./leaderboard";
@@ -36,7 +37,7 @@ import { SharedMutable } from "./SharedMutable";
 import { updateWealthinessDisplay } from "./wealth";
 import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
 import { GAMBLING_NW_THRESHOLD } from "./pokies";
-import { Mode, ModeBasedAction } from "./mode";
+import { mode, Mode, ModeBasedAction } from "./mode";
 
 import "./sound";
 import "./ui";
@@ -117,19 +118,6 @@ export const hds = new Binding<number, number>({
     hdsElement.textContent = formatter.value.format(to);
 
     checkBuyables();
-
-    // Check if it is 'safe' to spin slots
-    // It is 'safe' if the hds is more than 5% of the hdnw (which is the most you can lose)
-    if (to < hdnw.value / 20 && slotsAreSafe) {
-      console.log("UNSAFE 4 SLOTS")
-
-      slotsAreSafe = false;
-      spinSlotsButton.setAttribute("data-unsafe", "true");
-    } else if (to > hdnw.value / 20 && !slotsAreSafe) {
-      console.log("SAFE 4 SLOTS")
-
-      spinSlotsButton.removeAttribute("data-unsafe")
-    }
 
     if (dispatcher === "btn-click") hdsIncTimeoutEnd = Date.now() + 100;
   },
@@ -530,6 +518,8 @@ let lastTime = performance.now();
 export const shouldQuitEventLoop = new SharedMutable(false);
 
 export const evloop = (time: number) => {
+  if (mode === Mode.FREEZE_MODE) return;
+
   // First, add the delta-adjusted hdps to the hds
   //
   const deltaSeconds = (time - lastTime) / 1000;
@@ -577,6 +567,19 @@ export const evloop = (time: number) => {
   }
 
   lastTime = time;
+
+  // Check if it is 'safe' to spin slots
+  // It is 'safe' if the hds is more than 5% of the hdnw (which is the most you can lose)
+  if (hds.value < hdnw.value * pokiesWagerSlider.valueAsNumber / 100 && slotsAreSafe) {
+    console.log("UNSAFE 4 SLOTS")
+
+    slotsAreSafe = false;
+    spinSlotsButton.setAttribute("data-unsafe", "true");
+  } else if (hds.value > hdnw.value * pokiesWagerSlider.valueAsNumber / 100 && !slotsAreSafe) {
+    console.log("SAFE 4 SLOTS")
+
+    spinSlotsButton.removeAttribute("data-unsafe")
+  }
 
   if (!shouldQuitEventLoop.value) {
     requestAnimationFrame(evloop);

@@ -10,6 +10,9 @@
     "directory": "./site",
     "not_found_handling": "none"
   },
+  "vars": {
+    "ENVIRONMENT": "prod:",
+  },
   "build": {
     "command": "bash ./build.sh",
     "watch_dir": [
@@ -31,6 +34,13 @@
       "binding": "DB",
       "database_name": "hotdog-clicker-db",
       "database_id": "323937b2-8bb1-4f6d-a7cd-fc1a9146acb1",
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "SESSIONS",
+      "id": "9db16a9b3e4d43719c1be95fad218fb0",
+      "preview_id": "4c757708188742a5a9c582ce23fb37c2"
     }
   ]
 }

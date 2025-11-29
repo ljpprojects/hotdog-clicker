@@ -11,3 +11,7 @@ bun.lock
 *lock*
 better.py
 .dev
+
+.env*
+.dev.env*
+.dev.vars*

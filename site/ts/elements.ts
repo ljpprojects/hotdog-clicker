@@ -150,3 +150,6 @@ export const slotBoxes: [HTMLSpanElement, HTMLSpanElement, HTMLSpanElement] = [
 ];
 
 export const spinSlotsButton: HTMLButtonElement = document.querySelector("#spin-slots")!;
+
+export const pokiesWagerDisplay = document.getElementById("pokies-wager-display")!;
+export const pokiesWagerSlider: HTMLInputElement = document.querySelector("#pokies-wager-slider")!;

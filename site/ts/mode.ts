@@ -144,6 +144,13 @@ export const enterBuyMode = () => {
   updateLeaderboard()
 }
 
+export const enterFreezeMode = () => {
+  mode = Mode.FREEZE_MODE;
+
+  // Quit the event loop
+  shouldQuitEventLoop.value = true;
+}
+
 export const ALL_MODES = [Mode.BUY_MODE, Mode.SELL_MODE, Mode.FREEZE_MODE, Mode.TRANSITION_MODE];
 
 export class ModeBasedAction<T> {

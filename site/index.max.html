@@ -4,6 +4,19 @@
  / _` || || | | '_ \  / _` || || |  / __|| '_ \  / _` || __|/ _` || '_ \ | __|
 | (_| || || | | | | || (_| || || | | (__ | | | || (_| || |_| (_| || |_) || |_
  \__,_||_||_| |_| |_| \__,_||_||_|  \___||_| |_| \__,_| \__|\__, || .__/  \__|
+                                                            |___/ |_|
+        _  _   _             _  _         _             _                 _
+  __ _ | || | | |__    __ _ (_)| |   ___ | |__    __ _ | |_  __ _  _ __  | |_
+ / _` || || | | '_ \  / _` || || |  / __|| '_ \  / _` || __|/ _` || '_ \ | __|
+| (_| || || | | | | || (_| || || | | (__ | | | || (_| || |_| (_| || |_) || |_
+ \__,_||_||_| |_| |_| \__,_||_||_|  \___||_| |_| \__,_| \__|\__, || .__/  \__|
+                                                            |___/ |_|
+        _  _   _             _  _         _             _                 _
+  __ _ | || | | |__    __ _ (_)| |   ___ | |__    __ _ | |_  __ _  _ __  | |_
+ / _` || || | | '_ \  / _` || || |  / __|| '_ \  / _` || __|/ _` || '_ \ | __|
+| (_| || || | | | | || (_| || || | | (__ | | | || (_| || |_| (_| || |_) || |_
+ \__,_||_||_| |_| |_| \__,_||_||_|  \___||_| |_| \__,_| \__|\__, || .__/  \__|
+                                                            |___/ |_|
 -->
 
 <!doctype html>
@@ -15,11 +28,11 @@
             content="Hot Dog Clicker is a fun way to pass the time."
         />
         <meta name="og:title" property="og:title" content="Hot Dog Clicker" />
-        <link rel="canonical" href="https://hdc.ljpprojects.org/" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta charset="utf-8" />
+        <link rel="canonical" href="https://hdc.ljpprojects.org/" />
         <link rel="stylesheet" href="/dist/index-min.css" />
     </head>
-
     <body>
         <nav>
             <button title="Main Menu" id="open-main-menu" data-click-sound data-hover-sound aria-label="Open Main Menu">
@@ -187,12 +200,7 @@
         <dialog id="gambling-dialog" data-alert-sound>
             <!-- Do NOT submit on enter -->
             <form method="dialog" onkeydown="return event.key !== 'Enter'">
-                <b>Gambling!!</b>
-                <p>Getting 777 will give you 100% of your hdnw or 10 billion hds, whatever is higher</p>
-                <p>Getting 3 of the same digit will give you 50% of your hdnw or 1 billion hds, whatever is higher</p>
-                <p>Getting 2 of the same digit in a row will give you 10% of your hdnw</p>
-                <p>Getting 2 of the same digit not in a row will give you 1% of your hdnw</p>
-                <small>Not getting anything will lose you 5% of your hdnw 🤫</small>
+                <b>POKIESSSSS!!</b>
                 <div id="slots">
                     <div class="squ-box">
                         <span id="slot-1">0</span>
@@ -204,7 +212,9 @@
                         <span id="slot-3">0</span>
                     </div>
                 </div>
-                <button data-button id="spin-slots" onclick="return false;">SPIN!!!!!</button>
+                <p>Wager (percent of hdnw): <span id="pokies-wager-display">0</span></p>
+                <input type="range" min="1" max="100" id="pokies-wager-slider" />
+                <button id="spin-slots" onclick="return false;" data-button data-click-sound data-hover-sound>SPIN!!!!!</button>
                 <input type="submit" value="nvm" data-button data-click-sound data-hover-sound />
             </form>
         </dialog>

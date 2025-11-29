@@ -1,4 +1,4 @@
-import { Hono, Context } from "hono";
+import { Hono, Context, TypedResponse } from "hono";
 import { trimTrailingSlash } from 'hono/trailing-slash'
 import { cors } from 'hono/cors';
 import { csrf } from 'hono/csrf';
@@ -15,82 +15,177 @@ import type {
 } from "../shared/types.d.ts";
 
 import { CookieOptions } from "hono/utils/cookie";
+import { env } from "cloudflare:workers";
+import { ContentfulStatusCode } from "hono/utils/http-status.js";
+import { BlankInput } from "hono/types";
+
+type SessionData = {
+  identifier: string
+}
 
 const IDENT_COOKIE_NAME = "identifier";
 const IDENT_COOKIE_MAX_AGE = 60 ** 2 * 24 * 31 * 6;
 
-const COOKIE_OPTS: (age: number) => CookieOptions = (age: number) => ({
-  httpOnly: true,
-  sameSite: "Strict",
-  maxAge: age,
-  //secure: true,
-  //prefix: "secure",
-  path: "/",
-  // domain: "hdc.ljpprojects.org"
-});
+const SESSION_COOKIE_NAME = "session";
+const SESSION_MAX_AGE = 60 ** 2 * 30;
+
+const COOKIE_OPTS: (age: number) => CookieOptions = (age: number) => {
+  if (env.ENVIRONMENT.startsWith("prod:")) {
+    return {
+      httpOnly: true,
+      sameSite: "Strict",
+      maxAge: age,
+      secure: true,
+      prefix: "secure",
+      path: "/",
+      domain: env.ENVIRONMENT === "prod:release" ? 'https://hdc.ljpprojects.org' : 'https://dev.hdc.ljpprojects.org'
+    }
+  } else {
+    return {
+      httpOnly: true,
+      sameSite: "Strict",
+      maxAge: age,
+      path: "/",
+    }
+  }
+};
+
+const KV_PUT_OPTS: (identifier: string) => KVNamespacePutOptions = (identifier) => {
+  return {
+    expirationTtl: SESSION_MAX_AGE,
+    metadata: {
+      environment: env.ENVIRONMENT
+    }
+  }
+}
 
 const sanitiseDBData = (full: DBDataFull): DBData => {
   return {
     encoded_save: full.encoded_save,
     nickname: full.nickname,
     net_worth: full.net_worth
-  } satisfies DBData;
-};
-
-type Bindings = {
-  DB: D1Database;
+  } as DBData;
 };
 
 const workerData: (dat: ServerSentWorkerData) => ServerSentWorkerData = (dat) =>
   dat;
 
-const app = new Hono<{ Bindings: Bindings }>();
+const app = new Hono<{ Bindings: Cloudflare.Env }>();
 
 app.use(trimTrailingSlash());
 
-/*app.use(csrf({
-  origin: [
-    'https://hdc.ljpprojects.org',
-    'https://dev.hdc.ljpprojects.org',
-  ],
-}))
-
-/*app.use(cors({
-  origin: [
-    'https://hdc.ljpprojects.org',
-    'https://dev.hdc.ljpprojects.org',
-  ],
-  allowHeaders: ['X-Custom-Header', 'Upgrade-Insecure-Requests'],
-  allowMethods: ['POST', 'GET'],
-  exposeHeaders: ['Content-Length', 'X-Kuma-Revision'],
-  maxAge: 600,
-  credentials: true,
-}))*/
+if (env.ENVIRONMENT.startsWith("prod:")) {
+  app.use(cors({
+    origin: env.ENVIRONMENT === "prod:release" ? 'https://hdc.ljpprojects.org' : 'https://dev.hdc.ljpprojects.org',
+    allowHeaders: ['Upgrade-Insecure-Requests'],
+    allowMethods: ['POST', 'GET'],
+    exposeHeaders: ['Content-Length'],
+    maxAge: 600,
+    credentials: true,
+  }))
+}
 
 app.use(logger());
 
-app.get("/auth", async (c) => {
-  const bytes = new Uint8Array(32);
+const initSession = async (
+  c: Context<{
+    Bindings: Cloudflare.Env;
+  }, string, BlankInput>,
+
+  identifier: string
+): Promise<[Response, string]> => {
+  const bytes = new Uint8Array(128);
   crypto.getRandomValues(bytes);
 
-  const identifier = btoa(String.fromCharCode(...bytes));
+  /*
+  Examples:
+  4upj481ZwuZXvLaByK/Oi9nbx8XtxTK+4Tu54pYz30EyJ6CFlf9wrLnH16oY2lanWSL6Fu2juM5sRyqoWZ7tJa3C8uaeoE1SYtxj27YUylcxeaWWsRhs2f+uYgMEe5AwetsFLynPdmzUFypYd3LCMZgl2V/K6M59TvQFD3tpTyU=
+  mCQKmRBLn/25q6DbU5r4B70CEB83m7YiF75dalHZRUEab8f5IAnirnIP7/OO6YIWsg9Pr5GT85NpUGVLkc8p9PUqVYQPvWoKCSdb4W6S7fy+nHuYrN5gYcUwN/HH6CsKuCF99E91UIfg/IKZLJEcMuoqo78djepPa67kOb3Mthw=
+  */
+  const sessionCode = bytes.toBase64();
+
+  // We have an identifier, so we need to create a new session
+  await c.env.SESSIONS.put(`session:${sessionCode}`, JSON.stringify({
+    identifier,
+  } as SessionData));
 
   setCookie(
     c,
-    IDENT_COOKIE_NAME,
-    identifier,
-    COOKIE_OPTS(IDENT_COOKIE_MAX_AGE),
+    SESSION_COOKIE_NAME,
+    sessionCode,
+    COOKIE_OPTS(SESSION_MAX_AGE)
   );
 
   const callback = c.req.query("callback");
-
-  if (callback) {
-    return c.redirect(callback);
+  if (callback != null) {
+    return [c.redirect(callback), sessionCode]
   }
 
-  return c.json({
-    success: true,
-  });
+  return [c.json(
+    workerData({
+      success: true,
+    })
+  ), sessionCode]
+}
+
+const checkSession = async (
+  c: Context<{
+    Bindings: Cloudflare.Env;
+  }, string, BlankInput>,
+
+  sessionCode: string
+): Promise<SessionData | null> => {
+  const identifierRegex = /^[a-zA-Z0-9+\/]{43}=$/;
+  const sessionRegex = /^[a-zA-Z0-9+\/]{171}=$/;
+
+  if (!sessionRegex.test(sessionCode)) {
+    return null
+  }
+
+  const sessionData = await env.SESSIONS.get<SessionData>(`session:${sessionCode}`, "json");
+  if (sessionData == null) {
+    return null;
+  }
+
+  if (!identifierRegex.test(sessionData.identifier)) {
+    return null
+  }
+
+  const query = `
+    select exists(
+      select 1
+      from savedat
+      where identifier = ?
+    ) as exists_flag
+  `.trim();
+
+  const d1result = await c.env.DB.prepare(query).bind(sessionData.identifier).run();
+  if (d1result.error) {
+    return null;
+  }
+
+  if (d1result.results[0] != null) {
+    d1result.results[0]
+  }
+
+  const exists = (d1result.results?.[0]?.exists_flag ?? 0) === 1;
+  return exists ? sessionData : null
+}
+
+app.get("/auth", async (c) => {
+  // Get the identifier cookie
+  const maybeIdentifier = getCookie(c, IDENT_COOKIE_NAME);
+
+  if (maybeIdentifier != null) {
+    return (await initSession(c, maybeIdentifier))[0];
+  }
+
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+
+  const identifier = bytes.toBase64();
+
+  return (await initSession(c, identifier))[0];
 });
 
 app.post("/api", async (c) => {
@@ -110,9 +205,22 @@ app.post("/api", async (c) => {
     );
   }
 
-  const identifier = getCookie(c, IDENT_COOKIE_NAME);
+  const session = getCookie(c, SESSION_COOKIE_NAME);
+  const identifier = getCookie(c, SESSION_COOKIE_NAME);
+  if (session == null || identifier == null) {
+    return c.json(
+      workerData({
+        success: false,
+        error: {
+          abbrev: "EAUTH",
+          message: "Must be authenticated to run an action.",
+        },
+      }),
+    );
+  }
 
-  if (!identifier) {
+  const sessionData = await checkSession(c, session);
+  if (sessionData == null) {
     return c.json(
       workerData({
         success: false,
