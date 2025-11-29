@@ -11,7 +11,7 @@
     "not_found_handling": "none"
   },
   "vars": {
-    "ENVIRONMENT": "dev:nightly",
+    "ENVIRONMENT": "prod:nightly",
   },
   "build": {
     "command": "bash ./build.sh",
