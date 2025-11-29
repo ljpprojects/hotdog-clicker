@@ -90,14 +90,6 @@ export const receiveNickname = async (rejectOnInvalid: boolean = false): Promise
 
         return rej("rejectOnInvalid was set to true and the given nickname was invalid.")
       } else if (!isInvalid) {
-        // Submit the form
-        const ev = new SubmitEvent("submit", {
-          cancelable: false,
-          submitter: nicknameDialogInputElement
-        })
-
-        nicknameDialogFormElement.dispatchEvent(ev);
-
         cleanup();
 
         updateLeaderboard().then(() => res(recvNickname));
