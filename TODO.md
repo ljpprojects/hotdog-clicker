@@ -1,5 +1,9 @@
 # TODO
 
+## DO THESE SOON (ish)
+
+**Make the Worker not have to think it is in the development environment!!!!!!!!!**
+
 ## Priority-sorted
 
 1. Fix settings menu
