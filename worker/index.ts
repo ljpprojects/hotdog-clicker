@@ -77,11 +77,7 @@ app.use(trimTrailingSlash());
 if (env.ENVIRONMENT.startsWith("prod:")) {
   app.use(cors({
     origin: env.ENVIRONMENT === "prod:release" ? 'https://hdc.ljpprojects.org' : 'https://dev.hdc.ljpprojects.org',
-    allowHeaders: ['Upgrade-Insecure-Requests'],
-    allowMethods: ['POST', 'GET'],
     exposeHeaders: ['Content-Length'],
-    maxAge: 600,
-    credentials: true,
   }))
 }
 
