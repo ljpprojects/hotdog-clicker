@@ -131,10 +131,6 @@ const checkSession = async (
     return null;
   }
 
-  if (!identifierRegex.test(sessionData.identifier)) {
-    return null
-  }
-
   const query = `
     select exists(
       select 1
