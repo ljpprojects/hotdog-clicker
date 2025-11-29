@@ -36,7 +36,6 @@ const COOKIE_OPTS: (age: number) => CookieOptions = (age: number) => {
       sameSite: "Strict",
       maxAge: age,
       secure: true,
-      prefix: "secure",
       path: "/",
       domain: env.ENVIRONMENT === "prod:release" ? 'https://hdc.ljpprojects.org' : 'https://dev.hdc.ljpprojects.org'
     }
@@ -74,9 +73,11 @@ const app = new Hono<{ Bindings: Cloudflare.Env }>();
 
 app.use(trimTrailingSlash());
 
+console.log(env.ENVIRONMENT);
+
 if (env.ENVIRONMENT.startsWith("prod:")) {
   app.use(cors({
-    origin: env.ENVIRONMENT === "prod:release" ? 'hdc.ljpprojects.org' : 'dev.hdc.ljpprojects.org',
+    origin: env.ENVIRONMENT === "prod:release" ? 'https://hdc.ljpprojects.org' : 'https://dev.hdc.ljpprojects.org',
     allowHeaders: ['Upgrade-Insecure-Requests'],
     allowMethods: ['POST', 'GET'],
     exposeHeaders: ['Content-Length'],
