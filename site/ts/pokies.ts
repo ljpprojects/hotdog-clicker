@@ -276,7 +276,9 @@ spinSlotsButton.addEventListener("click", async () => {
   );
 
   const shadowSave = compileSave();
+
   shadowSave.hdc += amountWon;
+  shadowSave.hdnw += amountWon;
 
   {
     enterBuyMode();
