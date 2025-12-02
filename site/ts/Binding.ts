@@ -46,6 +46,7 @@ export class Binding<V, B> {
   private readonly getfn: (this: BindingBacker<B>, dispatcher?: string) => V;
 
   private backing: B | null;
+  readonly initialBacking: B | null = null;
 
   readonly binderBacking: BindingBacker<B> =
     new (class extends BindingBacker<B> {
@@ -74,6 +75,7 @@ export class Binding<V, B> {
     setfn(this: BindingBacker<B>, to: V, dispatcher?: string): void;
     getfn(this: BindingBacker<B>, dispatcher?: string): V;
   }) {
+    this.initialBacking = options.backing ?? null;
     this.backing = options.backing ?? null;
     this.getfn = options.getfn;
     this.setfn = options.setfn;

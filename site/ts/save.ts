@@ -303,31 +303,31 @@ export const loadFromSave = (saveData: HDCSaveData) => {
   hdps.value = NaNNullCoerce(saveData.hdps, 0);
 
   butchersOwned.value = NaNNullCoerce(saveData.ownedButchers, 0);
-  butcherPrice.value = calcCost(butcherPrice.value, butchersOwned.value);
+  butcherPrice.value = calcCost(butcherPrice.initialBacking!, butchersOwned.value);
 
   standsOwned.value = NaNNullCoerce(saveData.ownedStands, 0);
-  standPrice.value = calcCost(standPrice.value, standsOwned.value);
+  standPrice.value = calcCost(standPrice.initialBacking!, standsOwned.value);
 
   cartsOwned.value = NaNNullCoerce(saveData.ownedCarts, 0);
-  cartPrice.value = calcCost(cartPrice.value, cartsOwned.value);
+  cartPrice.value = calcCost(cartPrice.initialBacking!, cartsOwned.value);
 
   trucksOwned.value = NaNNullCoerce(saveData.ownedTrucks, 0);
-  truckPrice.value = calcCost(truckPrice.value, trucksOwned.value);
+  truckPrice.value = calcCost(truckPrice.initialBacking!, trucksOwned.value);
 
   plantationsOwned.value = NaNNullCoerce(saveData.ownedPlantations, 0);
-  plantationPrice.value = calcCost(plantationPrice.value, plantationsOwned.value);
+  plantationPrice.value = calcCost(plantationPrice.initialBacking!, plantationsOwned.value);
 
   factoriesOwned.value = NaNNullCoerce(saveData.ownedFactories, 0);
-  factoryPrice.value = calcCost(factoryPrice.value, factoriesOwned.value);
+  factoryPrice.value = calcCost(factoryPrice.initialBacking!, factoriesOwned.value);
 
   abattoirsOwned.value = NaNNullCoerce(saveData.ownedAbattoirs, 0);
-  abattoirPrice.value = calcCost(abattoirPrice.value, abattoirsOwned.value);
+  abattoirPrice.value = calcCost(abattoirPrice.initialBacking!, abattoirsOwned.value);
 
   restaurantsOwned.value = NaNNullCoerce(saveData.ownedRestaurants, 0);
-  restaurantPrice.value = calcCost(restaurantPrice.value, restaurantsOwned.value);
+  restaurantPrice.value = calcCost(restaurantPrice.initialBacking!, restaurantsOwned.value);
 
   franchisesOwned.value = NaNNullCoerce(saveData.ownedFranchises, 0);
-  franchisePrice.value = calcCost(franchisePrice.value, franchisesOwned.value);
+  franchisePrice.value = calcCost(franchisePrice.initialBacking!, franchisesOwned.value);
 
   hdnw.value = NaNNullCoerce(saveData.hdnw, 0);
 
