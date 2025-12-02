@@ -118,7 +118,7 @@ export const payout = (wager: number, symbols: [SlotSymbol, SlotSymbol, SlotSymb
 
   const compactFormatter = new Intl.NumberFormat(navigator.languages, formatterConfig);
 
-  if (symbols.every((s, _, a) => s === a[0])) {
+  if (symbols.every((s, _, a) => s !== "▼" && s === a[0])) {
     // 3-of-a-kind
     const category = symbolCategoryTable[symbols[0]];
     const multiplier = payoutTable["3-kind"][category];
@@ -132,7 +132,7 @@ export const payout = (wager: number, symbols: [SlotSymbol, SlotSymbol, SlotSymb
     }, delayMs)
 
     return winnings;
-  } else if (symbols.some((s, i, a) => i !== 0 && s === a[i - 1])) {
+  } else if (symbols.some((s, i, a) => s !== "▼" && i !== 0 && s === a[i - 1])) {
     // 2-of-a-kind consecutive
     const category = symbolCategoryTable[symbols.find((s, i, a) => i !== a.length - 1 && s === a[i + 1])!];
     const multiplier = payoutTable["2-cons"][category];
@@ -146,7 +146,7 @@ export const payout = (wager: number, symbols: [SlotSymbol, SlotSymbol, SlotSymb
     }, delayMs)
 
     return winnings;
-  } else if (symbols[0] === symbols[2]) {
+  } else if (symbols[0] !== "▼" && symbols[0] === symbols[2]) {
     // 2-of-a-kind consecutive
     const category = symbolCategoryTable[symbols[0]];
     const multiplier = payoutTable["2-split"][category];

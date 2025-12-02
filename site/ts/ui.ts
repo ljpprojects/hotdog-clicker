@@ -150,10 +150,7 @@ restoreSaveButton.addEventListener("click", async () => {
 
 getIdentifierButton.addEventListener("click", async () => {
   closeMainMenu()
-  const ident = await getAndShowIdentifierCode();
-
-  // Hack to make the identifier code display monospace
-  notificationPopupSet.body.innerHTML = `Your identifier code is <code>${ident}</code>`
+  await getAndShowIdentifierCode();
 })
 
 export const checkBuyables = () => {

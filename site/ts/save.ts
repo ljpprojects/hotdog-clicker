@@ -279,7 +279,7 @@ export const generateEncodedSave = (from?: HDCSaveData): string => {
 
 export const save = async (from?: HDCSaveData): Promise<ServerSentWorkerData> => {
   const saveData = generateEncodedSave(from);
-  const req = generateReport(saveData, nickname, compileSave().hdnw);
+  const req = generateReport(saveData, nickname, (from ?? compileSave()).hdnw);
 
   return await makeWorkerReq(req);
 };
@@ -292,10 +292,7 @@ export const wipe = async (): Promise<ServerSentWorkerData> => {
     DEFAULT_SAVE_DATA.hdnw,
   );
 
-  return await makeWorkerReq(req).then(r => {
-    console.log("WIPED")
-    return r;
-  });
+  return await makeWorkerReq(req);
 };
 
 export const loadFromSave = (saveData: HDCSaveData) => {
