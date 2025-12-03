@@ -1,7 +1,5 @@
 import { Hono, Context, TypedResponse } from "hono";
-import { trimTrailingSlash } from 'hono/trailing-slash'
-import { cors } from 'hono/cors';
-import { csrf } from 'hono/csrf';
+import { trimTrailingSlash } from 'hono/trailing-slash';
 import { getCookie, setCookie } from "hono/cookie";
 import { logger } from "hono/logger";
 import type {
@@ -16,7 +14,6 @@ import type {
 
 import { CookieOptions } from "hono/utils/cookie";
 import { env } from "cloudflare:workers";
-import { ContentfulStatusCode } from "hono/utils/http-status.js";
 import { BlankInput } from "hono/types";
 
 type SessionData = {
@@ -131,25 +128,12 @@ const checkSession = async (
     return null;
   }
 
-  const query = `
-    select exists(
-      select 1
-      from savedat
-      where identifier = ?
-    ) as exists_flag
-  `.trim();
-
-  const d1result = await c.env.DB.prepare(query).bind(sessionData.identifier).run();
-  if (d1result.error) {
+  if (!identifierRegex.test(sessionData.identifier)) {
     return null;
   }
 
-  if (d1result.results[0] != null) {
-    d1result.results[0]
-  }
 
-  const exists = (d1result.results?.[0]?.exists_flag ?? 0) === 1;
-  return exists ? sessionData : null
+  return sessionData
 }
 
 app.get("/auth", async (c) => {
@@ -162,12 +146,16 @@ app.get("/auth", async (c) => {
 
   const session = getCookie(c, SESSION_COOKIE_NAME);
   if (session != null) {
-    const sessionData = await checkSession(c, session);
-
-    if (sessionData != null) {
-
-      return (await initSession(c, sessionData.identifier))[0];
+    const callback = c.req.query("callback");
+    if (callback != null) {
+      return c.redirect(callback);
     }
+
+    return c.json(
+      workerData({
+        success: true,
+      })
+    );
   }
 
   const bytes = new Uint8Array(32);
@@ -209,6 +197,7 @@ app.post("/api", async (c) => {
   }
 
   const sessionData = await checkSession(c, session);
+  console.log(sessionData)
   if (sessionData == null) {
     return c.json(
       workerData({
@@ -222,6 +211,8 @@ app.post("/api", async (c) => {
   }
 
   const identifier = sessionData.identifier;
+
+  console.log(identifier);
 
   switch (body.action) {
     case "leaderboard":
