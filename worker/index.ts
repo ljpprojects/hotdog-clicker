@@ -160,6 +160,16 @@ app.get("/auth", async (c) => {
     return (await initSession(c, maybeIdentifier))[0];
   }
 
+  const session = getCookie(c, SESSION_COOKIE_NAME);
+  if (session != null) {
+    const sessionData = await checkSession(c, session);
+
+    if (sessionData != null) {
+
+      return (await initSession(c, sessionData.identifier))[0];
+    }
+  }
+
   const bytes = new Uint8Array(32);
   crypto.getRandomValues(bytes);
 
