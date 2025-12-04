@@ -26,7 +26,7 @@ const REFRESH_TOKEN_NAME = "rftk";
 const REFRESH_TOKEN_MAX_AGE = 60 ** 2 * 24 * 31 * 6;
 
 const SESSION_COOKIE_NAME = "session";
-const SESSION_MAX_AGE = 60 ** 2 * 30;
+const SESSION_MAX_AGE = 60 * 30;
 
 const COOKIE_OPTS: (age: number) => CookieOptions = (age: number) => {
   if (env.ENVIRONMENT.startsWith("prod:")) {
