@@ -178,7 +178,6 @@ app.get("/auth", async (c) => {
   if (maybeIdentifier != null) {
     // Check if we have a refresh token
     const refreshToken = getCookie(c, REFRESH_TOKEN_NAME);
-    console.log(refreshToken)
     if (refreshToken == null) {
       const newRefreshToken = createRefreshToken(Uint8Array.fromBase64(maybeIdentifier))!;
 
@@ -296,7 +295,6 @@ app.post("/api", async (c) => {
   }
 
   const sessionData = await checkSession(c, session);
-  console.log(sessionData)
   if (sessionData == null) {
     return c.json(
       workerData({
@@ -311,7 +309,19 @@ app.post("/api", async (c) => {
 
   const identifier = sessionData.identifier;
 
-  console.log(identifier);
+  // Check if we have a refresh token, and ensure we create one (everyone needs one!!!!)
+  const refreshToken = getCookie(c, REFRESH_TOKEN_NAME);
+  if (refreshToken == null) {
+    const newRefreshToken = createRefreshToken(Uint8Array.fromBase64(identifier))!;
+
+    // Set refresh token
+    setCookie(
+      c,
+      REFRESH_TOKEN_NAME,
+      newRefreshToken.toBase64(),
+      COOKIE_OPTS(REFRESH_TOKEN_MAX_AGE)
+    );
+  }
 
   switch (body.action) {
     case "leaderboard":
