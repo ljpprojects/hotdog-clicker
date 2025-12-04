@@ -333,12 +333,13 @@ export const loadFromSave = (saveData: HDCSaveData) => {
 }
 
 export const load = async (fromReq?: ServerSentWorkerData) => {
-  const res = fromReq ?? await makeWorkerReq(generateGet());
+  let res = fromReq ?? await makeWorkerReq(generateGet());
 
   if (!res.success) {
     switch (res.error?.abbrev) {
       case "EAUTH":
         await fetch("/auth");
+        res = await makeWorkerReq(generateGet());
 
         break;
     }

@@ -96,6 +96,8 @@ export const hdnw = new Binding<number, number>({
 let hdsIncTimeoutEnd = Date.now();
 let slotsAreSafe = true;
 
+export const HD_CLICKS_PER_SEC = 20;
+
 /**
  * The amount of hot dogs the user has.
  */
@@ -119,7 +121,7 @@ export const hds = new Binding<number, number>({
 
     checkBuyables();
 
-    if (dispatcher === "btn-click") hdsIncTimeoutEnd = Date.now() + 100;
+    if (dispatcher === "btn-click") hdsIncTimeoutEnd = Date.now() + (1000 / HD_CLICKS_PER_SEC);
   },
 
   getfn(): number {

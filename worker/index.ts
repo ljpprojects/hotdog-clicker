@@ -21,7 +21,9 @@ type SessionData = {
 }
 
 const IDENT_COOKIE_NAME = "identifier";
-const IDENT_COOKIE_MAX_AGE = 60 ** 2 * 24 * 31 * 6;
+
+const REFRESH_TOKEN_NAME = "rftk";
+const REFRESH_TOKEN_MAX_AGE = 60 ** 2 * 24 * 31 * 6;
 
 const SESSION_COOKIE_NAME = "session";
 const SESSION_MAX_AGE = 60 ** 2 * 30;
@@ -32,8 +34,9 @@ const COOKIE_OPTS: (age: number) => CookieOptions = (age: number) => {
       httpOnly: true,
       sameSite: "Strict",
       maxAge: age,
-      //secure: true,
+      secure: true,
       path: "/",
+      prefix: "secure",
       //domain: env.ENVIRONMENT === "prod:release" ? 'https://hdc.ljpprojects.org' : 'https://dev.hdc.ljpprojects.org'
     }
   } else {
@@ -46,12 +49,10 @@ const COOKIE_OPTS: (age: number) => CookieOptions = (age: number) => {
   }
 };
 
-const KV_PUT_OPTS: (identifier: string) => KVNamespacePutOptions = (identifier) => {
-  return {
-    expirationTtl: SESSION_MAX_AGE,
-    metadata: {
-      environment: env.ENVIRONMENT
-    }
+const KV_PUT_OPTS: KVNamespacePutOptions = {
+  expirationTtl: SESSION_MAX_AGE,
+  metadata: {
+    environment: env.ENVIRONMENT
   }
 }
 
@@ -73,6 +74,37 @@ app.use(trimTrailingSlash());
 console.log(env.ENVIRONMENT);
 app.use(logger());
 
+const createRefreshToken = (identifier: Uint8Array) => {
+  if (identifier.length !== 32) {
+    return null
+  }
+
+  // Identifier should be 32 bytes long
+
+  const randomBytes = new Uint8Array(96);
+  crypto.getRandomValues(randomBytes);
+
+  const bytes = new Uint8Array(128);
+
+  bytes.set(randomBytes, 0);
+  bytes.set(identifier, 96);
+
+  return bytes;
+}
+
+const checkRefreshToken = (refreshToken: Uint8Array) => {
+  if (refreshToken.length !== 128) {
+    return false
+  }
+
+  // refreshToken should be 128 bytes long
+
+  const identifierBytes = refreshToken.slice(96);
+  const identifierRegex = /^[a-zA-Z0-9+\/]{43}=$/;
+
+  return identifierRegex.test(identifierBytes.toBase64());
+}
+
 const initSession = async (
   c: Context<{
     Bindings: Cloudflare.Env;
@@ -93,7 +125,7 @@ const initSession = async (
   // We have an identifier, so we need to create a new session
   await c.env.SESSIONS.put(`session:${sessionCode}`, JSON.stringify({
     identifier,
-  } as SessionData));
+  } as SessionData), KV_PUT_OPTS);
 
   setCookie(
     c,
@@ -122,6 +154,11 @@ const checkSession = async (
   sessionCode: string
 ): Promise<SessionData | null> => {
   const identifierRegex = /^[a-zA-Z0-9+\/]{43}=$/;
+  const sessionRegex = /^[a-zA-Z0-9+\/]{171}=$/;
+
+  if (!sessionRegex.test(sessionCode)) {
+    return null;
+  }
 
   const sessionData = await env.SESSIONS.get<SessionData>(`session:${sessionCode}`, "json");
   if (sessionData == null) {
@@ -132,7 +169,6 @@ const checkSession = async (
     return null;
   }
 
-
   return sessionData
 }
 
@@ -141,27 +177,91 @@ app.get("/auth", async (c) => {
   const maybeIdentifier = getCookie(c, IDENT_COOKIE_NAME);
 
   if (maybeIdentifier != null) {
+    // Check if we have a refresh token
+    const refreshToken = getCookie(c, REFRESH_TOKEN_NAME);
+    console.log(refreshToken)
+    if (refreshToken == null) {
+      const newRefreshToken = createRefreshToken(Uint8Array.fromBase64(maybeIdentifier))!;
+
+      // Set refresh token
+      setCookie(
+        c,
+        REFRESH_TOKEN_NAME,
+        newRefreshToken.toBase64(),
+        COOKIE_OPTS(REFRESH_TOKEN_MAX_AGE)
+      );
+    }
+
     return (await initSession(c, maybeIdentifier))[0];
   }
 
   const session = getCookie(c, SESSION_COOKIE_NAME);
   if (session != null) {
-    const callback = c.req.query("callback");
-    if (callback != null) {
-      return c.redirect(callback);
-    }
+    const sessionData = await checkSession(c, session);
+    if (sessionData) {
+      // Check if we have a refresh token
+      const refreshToken = getCookie(c, REFRESH_TOKEN_NAME);
+      if (refreshToken == null) {
+        const newRefreshToken = createRefreshToken(Uint8Array.fromBase64(sessionData.identifier))!;
 
-    return c.json(
-      workerData({
-        success: true,
-      })
-    );
+        // Set refresh token
+        setCookie(
+          c,
+          REFRESH_TOKEN_NAME,
+          newRefreshToken.toBase64(),
+          COOKIE_OPTS(REFRESH_TOKEN_MAX_AGE)
+        );
+      }
+
+      const callback = c.req.query("callback");
+      if (callback != null) {
+        return c.redirect(callback);
+      }
+
+      return c.json(
+        workerData({
+          success: true,
+        })
+      );
+    }
   }
 
-  const bytes = new Uint8Array(32);
-  crypto.getRandomValues(bytes);
+  // Last resort: check for a refresh token
+  const refreshToken = getCookie(c, REFRESH_TOKEN_NAME);
+  if (refreshToken != null) {
+    const refreshTokenBytes = Uint8Array.fromBase64(refreshToken);
+    if (checkRefreshToken(refreshTokenBytes)) {
+      const identifier = refreshTokenBytes.slice(96, 128);
 
-  const identifier = bytes.toBase64();
+      console.log(identifier.toBase64());
+
+      const newRefreshToken = createRefreshToken(identifier)!;
+
+      // Rotate refresh token
+      setCookie(
+        c,
+        REFRESH_TOKEN_NAME,
+        newRefreshToken.toBase64(),
+        COOKIE_OPTS(REFRESH_TOKEN_MAX_AGE)
+      );
+
+      return (await initSession(c, identifier.toBase64()))[0];
+    }
+  }
+
+  const identifierBytes = new Uint8Array(32);
+  crypto.getRandomValues(identifierBytes);
+
+  const identifier = identifierBytes.toBase64();
+  const newRefreshToken = createRefreshToken(identifierBytes)!;
+
+  // Set refresh token
+  setCookie(
+    c,
+    REFRESH_TOKEN_NAME,
+    newRefreshToken.toBase64(),
+    COOKIE_OPTS(REFRESH_TOKEN_MAX_AGE)
+  );
 
   return (await initSession(c, identifier))[0];
 });
@@ -350,72 +450,20 @@ app.post("/api", async (c) => {
           results,
         }),
       );
+
     case "restore":
       const { oldIdentifier } = body as ClientSentWorkerDataRestoreAction;
 
-      // Add the amount paid to the designated user
+      // Set the session to have the old identifier
+      env.SESSIONS.put(`session:${session}`, JSON.stringify({
+        identifier: oldIdentifier,
+      } as SessionData))
 
-      const restoreQuery = `
-          UPDATE savedat
-          SET encoded_save = src.encoded_save,
-              nickname     = src.nickname,
-              net_worth    = src.net_worth
-          FROM (SELECT encoded_save, nickname, net_worth
-                FROM savedat
-                WHERE identifier = ?1) AS src
-          WHERE savedat.identifier = ?2
-          RETURNING savedat.identifier,
-                    savedat.encoded_save,
-                    savedat.nickname,
-                    savedat.net_worth;
-        `.trim();
-
-      try {
-        let res: D1Result<Record<string, unknown>> = await c.env.DB.prepare(
-          restoreQuery,
-        )
-          .bind(oldIdentifier, identifier)
-          .run();
-
-        if (res == null) {
-          break;
-        }
-
-        if (res.error) {
-          return c.json(
-            workerData({
-              success: false,
-              error: {
-                abbrev: "EQURY",
-                message: `D1 returned an error: ${res.error}`,
-              },
-            }),
-          );
-
-          break;
-        }
-
-        const results = (res.results as DBDataFull[]).map((dirty) =>
-          sanitiseDBData(dirty),
-        );
-
-        return c.json(
-          workerData({
-            success: true,
-            results,
-          }),
-        );
-      } catch (e) {
-        return c.json(
-          workerData({
-            success: false,
-            error: {
-              abbrev: "EQURY",
-              message: `D1 returned an error: ${e}`,
-            },
-          }),
-        );
-      }
+      return c.json(
+        workerData({
+          success: true,
+        }),
+      );
 
     case "ident":
       return c.json(

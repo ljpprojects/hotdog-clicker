@@ -27,7 +27,9 @@ body[data-progress] {
 }
 
 :root,
-button {
+button,
+option,
+select {
     height: auto;
     font-family: "Tiny5", sans-serif;
     color: var(--fg-col);
@@ -85,8 +87,8 @@ nav img {
 
 section.card {
     background-color: var(--bg-tint);
-    backdrop-filter: blur(1rem);
-    -webkit-backdrop-filter: blur(1rem);
+    backdrop-filter: blur(2rem);
+    -webkit-backdrop-filter: blur(2rem);
     border: 0.25vmin solid var(--bg-col);
     border-radius: 2.5vmin;
     padding: 5vmin;
@@ -221,6 +223,10 @@ dialog:not([open]) {
 
 #leaderboard>ul>li::marker {
     font-weight: bold;
+}
+
+#open-main-menu {
+    cursor: context-menu;
 }
 
 #notification-prominent {
@@ -380,12 +386,11 @@ dialog:not([open]) {
     color: var(--bg-col);
 }
 
-#change-nickname,
-#restore-save-dialog,
-#gambling-dialog {
+.menu {
     position: fixed;
     inset: 0;
     margin: auto;
+    padding: 2.5vmin;
 
     width: 50vw;
     min-height: 50vh;
@@ -393,8 +398,8 @@ dialog:not([open]) {
 
     background-color: var(--bg-col-t);
 
-    backdrop-filter: blur(1rem);
-    -webkit-backdrop-filter: blur(1rem);
+    backdrop-filter: blur(2rem);
+    -webkit-backdrop-filter: blur(2rem);
 
     display: flex;
     flex-direction: column;
@@ -407,9 +412,7 @@ dialog:not([open]) {
     overflow: auto;
 }
 
-#change-nickname>form,
-#restore-save-dialog>form,
-#gambling-dialog>form {
+.menu>form {
     display: grid;
     justify-content: center;
     justify-items: start;
@@ -429,7 +432,8 @@ dialog:not([open]) {
     padding: 5vmin;
 }
 
-#gambling-dialog>form>p {
+#gambling-dialog>form>p,
+#settings-menu>form>p {
     font-size: 1.2em;
 }
 
@@ -445,10 +449,9 @@ dialog:not([open]) {
     border-radius: .5vmin;
 }
 
-#change-nickname>form>input[type="submit"],
-#restore-save-dialog>form>input[type="submit"],
-#gambling-dialog>form>input[type="submit"],
-#gambling-dialog>form>[data-button] {
+.menu>form>input[type="submit"],
+#gambling-dialog>form>[data-button],
+#settings-menu>form>[data-button] {
     border: none;
     width: 10vmin;
     font-family: "Tiny5", sans-serif;
@@ -486,4 +489,20 @@ dialog:not([open]) {
 #spin-slots[data-unsafe] {
     background-color: var(--dn-col) !important;
     cursor: wait;
+}
+
+#settings-menu {
+    padding: 10vmin;
+}
+
+#settings-menu>form>section {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+#settings-menu>form>section>div {
+    display: flex;
+    justify-content: space-between;
+    width: 30vw;
 }
