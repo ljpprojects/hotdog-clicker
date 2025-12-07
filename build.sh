@@ -1,5 +1,7 @@
 #! /bin/bash
 
+rm -rf site/dist
+
 set -euo pipefail
 mkdir -p site/dist/lib
 

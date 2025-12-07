@@ -37,7 +37,7 @@ import {
   openMainMenuButton,
   restoreSaveButton,
   getIdentifierButton,
-  openSettingsButton,
+  changeSettingsButton,
   hotdogButtonElement,
   butcherImageElement,
   standImageElement,
@@ -58,6 +58,7 @@ import { increase } from "./maths";
 import { Mode, ModeBasedAction } from "./mode";
 import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
 import { DEFAULT_SAVE_DATA, getAndShowIdentifierCode, load, restoreSave, save, wipe } from "./save";
+import { changeSettings } from "./settings";
 
 export const beginLoading = () => {
   document.body.setAttribute("data-progress", "true")
@@ -143,10 +144,10 @@ restoreSaveButton.addEventListener("click", async () => {
   await restoreSave()
 })
 
-/*openSettingsButton.addEventListener("click", async () => {
-  hideContextMenu()
+changeSettingsButton.addEventListener("click", async () => {
+  closeMainMenu()
   await changeSettings()
-})*/
+})
 
 getIdentifierButton.addEventListener("click", async () => {
   closeMainMenu()

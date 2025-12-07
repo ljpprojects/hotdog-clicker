@@ -17,6 +17,8 @@
 | (_| || || | | | | || (_| || || | | (__ | | | || (_| || |_| (_| || |_) || |_
  \__,_||_||_| |_| |_| \__,_||_||_|  \___||_| |_| \__,_| \__|\__, || .__/  \__|
                                                             |___/ |_|
+
+AI could never create this slop...
 -->
 
 <!doctype html>
@@ -205,18 +207,18 @@
 
                     <div>
                         <p>Enable Sounds</p>
-                        <input type="checkbox" checked data-button data-click-sound />
+                        <input id="sounds-enabled" type="checkbox" checked data-button data-click-sound />
                     </div>
                     <div>
                         <p>Enable Gambling</p>
-                        <input type="checkbox" data-button data-click-sound />
+                        <input id="gambling-enabled" type="checkbox" data-button data-click-sound />
                     </div>
                     <div>
                         <p>Number Format</p>
-                        <select checked data-button data-click-sound>
-                            <option>Normal (e.g. 1,234,567)</option>
-                            <option>Compact (e.g. 1.23M)</option>
-                            <option>Scientific (e.g. 1.23e6)</option>
+                        <select id="number-format" checked data-button data-click-sound>
+                            <option value="standard">Normal (e.g. 1,234,567)</option>
+                            <option value="compact">Compact (e.g. 1.23M)</option>
+                            <option value="scientific">Scientific (e.g. 1.23e6)</option>
                         </select>
                     </div>
                 </section>
@@ -225,22 +227,22 @@
 
                     <div>
                         <p>Decimal Precision (<span id="decimal-precision-display">2</span> points)</p>
-                        <input type="range" min="0" max="10" value="2" data-click-sound />
+                        <input id="decimal-precision" type="range" min="0" max="10" value="2" data-click-sound />
                     </div>
 
                     <div>
                         <p>Maximum Leaderboard Places (<span id="ldbd-places-display">15</span> places)</p>
-                        <input type="range" min="3" max="25" value="15" data-click-sound />
+                        <input id="ldbd-places" type="range" min="3" max="40" value="15" data-click-sound />
                     </div>
                 </section>
-                <button style="background-color: var(--dn-col)" data-button data-click-sound data-hover-sound>
+                <button id="settings-cancel" style="background-color: var(--dn-col)" data-button data-click-sound data-hover-sound>
                     Cancel
                 </button>
                 <input type="submit" value="Apply" tabindex="0" data-button data-click-sound data-hover-sound />
             </form>
         </dialog>
 
-        <dialog id="gambling-dialog" data-alert-sound>
+        <dialog id="gambling-dialog" class="menu" data-alert-sound>
             <!-- Do NOT submit on enter -->
             <form method="dialog" onkeydown="return event.key !== 'Enter'">
                 <b>POKIESSSSS!!</b>
@@ -295,6 +297,9 @@
                 </button>
                 <button title="Gamble" id="open-gambling-button" data-click-sound data-hover-sound aria-label="Open 'gambling' menu">
                     <img src="/assets/pokies-button.svg" width="100" draggable="false" />
+                </button>
+                <button title="Change Settings" id="change-settings-button" data-click-sound data-hover-sound aria-label="Change settings and preferences">
+                    <img src="/assets/settings.svg" width="100" draggable="false" />
                 </button>
                 <button title="Complete Transition" id="complete-transition-button" class="hide" data-click-sound data-hover-sound aria-label="Finish the save transition">
                     Finish Save Transition

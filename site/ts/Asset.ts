@@ -1,6 +1,6 @@
 export interface Asset { };
 
-export class PreloadedAsset implements Asset {
+export class CachedAsset implements Asset {
   readonly url: string;
 
   private loadedBase64Url: string | null = null;
@@ -10,15 +10,24 @@ export class PreloadedAsset implements Asset {
 
     // Avoid name collisions with 'this' in the callback
     const self = this;
-    const getResource = async () => {
-      // Load the resource
-      const blob = await (await fetch(self.url)).blob();
+    const getResource: (this: CachedAsset) => Promise<void> = (async () => {
+      const cache = await caches.open("v3-nightly");
+      const cached = await cache.match(self.url);
+
+      if (cached == null) {
+        await cache.add(self.url);
+
+        return await (getResource.bind(self))();
+      }
+
+      // Get the blob
+      const blob = await cached.blob();
 
       // Create the data URL
       const dataURL = URL.createObjectURL(blob);
 
-      self.loadedBase64Url = dataURL;
-    };
+      this.loadedBase64Url = dataURL;
+    }).bind(this);
 
     // Check if we can request an idle callback
     if ("requestIdleCallback" in window) {

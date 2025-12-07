@@ -1,9 +1,10 @@
-import { PreloadedAsset } from "./Asset"
+import { CachedAsset } from "./Asset"
+import { settings } from "./settings"
 
 export type SoundAssetSet = {
-  click: PreloadedAsset,
-  hover: PreloadedAsset,
-  alert: PreloadedAsset
+  click: CachedAsset,
+  hover: CachedAsset,
+  alert: CachedAsset
 }
 
 export type SoundAudioSet = {
@@ -19,9 +20,9 @@ export enum Sound {
 }
 
 export const uiSoundSet: SoundAssetSet = {
-  click: new PreloadedAsset("/assets/click.mp3"),
-  hover: new PreloadedAsset("/assets/hover.mp3"),
-  alert: new PreloadedAsset("/assets/alert.mp3"),
+  click: new CachedAsset("/assets/click.mp3"),
+  hover: new CachedAsset("/assets/hover.mp3"),
+  alert: new CachedAsset("/assets/alert.mp3"),
 }
 
 export const uiAudioSet: () => SoundAudioSet = () => ({
@@ -31,6 +32,10 @@ export const uiAudioSet: () => SoundAudioSet = () => ({
 })
 
 export const playSound = async (s: Sound) => {
+  if (!settings.value.enableSounds) {
+    return
+  }
+
   const { Click, Hover, Alert } = Sound;
 
   switch (s) {
@@ -52,9 +57,7 @@ const alertSoundElements: NodeListOf<HTMLDialogElement> = document.querySelector
 
 for (const el of clickSoundElements) {
   el.addEventListener("mousedown", async e => {
-    const target = e.target;
-
-    if (!(target instanceof HTMLElement)) {
+    if (!(e.target instanceof HTMLElement)) {
       return
     }
 
@@ -72,7 +75,9 @@ for (const el of hoverSoundElements) {
 
   el.addEventListener("focusin", async e => {
     // If the element that got hovered over is a descendant of el, ignore it
-    if (e.target !== e.currentTarget) return
+    if (e.target !== e.currentTarget) {
+      return
+    }
 
     playSound(Sound.Hover)
   })

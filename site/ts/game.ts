@@ -32,6 +32,8 @@ import {
   pokiesWagerSlider,
 } from "./elements";
 
+import './settings/index';
+
 import { updateLeaderboard } from "./leaderboard";
 import { SharedMutable } from "./SharedMutable";
 import { updateWealthinessDisplay } from "./wealth";
@@ -42,6 +44,7 @@ import { mode, Mode, ModeBasedAction } from "./mode";
 import "./sound";
 import "./ui";
 import { checkBuyables } from "./ui";
+import { settings } from "./settings/index";
 
 export const formatter = new SharedMutable(
   new Intl.NumberFormat(navigator.language, {
@@ -535,7 +538,7 @@ export const evloop = (time: number) => {
   updateWealthinessDisplay();
 
   // Check if we should allow gambling (> 50 hdnw)
-  if (hdnw.value >= GAMBLING_NW_THRESHOLD && !canGamble) {
+  if (hdnw.value >= GAMBLING_NW_THRESHOLD && !canGamble && settings.value.enableGambling) {
     canGamble = true;
 
     openGamblingButton.removeAttribute("disabled")
@@ -548,7 +551,7 @@ export const evloop = (time: number) => {
       dismissalMode: NotificationDismissalMode.Automatic,
       dismissalTimeMs: 1000,
       pauseGame: false,
-    })
+    });
   } else if (hdnw.value < GAMBLING_NW_THRESHOLD && canGamble) {
     canGamble = false;
 
@@ -566,6 +569,12 @@ export const evloop = (time: number) => {
         dismissalMode: NotificationDismissalMode.Automatic,
       })
     }
+  } else if (canGamble && !settings.value.enableGambling) {
+    canGamble = false;
+
+    openGamblingButton.setAttribute("disabled", "true")
+    openGamblingButton.setAttribute("data-unbuyable", "true")
+    openGamblingButton.title = "Gamble (DISABLED in settings)";
   }
 
   lastTime = time;

@@ -6,12 +6,55 @@
   "workers_dev": false,
   "send_metrics": false,
   "first_party_worker": true,
+  "tsconfig": "./worker/tsconfig.json",
   "assets": {
     "directory": "./site",
     "not_found_handling": "none"
   },
   "vars": {
-    "ENVIRONMENT": "prod:nightly",
+    "ENVIRONMENT": "unknown",
+  },
+  "env": {
+    "local": {
+      "vars": {
+        "ENVIRONMENT": "dev:nightly"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "hotdog-clicker-db",
+          "database_id": "323937b2-8bb1-4f6d-a7cd-fc1a9146acb1",
+          "remote": false,
+        }
+      ],
+      "kv_namespaces": [
+        {
+          "binding": "SESSIONS",
+          "id": "4c757708188742a5a9c582ce23fb37c2",
+          "remote": false,
+        }
+      ]
+    },
+    "prod": {
+      "vars": {
+        "ENVIRONMENT": "prod:nightly",
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "hotdog-clicker-db",
+          "database_id": "323937b2-8bb1-4f6d-a7cd-fc1a9146acb1",
+          "remote": true,
+        }
+      ],
+      "kv_namespaces": [
+        {
+          "binding": "SESSIONS",
+          "id": "9db16a9b3e4d43719c1be95fad218fb0",
+          "remote": true,
+        }
+      ]
+    }
   },
   "observability": {
     "enabled": false,
@@ -44,18 +87,4 @@
       "./build-guard.sh"
     ]
   },
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "hotdog-clicker-db",
-      "database_id": "323937b2-8bb1-4f6d-a7cd-fc1a9146acb1",
-    }
-  ],
-  "kv_namespaces": [
-    {
-      "binding": "SESSIONS",
-      "id": "9db16a9b3e4d43719c1be95fad218fb0",
-      "preview_id": "4c757708188742a5a9c582ce23fb37c2"
-    }
-  ]
 }

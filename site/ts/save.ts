@@ -46,7 +46,7 @@ import {
   restoreDialogFormElement,
   restoreDialogInputElement
 } from "./elements"
-import { applySettings, DEFAULT_SETTINGS, HDCSettings, settings } from "./settings";
+import { coerceSettings, DEFAULT_SETTINGS, HDCSettings, settings } from "./settings";
 import { NaNNullCoerce } from "./utils";
 import { startTransition } from "./transition";
 import { enterBuyMode } from "./mode";
@@ -264,7 +264,7 @@ export const compileSave = (): HDCSaveData => {
     ownedFranchises: franchisesOwned.value,
     nickname: (nickname || PLACEHOLDER_NICKNAME).slice(MAX_NICKNAME_LENGTH),
     hdnw: hdnw.value,
-    settings,
+    settings: settings.value,
   };
 };
 
@@ -329,7 +329,7 @@ export const loadFromSave = (saveData: HDCSaveData) => {
   hdnw.value = NaNNullCoerce(saveData.hdnw, 0);
 
   // Load settings
-  applySettings(saveData.settings)
+  settings.value = coerceSettings(saveData.settings);
 }
 
 export const load = async (fromReq?: ServerSentWorkerData) => {

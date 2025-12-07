@@ -50,3 +50,72 @@ export const withTimeout = async function _<T>(task: Promise<T>, ms: number): Pr
  * @returns The wrapped sum
  */
 export const wrappingAdd = (x: number, y: number, thresh: number) => (x + y) % thresh
+
+type DeepObject<T> = {
+  [P in keyof T]: DeepObject<T[P]> | T[P];
+}
+
+export type DeepReadonly<T> = {
+  readonly [P in keyof T]: DeepReadonly<T[P]>;
+}
+
+export const deepFreeze = function <T extends { [name: string]: any }>(obj: T): DeepReadonly<T> {
+  const propNames = Object.getOwnPropertyNames(obj);
+  const newObj: DeepObject<T> = obj;
+
+  propNames.forEach((name) => {
+    const prop = obj[name];
+
+    if (typeof prop === 'object' && prop !== null) {
+      // @ts-ignore
+      newObj[name] = deepFreeze(prop);
+    }
+  });
+
+  return newObj as DeepReadonly<T>;
+};
+
+export const equal = function <A, B>(lhs: A, rhs: B): boolean {
+  if (typeof lhs !== typeof rhs) {
+    return false;
+  }
+
+  if (lhs != null && rhs != null && Array.isArray(lhs) && Array.isArray(rhs)) {
+    return lhs.length === rhs.length && lhs.every((v, i) => equal(v, rhs[i]))
+  }
+
+  if (lhs != null && rhs != null && typeof lhs === "object" && typeof rhs === "object") {
+    return deepEqual(lhs, rhs)
+  }
+
+  return lhs as any === rhs as any;
+}
+
+export const arraysOverlap = function <A, B>(a: A[], b: B[]) {
+  const [largest, smallest]: [any[], any[]] = a.length <= b.length ? [a, b] : [b, a];
+
+  return smallest.every(v => largest.includes(v))
+}
+
+export const deepEqual = function <A extends { [name: string]: any }, B extends { [name: string]: any }>(lhs: A, rhs: B) {
+  // Check if they are the same reference
+  if (lhs as object === rhs as object) {
+    return true;
+  }
+
+  const
+    keysA = Object.getOwnPropertyNames(lhs),
+    keysB = Object.getOwnPropertyNames(rhs);
+
+  console.log(keysA, keysB);
+
+  if (!arraysOverlap(keysA, keysB)) {
+    return false;
+  }
+
+  if (keysA.some((k, i) => !equal(lhs[k], rhs[k]))) {
+    return false;
+  }
+
+  return true;
+}
