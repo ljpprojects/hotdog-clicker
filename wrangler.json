@@ -1,6 +1,5 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "hotdog-clicker",
   "compatibility_date": "2025-11-17",
   "main": "./worker/index.ts",
   "workers_dev": false,
@@ -16,6 +15,7 @@
   },
   "env": {
     "local": {
+      "name": "hotdog-clicker",
       "vars": {
         "ENVIRONMENT": "dev:nightly"
       },
@@ -36,6 +36,7 @@
       ]
     },
     "nightly": {
+      "name": "hotdog-clicker",
       "vars": {
         "ENVIRONMENT": "prod:nightly",
       },
