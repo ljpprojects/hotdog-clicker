@@ -464,7 +464,7 @@ app.post("/api", async (c) => {
       const { oldIdentifier } = body as ClientSentWorkerDataRestoreAction;
 
       // Set the session to have the old identifier
-      env.SESSIONS.put(`session:${session}`, JSON.stringify({
+      c.env.SESSIONS.put(`session:${session}`, JSON.stringify({
         identifier: oldIdentifier,
       } as SessionData))
 
