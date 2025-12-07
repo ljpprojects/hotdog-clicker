@@ -34,9 +34,9 @@ const COOKIE_OPTS: (age: number) => CookieOptions = (age: number) => {
       httpOnly: true,
       sameSite: "Strict",
       maxAge: age,
-      //secure: true,
+      secure: true,
       path: "/",
-      //domain: env.ENVIRONMENT === "prod:release" ? 'https://hdc.ljpprojects.org' : 'https://dev.hdc.ljpprojects.org'
+      domain: env.ENVIRONMENT === "prod:release" ? 'https://hdc.ljpprojects.org' : 'https://dev.hdc.ljpprojects.org'
     }
   } else {
     return {
