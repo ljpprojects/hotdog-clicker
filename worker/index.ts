@@ -159,7 +159,7 @@ const checkSession = async (
     return null;
   }
 
-  const sessionData = await env.SESSIONS.get<SessionData>(`session:${sessionCode}`, "json");
+  const sessionData = await c.env.SESSIONS.get<SessionData>(`session:${sessionCode}`, "json");
   if (sessionData == null) {
     return null;
   }
