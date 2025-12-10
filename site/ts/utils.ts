@@ -59,6 +59,10 @@ export type DeepReadonly<T> = {
   readonly [P in keyof T]: DeepReadonly<T[P]>;
 }
 
+export const makeReadonlyCT = function <T extends { [name: string]: any }>(obj: T): DeepReadonly<T> {
+  return obj;
+}
+
 export const deepFreeze = function <T extends { [name: string]: any }>(obj: T): DeepReadonly<T> {
   const propNames = Object.getOwnPropertyNames(obj);
   const newObj: DeepObject<T> = obj;

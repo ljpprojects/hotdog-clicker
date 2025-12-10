@@ -1,4 +1,4 @@
-import { Card } from "./card";
+import { Card } from "./gambling/card";
 
 export enum BlackJackWinState {
   HouseWin,

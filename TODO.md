@@ -6,5 +6,6 @@
   - Implement dealer algorithm
   - Add UI
   - Add icons for the cards
-  - Add icons for the poker chips
 2. Add Poker as a gambling option
+3. Add a multiplayer blackjack mode
+4. Add a multiplayer poker mode

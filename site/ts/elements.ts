@@ -1,3 +1,5 @@
+import { settings } from "./settings";
+
 export const hdpsElement = document.getElementById("hdps")!;
 export const hdsElement = document.getElementById("hds")!;
 export const hdnwElement = document.getElementById("hdnw")!;
@@ -60,23 +62,18 @@ export const abattoirImageElement: HTMLImageElement = document.querySelector("#a
 export const restaurantImageElement: HTMLImageElement = document.querySelector("#restaurant > img")!;
 export const franchiseImageElement: HTMLImageElement = document.querySelector("#franchise > img")!;
 
-export const leaderboardElements = [
-  document.getElementById("ldbd-pl-01")!,
-  document.getElementById("ldbd-pl-02")!,
-  document.getElementById("ldbd-pl-03")!,
-  document.getElementById("ldbd-pl-04")!,
-  document.getElementById("ldbd-pl-05")!,
-  document.getElementById("ldbd-pl-06")!,
-  document.getElementById("ldbd-pl-07")!,
-  document.getElementById("ldbd-pl-08")!,
-  document.getElementById("ldbd-pl-09")!,
-  document.getElementById("ldbd-pl-10")!,
-  document.getElementById("ldbd-pl-11")!,
-  document.getElementById("ldbd-pl-12")!,
-  document.getElementById("ldbd-pl-13")!,
-  document.getElementById("ldbd-pl-14")!,
-  document.getElementById("ldbd-pl-15")!,
-];
+export const leaderboardContainerList: HTMLUListElement = document.querySelector("#leaderboard > ul")!;
+
+export const leaderboardElementsGenerator = function* () {
+  for (let i = 0; i < settings.value.maxLdbdPlaces; i++) {
+    const element = document.createElement("li");
+    leaderboardContainerList.appendChild(element);
+
+    yield element
+  }
+}
+
+export const leaderboardElements = [...leaderboardElementsGenerator()];
 
 export const youLeaderboardElement: HTMLLIElement = document.getElementById(
   "ldbd-you",

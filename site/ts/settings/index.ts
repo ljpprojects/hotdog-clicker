@@ -1,4 +1,4 @@
-import { Binding } from '../Binding';
+import { GeneralBinding } from '../Binding';
 import { abattoirPrice, butcherPrice, cartPrice, factoryPrice, formatter, franchisePrice, hdnw, hdps, hds, plantationPrice, restaurantPrice, standPrice, truckPrice } from '../game';
 import { updateLeaderboard } from '../leaderboard';
 import { deepEqual, deepFreeze, DeepReadonly } from '../utils';
@@ -24,14 +24,14 @@ export const DEFAULT_SETTINGS: DeepReadonly<HDCSettings> = Object.freeze({
   enableSounds: true,
 } as HDCSettings);
 
-export const settings: Binding<DeepReadonly<HDCSettings>, HDCSettings> = new Binding({
+export const settings: GeneralBinding<DeepReadonly<HDCSettings>, HDCSettings> = new GeneralBinding({
   backing: structuredClone(DEFAULT_SETTINGS),
 
   setfn(newSettings, dispatcher?: string) {
     // Apply settings
 
     // Exit early if there are no changes
-    if (deepEqual(this.getBacking()!, newSettings)) {
+    if (deepEqual(this.value!, newSettings)) {
       console.warn("Exiting early, no changes.")
 
       return;
@@ -47,7 +47,7 @@ export const settings: Binding<DeepReadonly<HDCSettings>, HDCSettings> = new Bin
       maxLdbdPlaces
     } = newSettings;
 
-    this.setBacking(newSettings);
+    this.value = newSettings;
 
     // Check for changes to the amount of digits to display
     if (
@@ -90,7 +90,7 @@ export const settings: Binding<DeepReadonly<HDCSettings>, HDCSettings> = new Bin
   },
 
   getfn(dispatcher?: string) {
-    const _settings = this.getBacking()!;
+    const _settings = this.value!;
     const copy = structuredClone(_settings);
 
     return deepFreeze(copy);

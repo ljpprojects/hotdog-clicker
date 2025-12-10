@@ -1,18 +1,30 @@
+import { DeepReadonly } from "./utils";
+
 export type BindingBackerDoAsyncConfig = {
   needsToWait: boolean;
 };
 
 export abstract class BindingBacker<T> {
-  backedBinding: Binding<any, T>;
+  protected _value: T | null;
+  protected _prevValue: T | null = null;
 
   private currentTask: Promise<void> = Promise.resolve();
 
-  abstract getBacking(): T | null;
-  abstract getPreviousBacking(): T | null;
-  abstract setBacking(to: T): void;
+  constructor(value?: T | null) {
+    this._value = value ?? null;
+  }
 
-  constructor(backedBinding: Binding<any, T>) {
-    this.backedBinding = backedBinding;
+  get value(): T | null {
+    return this._value;
+  }
+
+  get prevValue(): T | null {
+    return this._prevValue
+  }
+
+  set value(to: T | null) {
+    this._prevValue = this._value;
+    this._value = to;
   }
 
   /**
@@ -37,63 +49,55 @@ export abstract class BindingBacker<T> {
   }
 }
 
-export class Binding<V, B> {
-  private readonly setfn: (
+export interface Binding<V, B> {
+  readonly getfn: (this: DeepReadonly<BindingBacker<B>>, dispatcher?: string) => V;
+
+  readonly backing: BindingBacker<B>;
+  readonly initialBacking: DeepReadonly<B> | null;
+
+  getValue(dispatcher?: string): V | null;
+
+  runSet(): void;
+
+  get value(): V | null;
+}
+
+export class GeneralBinding<V, B> implements Binding<V, B> {
+  readonly setfn: (
     this: BindingBacker<B>,
     to: V,
     dispatcher?: string,
   ) => void;
-  private readonly getfn: (this: BindingBacker<B>, dispatcher?: string) => V;
+  readonly getfn: (this: DeepReadonly<BindingBacker<B>>, dispatcher?: string) => V;
 
-  private backing: B | null;
-  readonly initialBacking: B | null = null;
-
-  readonly binderBacking: BindingBacker<B> =
-    new (class extends BindingBacker<B> {
-      private prev: B | null = null
-
-      getBacking(): B | null {
-        return this.backedBinding.backing;
-      }
-
-      getPreviousBacking(): B | null {
-        return this.prev
-      }
-
-      setBacking(to: B) {
-        this.prev = this.getBacking()
-        this.backedBinding.backing = to;
-      }
-
-      constructor(backedBinding: Binding<any, B>) {
-        super(backedBinding);
-      }
-    })(this);
+  readonly initialBacking: DeepReadonly<B> | null = null;
+  readonly backing: BindingBacker<B> =
+    new (class extends BindingBacker<B> { })(null);
 
   constructor(options: {
     backing?: B | null;
     setfn(this: BindingBacker<B>, to: V, dispatcher?: string): void;
-    getfn(this: BindingBacker<B>, dispatcher?: string): V;
+    getfn(this: DeepReadonly<BindingBacker<B>>, dispatcher?: string): V;
   }) {
     this.initialBacking = options.backing ?? null;
-    this.backing = options.backing ?? null;
+    this.backing.value = options.backing ?? null;
     this.getfn = options.getfn;
     this.setfn = options.setfn;
   }
 
   public getValue(dispatcher?: string): V {
-    return this.getfn.call(this.binderBacking, dispatcher);
+    return this.getfn.call(this.backing, dispatcher);
   }
 
   public setValue(to: V, dispatcher?: string) {
-    this.setfn.call(this.binderBacking, to, dispatcher);
+    this.setfn.call(this.backing, to, dispatcher);
   }
 
   /**
    * Runs the set function setup for the Binding with the value returned by Binding.getValue(dispatcher: "binding-internal")
    */
   public runSet() {
-    this.setfn.call(this.binderBacking, this.getValue(), "binding-internal")
+    this.setfn.call(this.backing, this.getValue(), "binding-internal")
   }
 
   get value(): V {

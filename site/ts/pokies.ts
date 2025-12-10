@@ -1,6 +1,6 @@
 // Not so boring now, is it, bitch?
 
-import { Binding } from "./Binding";
+import { GeneralBinding } from "./Binding";
 import { gamblingDialog, openGamblingButton, pokiesWagerDisplay, pokiesWagerSlider, slotBoxes, spinSlotsButton } from "./elements";
 import { formatter, hdnw, hds } from "./game";
 import { HDCNotification, NotificationDismissalMode, NotificationProminence, notify } from "./notify";
@@ -174,37 +174,37 @@ export const payout = (wager: number, symbols: [SlotSymbol, SlotSymbol, SlotSymb
   }
 }
 
-const slot1Binding = new Binding<number, number>({
+const slot1Binding = new GeneralBinding<number, number>({
   backing: 0,
   getfn() {
-    return this.getBacking() ?? 0
+    return this.value ?? 0;
   },
   setfn(index) {
-    this.setBacking(index)
+    this.value = index;
 
     slotBoxes[0].textContent = symbols[index];
   },
 });
 
-const slot2Binding = new Binding<number, number>({
+const slot2Binding = new GeneralBinding<number, number>({
   backing: 0,
   getfn() {
-    return this.getBacking() ?? 0
+    return this.value ?? 0;
   },
   setfn(index) {
-    this.setBacking(index)
+    this.value = index;
 
     slotBoxes[1].textContent = symbols[index];
   },
 });
 
-const slot3Binding = new Binding<number, number>({
+const slot3Binding = new GeneralBinding<number, number>({
   backing: 0,
   getfn() {
-    return this.getBacking() ?? 0
+    return this.value ?? 0;
   },
   setfn(index) {
-    this.setBacking(index)
+    this.value = index;
 
     slotBoxes[2].textContent = symbols[index];
   },

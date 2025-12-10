@@ -1,55 +1,55 @@
 import { HDCNumberFormat } from ".";
-import { Binding } from "../Binding"
+import { GeneralBinding } from "../Binding"
 import { decimalPrecisionElementSet, gamblingEnabledValue, leaderboardPlacesElementSet, numberFormatValue, soundsEnabledValue } from "./elements";
 
-export type SettingBinding<T> = Binding<T, T>;
+export type SettingBinding<T> = GeneralBinding<T, T>;
 
-export const soundEnabledBinding: SettingBinding<boolean> = new Binding({
+export const soundEnabledBinding: SettingBinding<boolean> = new GeneralBinding({
   backing: true,
 
   setfn(enable, dispatcher?) {
-    this.setBacking(enable);
+    this.value = enable;
 
     // Update display
     soundsEnabledValue.checked = enable;
   },
 
   getfn(dispatcher?) {
-    return this.getBacking()!
+    return this.value!;
   }
 })
 
-export const gamblingEnabledBinding: SettingBinding<boolean> = new Binding({
+export const gamblingEnabledBinding: SettingBinding<boolean> = new GeneralBinding({
   backing: true,
 
   setfn(enable, dispatcher?) {
-    this.setBacking(enable);
+    this.value = enable;
 
     // Update display
     gamblingEnabledValue.checked = enable;
   },
 
   getfn(dispatcher?) {
-    return this.getBacking()!
+    return this.value!;
   }
 })
 
-export const numberFormatBinding: SettingBinding<HDCNumberFormat> = new Binding({
+export const numberFormatBinding: SettingBinding<HDCNumberFormat> = new GeneralBinding({
   backing: "standard" as HDCNumberFormat,
 
   setfn(format, dispatcher?) {
-    this.setBacking(format);
+    this.value = format;
 
     // Update display
     numberFormatValue.value = format;
   },
 
   getfn(dispatcher?) {
-    return this.getBacking()!
+    return this.value!
   }
 })
 
-export const decimalPrecisionBinding: SettingBinding<number> = new Binding({
+export const decimalPrecisionBinding: SettingBinding<number> = new GeneralBinding({
   backing: 2,
 
   setfn(precision, dispatcher?) {
@@ -57,7 +57,7 @@ export const decimalPrecisionBinding: SettingBinding<number> = new Binding({
       return
     }
 
-    this.setBacking(precision);
+    this.value = precision;
 
     // Update display
     decimalPrecisionElementSet.value.valueAsNumber = decimalPrecisionElementSet.value.valueAsNumber;
@@ -65,11 +65,11 @@ export const decimalPrecisionBinding: SettingBinding<number> = new Binding({
   },
 
   getfn(dispatcher?) {
-    return this.getBacking()!
+    return this.value!
   }
 })
 
-export const ldbdPlacesBinding: SettingBinding<number> = new Binding({
+export const ldbdPlacesBinding: SettingBinding<number> = new GeneralBinding({
   backing: 15,
 
   setfn(places, dispatcher?) {
@@ -77,7 +77,7 @@ export const ldbdPlacesBinding: SettingBinding<number> = new Binding({
       return
     }
 
-    this.setBacking(places);
+    this.value = places;
 
     // Update display
     leaderboardPlacesElementSet.value.valueAsNumber = leaderboardPlacesElementSet.value.valueAsNumber;
@@ -85,6 +85,6 @@ export const ldbdPlacesBinding: SettingBinding<number> = new Binding({
   },
 
   getfn(dispatcher?) {
-    return this.getBacking()!
+    return this.value!;
   }
 })

@@ -1,6 +1,6 @@
 import { hdnw } from "./game";
 import { wealthinessElement } from "./elements";
-import { Binding, ImmutableBinding } from "./Binding";
+import { GeneralBinding, ImmutableBinding } from "./Binding";
 
 type WealthinessLevel =
   | "broke"

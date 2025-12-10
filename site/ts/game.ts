@@ -1,4 +1,4 @@
-import { Binding } from "./Binding";
+import { GeneralBinding } from "./Binding";
 import {
   save,
   load,
@@ -60,11 +60,11 @@ export const formatter = new SharedMutable(
  * How many hotdogs the user will earn passively (i.e. without action)
  * in one second.
  */
-export const hdps = new Binding<number, number>({
+export const hdps = new GeneralBinding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    this.setBacking(to);
+    this.value = to;
 
     this.doAsync({ needsToWait: false }, async () => {
       hdpsElement.textContent = formatter.value.format(to);
@@ -72,7 +72,7 @@ export const hdps = new Binding<number, number>({
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
@@ -83,16 +83,16 @@ export const hdps = new Binding<number, number>({
  * to the new price of that asset. This creates a unique strategy for dominating
  * the leaderboard.
  */
-export const hdnw = new Binding<number, number>({
+export const hdnw = new GeneralBinding<number, number>({
   backing: 0,
 
   setfn(to: number, dispatcher?: string) {
-    this.setBacking(to);
+    this.value = to;
     hdnwElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
@@ -104,14 +104,14 @@ export const HD_CLICKS_PER_SEC = 20;
 /**
  * The amount of hot dogs the user has.
  */
-export const hds = new Binding<number, number>({
+export const hds = new GeneralBinding<number, number>({
   backing: 0,
 
   setfn(to: number, dispatcher?: string) {
     if (hdsIncTimeoutEnd > Date.now() && dispatcher === "btn-click") return;
 
-    const prev = this.getBacking() ?? 0;
-    this.setBacking(to);
+    const prev = this.value ?? 0;
+    this.value = to;
 
     ModeBasedAction.empty()
       .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.setValue(
@@ -128,18 +128,18 @@ export const hds = new Binding<number, number>({
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
 // slaves?????????
-export const butchersOwned = new Binding<number, number>({
+export const butchersOwned = new GeneralBinding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    const curr = this.getBacking() ?? 0;
+    const curr = this.value ?? 0;
 
-    const prevPrice = butcherPrice.binderBacking.getPreviousBacking() ?? 0;
+    const prevPrice = butcherPrice.backing.prevValue ?? 0;
     const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = butcherPrice.value * to;
 
@@ -151,22 +151,22 @@ export const butchersOwned = new Binding<number, number>({
       "acquire-asset-butcher",
     );
 
-    this.setBacking(to);
+    this.value = to;
     butchersOwnedElement.textContent = to.toFixed(0);
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
-export const standsOwned = new Binding<number, number>({
+export const standsOwned = new GeneralBinding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    const curr = this.getBacking() ?? 0;
+    const curr = this.value ?? 0;
 
-    const prevPrice = standPrice.binderBacking.getPreviousBacking() ?? 0;
+    const prevPrice = standPrice.backing.prevValue ?? 0;
     const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = standPrice.value * to;
 
@@ -178,21 +178,21 @@ export const standsOwned = new Binding<number, number>({
       "acquire-asset-stand",
     );
 
-    this.setBacking(to);
+    this.value = to;
     standsOwnedElement.textContent = to.toFixed(0);
   },
 
   getfn(dispatcher): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
-export const cartsOwned = new Binding<number, number>({
+export const cartsOwned = new GeneralBinding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    const curr = this.getBacking() ?? 0;
-    const prevPrice = cartPrice.binderBacking.getPreviousBacking() ?? 0;
+    const curr = this.value ?? 0;
+    const prevPrice = cartPrice.backing.prevValue ?? 0;
     const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = cartPrice.value * to;
 
@@ -204,7 +204,7 @@ export const cartsOwned = new Binding<number, number>({
       "acquire-asset-cart",
     );
 
-    this.setBacking(to);
+    this.value = to;
 
     this.doAsync({ needsToWait: false }, async () => {
       cartsOwnedElement.textContent = String(to);
@@ -212,16 +212,16 @@ export const cartsOwned = new Binding<number, number>({
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
-export const trucksOwned = new Binding<number, number>({
+export const trucksOwned = new GeneralBinding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    const curr = this.getBacking() ?? 0;
-    const prevPrice = truckPrice.binderBacking.getPreviousBacking() ?? 0;
+    const curr = this.value ?? 0;
+    const prevPrice = truckPrice.backing.prevValue ?? 0;
     const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = truckPrice.value * to;
 
@@ -233,7 +233,7 @@ export const trucksOwned = new Binding<number, number>({
       "acquire-asset-truck",
     );
 
-    this.setBacking(to);
+    this.value = to;
 
     this.doAsync({ needsToWait: false }, async () => {
       trucksOwnedElement.textContent = String(to);
@@ -241,16 +241,16 @@ export const trucksOwned = new Binding<number, number>({
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
-export const plantationsOwned = new Binding<number, number>({
+export const plantationsOwned = new GeneralBinding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    const curr = this.getBacking() ?? 0;
-    const prevPrice = plantationPrice.binderBacking.getPreviousBacking() ?? 0;
+    const curr = this.value ?? 0;
+    const prevPrice = plantationPrice.backing.prevValue ?? 0;
     const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = plantationPrice.value * to;
 
@@ -262,7 +262,7 @@ export const plantationsOwned = new Binding<number, number>({
       "acquire-asset-plantation",
     );
 
-    this.setBacking(to);
+    this.value = to;
 
     this.doAsync({ needsToWait: false }, async () => {
       plantationsOwnedElement.textContent = String(to);
@@ -270,16 +270,16 @@ export const plantationsOwned = new Binding<number, number>({
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
-export const factoriesOwned = new Binding<number, number>({
+export const factoriesOwned = new GeneralBinding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    const curr = this.getBacking() ?? 0;
-    const prevPrice = factoryPrice.binderBacking.getPreviousBacking() ?? 0;
+    const curr = this.value ?? 0;
+    const prevPrice = factoryPrice.backing.prevValue ?? 0;
     const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = factoryPrice.value * to;
 
@@ -291,7 +291,7 @@ export const factoriesOwned = new Binding<number, number>({
       "acquire-asset-plantation",
     );
 
-    this.setBacking(to);
+    this.value = to;
 
     this.doAsync({ needsToWait: false }, async () => {
       factoriesOwnedElement.textContent = String(to);
@@ -299,16 +299,16 @@ export const factoriesOwned = new Binding<number, number>({
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
-export const abattoirsOwned = new Binding<number, number>({
+export const abattoirsOwned = new GeneralBinding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    const curr = this.getBacking() ?? 0;
-    const prevPrice = abattoirPrice.binderBacking.getPreviousBacking() ?? 0;
+    const curr = this.value ?? 0;
+    const prevPrice = abattoirPrice.backing.prevValue ?? 0;
     const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = abattoirPrice.value * to;
 
@@ -320,7 +320,7 @@ export const abattoirsOwned = new Binding<number, number>({
       "acquire-asset-abattoir",
     );
 
-    this.setBacking(to);
+    this.value = to;
 
     this.doAsync({ needsToWait: false }, async () => {
       abattoirsOwnedElement.textContent = String(to);
@@ -328,16 +328,16 @@ export const abattoirsOwned = new Binding<number, number>({
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
-export const restaurantsOwned = new Binding<number, number>({
+export const restaurantsOwned = new GeneralBinding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    const curr = this.getBacking() ?? 0;
-    const prevPrice = restaurantPrice.binderBacking.getPreviousBacking() ?? 0;
+    const curr = this.value ?? 0;
+    const prevPrice = restaurantPrice.backing.prevValue ?? 0;
     const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = restaurantPrice.value * to;
 
@@ -349,7 +349,7 @@ export const restaurantsOwned = new Binding<number, number>({
       "acquire-asset-restaurant",
     );
 
-    this.setBacking(to);
+    this.value = to;
 
     this.doAsync({ needsToWait: false }, async () => {
       restaurantsOwnedElement.textContent = String(to);
@@ -357,17 +357,17 @@ export const restaurantsOwned = new Binding<number, number>({
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
-export const franchisesOwned = new Binding<number, number>({
+export const franchisesOwned = new GeneralBinding<number, number>({
   backing: 0,
 
   setfn(to: number) {
-    const curr = this.getBacking() ?? 0;
+    const curr = this.value ?? 0;
 
-    const prevPrice = franchisePrice.binderBacking.getPreviousBacking() ?? 0;
+    const prevPrice = franchisePrice.backing.prevValue ?? 0;
     const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = franchisePrice.value * to;
 
@@ -379,7 +379,7 @@ export const franchisesOwned = new Binding<number, number>({
       "acquire-asset-franchise",
     );
 
-    this.setBacking(to);
+    this.value = to;
 
     this.doAsync({ needsToWait: false }, async () => {
       franchisesOwnedElement.textContent = String(to);
@@ -387,133 +387,133 @@ export const franchisesOwned = new Binding<number, number>({
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
 export const butcherRate: number = 0.1;
-export const butcherPrice = new Binding<number, number>({
+export const butcherPrice = new GeneralBinding<number, number>({
   backing: 15,
 
   setfn(to: number) {
-    this.setBacking(to);
+    this.value = to;
     butcherPriceElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
 export const standRate: number = 5;
-export const standPrice = new Binding<number, number>({
+export const standPrice = new GeneralBinding<number, number>({
   backing: 250,
 
   setfn(to: number) {
-    this.setBacking(to);
+    this.value = to;
     standPriceElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
 export const cartRate: number = 10;
-export const cartPrice = new Binding<number, number>({
+export const cartPrice = new GeneralBinding<number, number>({
   backing: 1000,
 
   setfn(to: number) {
-    this.setBacking(to);
+    this.value = to;
     cartPriceElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
 export const truckRate: number = 25;
-export const truckPrice = new Binding<number, number>({
+export const truckPrice = new GeneralBinding<number, number>({
   backing: 3750,
 
   setfn(to: number) {
-    this.setBacking(to);
+    this.value = to;
     truckPriceElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
 export const plantationRate: number = 50;
-export const plantationPrice = new Binding<number, number>({
+export const plantationPrice = new GeneralBinding<number, number>({
   backing: 12_000,
 
   setfn(to: number) {
-    this.setBacking(to);
+    this.value = to;
     plantationPriceElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
 export const factoryRate: number = 250;
-export const factoryPrice = new Binding<number, number>({
+export const factoryPrice = new GeneralBinding<number, number>({
   backing: 100_000,
 
   setfn(to: number) {
-    this.setBacking(to);
+    this.value = to;
     factoryPriceElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
 export const abattoirRate: number = 750;
-export const abattoirPrice = new Binding<number, number>({
+export const abattoirPrice = new GeneralBinding<number, number>({
   backing: 750_000,
 
   setfn(to: number) {
-    this.setBacking(to);
+    this.value = to;
     abattoirPriceElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
 export const restaurantRate: number = 1250;
-export const restaurantPrice = new Binding<number, number>({
+export const restaurantPrice = new GeneralBinding<number, number>({
   backing: 2_750_000,
 
   setfn(to: number) {
-    this.setBacking(to);
+    this.value = to;
     restaurantPriceElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
 export const franchiseRate: number = 5000;
-export const franchisePrice = new Binding<number, number>({
+export const franchisePrice = new GeneralBinding<number, number>({
   backing: 27_000_000,
 
   setfn(to: number) {
-    this.setBacking(to);
+    this.value = to;
     franchisePriceElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
-    return this.getBacking()!;
+    return this.value!;
   },
 });
 
