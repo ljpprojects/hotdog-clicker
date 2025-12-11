@@ -43,6 +43,7 @@ import { mode, Mode, ModeBasedAction } from "./mode";
 
 import "./sound";
 import "./ui";
+import "./gambling/blackjack";
 import { checkBuyables } from "./ui";
 import { settings } from "./settings/index";
 

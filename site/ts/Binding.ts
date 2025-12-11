@@ -96,8 +96,8 @@ export class GeneralBinding<V, B> implements Binding<V, B> {
   /**
    * Runs the set function setup for the Binding with the value returned by Binding.getValue(dispatcher: "binding-internal")
    */
-  public runSet() {
-    this.setfn.call(this.backing, this.getValue(), "binding-internal")
+  public runSet(dispatcher?: string) {
+    this.setfn.call(this.backing, this.getValue(), dispatcher ?? "binding-internal")
   }
 
   get value(): V {

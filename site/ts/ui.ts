@@ -53,7 +53,9 @@ import {
   openGamblingButton,
   gamblingDialog,
   spinSlotsButton,
-} from "./elements"; import { abattoirPrice, abattoirRate, abattoirsOwned, butcherPrice, butcherRate, butchersOwned, cartPrice, cartRate, cartsOwned, factoriesOwned, factoryPrice, factoryRate, franchisePrice, franchiseRate, franchisesOwned, hdps, hds, plantationPrice, plantationRate, plantationsOwned, restaurantPrice, restaurantRate, restaurantsOwned, standPrice, standRate, standsOwned, truckPrice, truckRate, trucksOwned } from "./game";
+  playBlackjackButton,
+} from "./elements"; import { wagerBlackjack } from "./gambling/blackjack";
+import { abattoirPrice, abattoirRate, abattoirsOwned, butcherPrice, butcherRate, butchersOwned, cartPrice, cartRate, cartsOwned, factoriesOwned, factoryPrice, factoryRate, franchisePrice, franchiseRate, franchisesOwned, hdps, hds, plantationPrice, plantationRate, plantationsOwned, restaurantPrice, restaurantRate, restaurantsOwned, standPrice, standRate, standsOwned, truckPrice, truckRate, trucksOwned } from "./game";
 import { increase } from "./maths";
 import { Mode, ModeBasedAction } from "./mode";
 import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
@@ -152,6 +154,11 @@ changeSettingsButton.addEventListener("click", async () => {
 getIdentifierButton.addEventListener("click", async () => {
   closeMainMenu()
   await getAndShowIdentifierCode();
+})
+
+playBlackjackButton.addEventListener("click", () => {
+  closeMainMenu();
+  wagerBlackjack();
 })
 
 export const checkBuyables = () => {

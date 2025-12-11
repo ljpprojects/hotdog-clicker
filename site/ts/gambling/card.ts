@@ -2,45 +2,45 @@ import { randomUint16 } from "../rand";
 import { deepFreeze, DeepReadonly } from "../utils";
 
 export enum CardSuit {
-  Spades,
-  Clubs,
-  Hearts,
-  Diamonds,
+  Spades = "S",
+  Clubs = "C",
+  Hearts = "H",
+  Diamonds = "D",
 }
 
 export enum CardRank {
-  Two = 2,
-  Three,
-  Four,
-  Five,
-  Six,
-  Seven,
-  Eight,
-  Nine,
-  Ten,
-  Jack,
-  Queen,
-  King,
-  Ace
+  Two = "2",
+  Three = "3",
+  Four = "4",
+  Five = "5",
+  Six = "6",
+  Seven = "7",
+  Eight = "8",
+  Nine = "9",
+  Ten = "10",
+  Jack = "J",
+  Queen = "Q",
+  King = "K",
+  Ace = "A",
 }
 
 export type Card = [CardRank, CardSuit]
 
 export const blackjackCardSum = (cards: CardRank[]): number => {
   const cardValueTable: Record<CardRank, number> = {
-    2: 2,
-    3: 3,
-    4: 4,
-    5: 5,
-    6: 6,
-    7: 7,
-    8: 8,
-    9: 9,
-    10: 10,
-    11: 10,
-    12: 10,
-    13: 10,
-    14: 11,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8,
+    "9": 9,
+    "10": 10,
+    "J": 10,
+    "Q": 10,
+    "K": 10,
+    "A": 11,
   };
 
   const sum = cards.reduce((acc, c) => {
@@ -136,5 +136,5 @@ export const drawCard = (): DeepReadonly<Card> => {
 export const drawCardRemoving = (deck: Card[]): Card => {
   const index = randomUint16() % deck.length;
 
-  return deck.splice(index, 0)[0];
+  return deck.splice(index, 1)[0];
 }

@@ -264,6 +264,43 @@ AI could never create this slop...
             </form>
         </dialog>
 
+        <dialog id="bj-wager-menu" class="menu" data-alert-sound open>
+            <form method="dialog">
+                <p>Wager (percent of hdnw): <span id="bj-wager-display">0</span></p>
+                <input type="range" min="1" max="100" id="bj-wager-slider" />
+                <button id="bj-deal" onclick="return false;" data-button data-click-sound data-hover-sound>DEAL!!!!!!!!</button>
+                <input type="submit" value="nvm" data-button data-click-sound data-hover-sound />
+            </form>
+        </dialog>
+
+        <dialog id="blackjack-menu" class="menu" data-alert-sound>
+            <form method="dialog">
+                <div>
+                    <p>Dealer's hand (<span id="bj-house-sum">11</span>)</p>
+                </div>
+                <div id="bj-dealer-hand">
+                    <img src="/assets/cards/AS.svg" title="A card. It wasn't designed by ljpprojects..." />
+                    <img src="/assets/cards/BK.svg" title="A card. It was (mostly) designed by ljpprojects. I wonder what the front says..." />
+                </div>
+
+                <section>
+                    <!-- BJ.... haha.... --->
+                    <button id="bj-hit-button" onclick="return false;" data-button data-click-sound data-hover-sound>HIT</button>
+                    <button id="bj-stand-button" onclick="return false;" data-button data-click-sound data-hover-sound>STAND</button>
+                </section>
+
+                <div>
+                    <p>Your hand (<span id="bj-player-sum">21</span>)</p>
+                </div>
+                <div id="bj-player-hand">
+                    <img src="/assets/cards/AH.svg" title="A card. It wasn't designed by ljpprojects..." />
+                    <img src="/assets/cards/JC.svg" title="A card. It wasn't designed by ljpprojects..." />
+                </div>
+
+                <button id="bj-deal-again" class="hide" onclick="return false;" data-button data-click-sound data-hover-sound>DEAL AGAIN</button>
+            </form>
+        </dialog>
+
         <dialog id="restore-save-dialog" class="menu" data-alert-sound>
             <!-- Do NOT submit on enter -->
             <form method="dialog" onkeydown="return event.key != 'Enter'">
@@ -300,6 +337,9 @@ AI could never create this slop...
                 </button>
                 <button title="Change Settings" id="change-settings-button" data-click-sound data-hover-sound aria-label="Change settings and preferences">
                     <img src="/assets/settings.svg" width="100" draggable="false" />
+                </button>
+                <button title="Play Blackjack" id="play-blackjack-button" data-click-sound data-hover-sound aria-label="Open the blackjack wager menu">
+                    Play Blackjack
                 </button>
                 <button title="Complete Transition" id="complete-transition-button" class="hide" data-click-sound data-hover-sound aria-label="Finish the save transition">
                     Finish Save Transition

@@ -280,13 +280,7 @@ spinSlotsButton.addEventListener("click", async () => {
   shadowSave.hdc += amountWon;
   shadowSave.hdnw += amountWon;
 
-  {
-    enterBuyMode();
-
-    await save(shadowSave);
-
-    enterFreezeMode();
-  }
+  await save(shadowSave);
 
   let i = 0;
   let id = setInterval(async () => {

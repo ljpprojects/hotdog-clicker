@@ -450,6 +450,7 @@ dialog:not([open]) {
 }
 
 .menu>form>input[type="submit"],
+.menu>form>[data-button],
 #gambling-dialog>form>[data-button],
 #settings-menu>form>[data-button] {
     border: none;
@@ -505,4 +506,25 @@ dialog:not([open]) {
     display: flex;
     justify-content: space-between;
     width: 30vw;
+}
+
+#blackjack-menu>form>section {
+    display: flex;
+    width: 30vw;
+    justify-content: space-between;
+}
+
+#blackjack-menu>form>div {
+    display: flex;
+    width: 30vw;
+    justify-content: center;
+}
+
+#blackjack-menu>form>section>button {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+#bj-deck {
+    width: 5vw;
 }
