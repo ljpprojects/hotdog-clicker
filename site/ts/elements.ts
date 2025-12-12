@@ -66,7 +66,7 @@ export const franchiseImageElement: HTMLImageElement = document.querySelector("#
 export const leaderboardContainerList: HTMLUListElement = document.querySelector("#leaderboard > ul")!;
 
 export const leaderboardElementsGenerator = function* () {
-  for (let i = 0; i < settings.value.maxLdbdPlaces; i++) {
+  for (let i = 0; i < 15; i++) {
     const element = document.createElement("li");
     leaderboardContainerList.appendChild(element);
 

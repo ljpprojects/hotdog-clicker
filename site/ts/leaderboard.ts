@@ -48,6 +48,8 @@ export const updateLeaderboard = () => new Promise<void>(async (res, rej) => {
     element.classList.add("hide")
   }
 
+  console.log(ldbd.length)
+
   for (const [rank, element] of leaderboardElements.slice(0, ldbd.length).entries()) {
     element.classList.remove("hide")
     element.textContent = `${ldbd[rank].nickname} — ${formatter.value.format(ldbd[rank].net_worth)}`;
@@ -55,7 +57,7 @@ export const updateLeaderboard = () => new Promise<void>(async (res, rej) => {
 
   const youLdbd = ldbd[ldbd.length - 1];
 
-  if (youLdbd.ldbd_rank <= 15) {
+  if (youLdbd.ldbd_rank <= leaderboardElements.length) {
     youLeaderboardElement.classList.add("hide");
   } else {
     youLeaderboardElement.classList.remove("hide");
