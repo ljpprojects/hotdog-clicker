@@ -508,16 +508,21 @@ dialog:not([open]) {
     width: 30vw;
 }
 
-#blackjack-menu>form>section {
-    display: flex;
-    width: 30vw;
-    justify-content: space-between;
+#blackjack-menu {
+    padding: 5vmin;
 }
 
 #blackjack-menu>form>div {
     display: flex;
-    width: 30vw;
+    width: 40vw;
     justify-content: center;
+}
+
+#blackjack-menu>form>section {
+    display: grid;
+    width: 40vw;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
 }
 
 #blackjack-menu>form>section>button {
@@ -527,4 +532,19 @@ dialog:not([open]) {
 
 #bj-deck {
     width: 5vw;
+}
+
+#bj-split-hand-sums {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 2vw;
+    width: 45vw;
+}
+
+#bj-split-hand-sums>p {
+    font-size: 1.3em;
+}
+
+.wager-slider {
+    width: 30vw;
 }

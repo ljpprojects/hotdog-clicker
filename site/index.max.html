@@ -27,24 +27,24 @@ AI could never create this slop...
         <title>Hot Dog Clicker</title>
         <meta
             name="description"
-            content="Hot Dog Clicker is a fun way to pass the time."
+            content="Hot Dog Clicker is a fun way to pass the time (or gamble lol)"
         />
         <meta name="og:title" property="og:title" content="Hot Dog Clicker" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta charset="utf-8" />
-        <link rel="canonical" href="https://hdc.ljpprojects.org/" />
+        <link rel="canonical" href="https://dev.hdc.ljpprojects.org/" />
         <link rel="stylesheet" href="/dist/index-min.css" />
     </head>
     <body>
         <nav>
             <button title="Main Menu" id="open-main-menu" data-click-sound data-hover-sound aria-label="Open Main Menu">
-                <img src="/assets/main-menu.svg" width="100" draggable="false" alt="" aria-hidden />
+                <img src="/assets/main-menu.svg" width="100" draggable="false" alt="Main Menu" aria-hidden />
             </button>
             <button title="Save" id="save" data-click-sound data-hover-sound aria-label="Save">
-                <img src="/assets/save.svg" width="100" draggable="false" alt="" aria-hidden />
+                <img src="/assets/save.svg" width="100" draggable="false" alt="Save" aria-hidden />
             </button>
             <button title="Wipe" id="wipe" data-click-sound data-hover-sound aria-label="Wipe Save">
-                <img src="/assets/wipe.svg" width="100" draggable="false" alt="" aria-hidden />
+                <img src="/assets/wipe.svg" width="100" draggable="false" alt="Wipe" aria-hidden />
             </button>
         </nav>
 
@@ -52,9 +52,9 @@ AI could never create this slop...
             <section class="splvert">
                 <section class="card" id="stat">
                     <div>
-                        <h2><span id="hds">0</span> hot dogs</h2>
-                        <h2><span id="hdps">0</span> hot dogs per second</h2>
-                        <h2>Net Worth: <span id="hdnw">0</span></h2>
+                        <h2><span id="hds">0</span> hot dogs (hds)</h2>
+                        <h2><span id="hdps">0</span> hot dogs per second (hdps)</h2>
+                        <h2>Net Worth (hdnw): <span id="hdnw">0</span></h2>
                         <h2>Wealthiness: <span id="wealthiness">broke</span></h2>
                     </div>
 
@@ -170,7 +170,7 @@ AI could never create this slop...
 
         <dialog id="notification-banner" data-alert-sound>
             <form method="dialog">
-                <p id="notification-banner-body">You are not meant to be seeing this message, that's a bug.</p>
+                <p id="notification-banner-body">Don't look now! I'm not ready yet!</p>
                 <input type="submit" value="OK" data-button data-click-sound data-hover-sound />
             </form>
         </dialog>
@@ -214,7 +214,7 @@ AI could never create this slop...
                         <input id="decimal-precision" type="range" min="0" max="10" value="2" data-click-sound />
                     </div>
                     <div>
-                        <p>Maximum Leaderboard Places (IGNORED, <span id="ldbd-places-display">15</span> places)</p>
+                        <p>(IGNORED) Maximum Leaderboard Places (<span id="ldbd-places-display">15</span> places)</p>
                         <input id="ldbd-places" type="range" min="3" max="40" value="15" data-click-sound />
                     </div>
                 </section>
@@ -225,7 +225,7 @@ AI could never create this slop...
             </form>
         </dialog>
 
-        <dialog id="gambling-dialog" class="menu" data-alert-sound>
+        <dialog id="pokies-dialog" class="menu" data-alert-sound>
             <!-- Do NOT submit on enter -->
             <form method="dialog" onkeydown="return event.key !== 'Enter'">
                 <b>POKIESSSSS!!</b>
@@ -241,7 +241,7 @@ AI could never create this slop...
                     </div>
                 </div>
                 <p>Wager (percent of hdnw): <span id="pokies-wager-display">0</span></p>
-                <input type="range" min="1" max="100" id="pokies-wager-slider" />
+                <input type="range" min="0.1" max="100" class="wager-slider" id="pokies-wager-slider" step="0.1" />
                 <button id="spin-slots" onclick="return false;" data-button data-click-sound data-hover-sound>SPIN!!!!!</button>
                 <input type="submit" value="nvm" data-button data-click-sound data-hover-sound />
             </form>
@@ -249,8 +249,9 @@ AI could never create this slop...
 
         <dialog id="bj-wager-menu" class="menu" data-alert-sound>
             <form method="dialog">
+                <b>BLAAACKJAAACK!!!!!</b>
                 <p>Wager (percent of hdnw): <span id="bj-wager-display">0</span></p>
-                <input type="range" min="1" max="100" id="bj-wager-slider" />
+                <input type="range" min="0.1" max="100" class="wager-slider" id="bj-wager-slider" step="0.1" />
                 <button id="bj-deal" onclick="return false;" data-button data-click-sound data-hover-sound>DEAL!!!!!!!!</button>
                 <input type="submit" value="nvm" data-button data-click-sound data-hover-sound />
             </form>
@@ -262,13 +263,14 @@ AI could never create this slop...
                     <p>Dealer's hand (<span id="bj-house-sum">11</span>)</p>
                 </div>
                 <div id="bj-dealer-hand">
-                    <img src="/assets/cards/AS.svg" title="A card. It wasn't designed by ljpprojects..." />
-                    <img src="/assets/cards/BK.svg" title="A card. It was (mostly) designed by ljpprojects. I wonder what the front says..." />
+                    <img src="/assets/cards/AS.svg" title="A card. It wasn't designed by ljpprojects." />
+                    <img src="/assets/cards/BK.svg" title="The back of a card. It was (mostly) designed by ljpprojects." />
                 </div>
 
                 <section>
                     <!-- BJ.... haha.... --->
                     <button id="bj-hit-button" onclick="return false;" data-button data-click-sound data-hover-sound>HIT</button>
+                    <button id="bj-double-button" onclick="return false;" data-button data-click-sound data-hover-sound>DOUBLE</button>
                     <button id="bj-stand-button" onclick="return false;" data-button data-click-sound data-hover-sound>STAND</button>
                 </section>
 
@@ -276,8 +278,15 @@ AI could never create this slop...
                     <p>Your hand (<span id="bj-player-sum">21</span>)</p>
                 </div>
                 <div id="bj-player-hand">
-                    <img src="/assets/cards/AH.svg" title="A card. It wasn't designed by ljpprojects..." />
-                    <img src="/assets/cards/JC.svg" title="A card. It wasn't designed by ljpprojects..." />
+                    <img src="/assets/cards/AH.svg" />
+                    <img src="/assets/cards/JC.svg" />
+                </div>
+
+                <div>
+                    <p>Split Hand Sums (in play order, leftmost hand is next)</p>
+                </div>
+                <div id="bj-split-hand-sums">
+                    <p>No split hands (split coming soon)</p>
                 </div>
 
                 <button id="bj-deal-again" class="hide" onclick="return false;" data-button data-click-sound data-hover-sound>DEAL AGAIN</button>
@@ -310,13 +319,13 @@ AI could never create this slop...
                 <button title="Get Identifier" id="get-identifier-button" data-click-sound data-hover-sound aria-label="Open 'get identifier' menu">
                     <img src="/assets/get-identifier.svg" width="100" draggable="false" />
                 </button>
-                <button title="Gamble" id="open-gambling-button" data-click-sound data-hover-sound aria-label="Open 'gambling' menu">
+                <button title="Pokies" id="open-gambling-button" data-click-sound data-hover-sound aria-label="Open 'gambling' menu">
                     <img src="/assets/pokies-button.svg" width="100" draggable="false" />
                 </button>
                 <button title="Change Settings" id="change-settings-button" data-click-sound data-hover-sound aria-label="Change settings and preferences">
                     <img src="/assets/settings.svg" width="100" draggable="false" />
                 </button>
-                <button title="Play Blackjack" id="play-blackjack-button" data-click-sound data-hover-sound aria-label="Open the blackjack wager menu">
+                <button title="Blackjack" id="play-blackjack-button" data-click-sound data-hover-sound aria-label="Open the blackjack wager menu">
                     Play Blackjack
                 </button>
                 <button title="Complete Transition" id="complete-transition-button" class="hide" data-click-sound data-hover-sound aria-label="Finish the save transition">

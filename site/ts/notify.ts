@@ -56,7 +56,7 @@ export const notify = async (notification: HDCNotification, delayMs: number = 0)
     formElement.addEventListener("submit", () => {
       clearTimeout(tId);
       res();
-    })
+    });
 
     if (dismissalMode === NotificationDismissalMode.Automatic) {
       tId = setTimeout(() => {

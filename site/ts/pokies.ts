@@ -1,7 +1,7 @@
 // Not so boring now, is it, bitch?
 
 import { GeneralBinding } from "./Binding";
-import { gamblingDialog, openGamblingButton, pokiesWagerDisplay, pokiesWagerSlider, slotBoxes, spinSlotsButton } from "./elements";
+import { pokiesDialog, openGamblingButton, pokiesWagerDisplay, pokiesWagerSlider, slotBoxes, spinSlotsButton } from "./elements";
 import { formatter, hdnw, hds } from "./game";
 import { HDCNotification, NotificationDismissalMode, NotificationProminence, notify } from "./notify";
 import { wait, wrappingAdd } from "./utils";
@@ -13,27 +13,24 @@ import { enterBuyMode, enterFreezeMode } from "./mode";
 export const GAMBLING_NW_THRESHOLD = 250;
 
 export type SlotSymbol =
-  "▼" | "🍇" | "🍋" | "🍒" | "🍉" | "🥝" | "♥️" | "♣️" | "♦️" | "♠️" | "𝟳";
+  "❌" | "🍇" | "🍋" | "🍒" | "🍉" | "🥝" | "♥️" | "♣️" | "♦️" | "♠️" | "𝟳";
 
 export type SlotSymbolCategory =
   "none" | "low" | "medium" | "𝟳";
 
-export type SlotWinKind = "none" | "2-split" | "2-cons" | "3-kind";
+export type SlotWinKind = "none" | "2-split" | "2-cons" | "flush" | "3-kind";
 
 export const symbols: SlotSymbol[] = [
-  /****** LOSING SYMBOLS (9/25 on reel) ******/
+  /****** LOSING SYMBOLS (6/23 on reel) ******/
 
-  "▼",
-  "▼",
-  "▼",
-  "▼",
-  "▼",
-  "▼",
-  "▼",
-  "▼",
-  "▼",
+  "❌",
+  "❌",
+  "❌",
+  "❌",
+  "❌",
+  "❌",
 
-  /****** LOW-PAYOUT SYMBOLS (9/25 on reel) ******/
+  /****** LOW-PAYOUT SYMBOLS (9/23 on reel) ******/
 
   "🍇",
   "🍇",
@@ -45,7 +42,7 @@ export const symbols: SlotSymbol[] = [
   "🍉",
   "🥝",
 
-  /****** MEDIUM-PAYOUT SYMBOLS (6/25 on reel) ******/
+  /****** MEDIUM-PAYOUT SYMBOLS (6/23 on reel) ******/
 
   "♥️",
   "♥️",
@@ -60,7 +57,7 @@ export const symbols: SlotSymbol[] = [
 ];
 
 export const symbolCategoryTable: Record<SlotSymbol, SlotSymbolCategory> = {
-  "▼": "none",
+  "❌": "none",
 
   "🍇": "low",
   "🍋": "low",
@@ -98,6 +95,14 @@ export const payoutTable: Record<SlotWinKind, Record<SlotSymbolCategory, number>
     "𝟳": 25,
   },
 
+  "flush": {
+    "none": 0,
+    "low": 2,
+    "medium": 5,
+    // This is NaN because it should not be possible, a flush of this is 3-of-a-kind
+    "𝟳": NaN,
+  },
+
   "3-kind": {
     "none": 0,
     "low": 5,
@@ -107,53 +112,56 @@ export const payoutTable: Record<SlotWinKind, Record<SlotSymbolCategory, number>
 };
 
 export const payout = (wager: number, symbols: [SlotSymbol, SlotSymbol, SlotSymbol], delayMs: number): number => {
-  console.log(symbols)
-
-  const formatterConfig: Intl.ResolvedNumberFormatOptions = {
-    ...formatter.value.resolvedOptions(),
-    notation: "compact",
-    maximumFractionDigits: 0,
-    minimumFractionDigits: 0,
-  };
-
-  const compactFormatter = new Intl.NumberFormat(navigator.languages, formatterConfig);
-
-  if (symbols.every((s, _, a) => s !== "▼" && s === a[0])) {
+  if (symbols.every((s, _, a) => s !== "❌" && s === a[0])) {
     // 3-of-a-kind
     const category = symbolCategoryTable[symbols[0]];
     const multiplier = payoutTable["3-kind"][category];
     const winnings = wager * multiplier;
 
     notify({
-      body: `3-of-a-kind! You win ${multiplier}x (${compactFormatter.format(winnings)})!`,
+      body: `3-of-a-kind! You win ${multiplier}x (${formatter.value.format(winnings)})!`,
       prominence: NotificationProminence.Banner,
       dismissalMode: NotificationDismissalMode.Automatic,
       dismissalTimeMs: 5000,
     }, delayMs)
 
     return winnings;
-  } else if (symbols.some((s, i, a) => s !== "▼" && i !== 0 && s === a[i - 1])) {
+  } else if (symbols.every((s, _, a) => symbolCategoryTable[s] !== "none" && symbolCategoryTable[s] === symbolCategoryTable[a[0]])) {
+    // flush
+    const category = symbolCategoryTable[symbols[0]];
+    const multiplier = payoutTable["flush"][category];
+    const winnings = wager * multiplier;
+
+    notify({
+      body: `Flush! You win ${multiplier}x (${formatter.value.format(winnings)})!`,
+      prominence: NotificationProminence.Banner,
+      dismissalMode: NotificationDismissalMode.Automatic,
+      dismissalTimeMs: 5000,
+    }, delayMs)
+
+    return winnings;
+  } else if (symbols.some((s, i, a) => s !== "❌" && i !== 0 && s === a[i - 1])) {
     // 2-of-a-kind consecutive
     const category = symbolCategoryTable[symbols.find((s, i, a) => i !== a.length - 1 && s === a[i + 1])!];
     const multiplier = payoutTable["2-cons"][category];
     const winnings = wager * multiplier;
 
     notify({
-      body: `2-of-a-kind (consecutive)! You win ${multiplier}x (${compactFormatter.format(winnings)})!`,
+      body: `2-of-a-kind (consecutive)! You win ${multiplier}x (${formatter.value.format(winnings)})!`,
       prominence: NotificationProminence.Banner,
       dismissalMode: NotificationDismissalMode.Automatic,
       dismissalTimeMs: 5000,
     }, delayMs)
 
     return winnings;
-  } else if (symbols[0] !== "▼" && symbols[0] === symbols[2]) {
+  } else if (symbols[0] !== "❌" && symbols[0] === symbols[2]) {
     // 2-of-a-kind consecutive
     const category = symbolCategoryTable[symbols[0]];
     const multiplier = payoutTable["2-split"][category];
     const winnings = wager * multiplier;
 
     notify({
-      body: `2-of-a-kind (split)! You win ${multiplier}x (${compactFormatter.format(winnings)})!`,
+      body: `2-of-a-kind (split)! You win ${multiplier}x (${formatter.value.format(winnings)})!`,
       prominence: NotificationProminence.Banner,
       dismissalMode: NotificationDismissalMode.Automatic,
       dismissalTimeMs: 5000,
@@ -330,5 +338,5 @@ spinSlotsButton.addEventListener("click", async () => {
 
 openGamblingButton.addEventListener("click", () => {
   closeMainMenu();
-  gamblingDialog.showModal();
+  pokiesDialog.showModal();
 })

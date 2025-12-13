@@ -1,0 +1,61 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "hotdog-clicker",
+  "compatibility_date": "2025-11-17",
+  "main": "./worker/index.ts",
+  "workers_dev": false,
+  "send_metrics": false,
+  "first_party_worker": true,
+  "assets": {
+    "directory": "./site",
+    "not_found_handling": "none"
+  },
+  "vars": {
+    "ENVIRONMENT": "prod:nightly",
+  },
+  "observability": {
+    "enabled": false,
+    "head_sampling_rate": 1,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "persist": true,
+      "invocation_logs": true
+    },
+    "traces": {
+      "enabled": true,
+      "persist": true,
+      "head_sampling_rate": 1
+    }
+  },
+  "build": {
+    "command": "bash ./build.sh",
+    "watch_dir": [
+      "./site/ts",
+      "./site/index.css",
+      "./site/index.max.html",
+      "./site/assets",
+      "./worker/index.ts",
+      "./shared",
+      "./tsconfig.json",
+      "./worker/tsconfig.json",
+      "./wrangler.json",
+      "./build.sh",
+      "./build-guard.sh"
+    ]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "hotdog-clicker-db",
+      "database_id": "323937b2-8bb1-4f6d-a7cd-fc1a9146acb1",
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "SESSIONS",
+      "id": "9db16a9b3e4d43719c1be95fad218fb0",
+      "preview_id": "4c757708188742a5a9c582ce23fb37c2"
+    }
+  ]
+}

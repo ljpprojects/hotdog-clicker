@@ -41,7 +41,7 @@ export const closeMainMenuButton = document.getElementById("close-main-menu")!;
 export const completeSaveTransitionButton = document.getElementById("complete-transition-button")!;
 export const playBlackjackButton = document.getElementById("play-blackjack-button")!;
 
-export const gamblingDialog: HTMLDialogElement = document.querySelector("#gambling-dialog")!;
+export const pokiesDialog: HTMLDialogElement = document.querySelector("#pokies-dialog")!;
 
 export const butcherButtonElement = document.getElementById("butcher")!;
 export const standButtonElement = document.getElementById("stand")!;

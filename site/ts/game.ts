@@ -2,6 +2,9 @@ import { GeneralBinding } from "./Binding";
 import {
   save,
   load,
+  wipe,
+  DEFAULT_SAVE_DATA,
+  wipeTimeoutEnd,
 } from "./save";
 
 import {
@@ -27,9 +30,10 @@ import {
   restaurantPriceElement,
   franchisePriceElement,
   openGamblingButton,
-  gamblingDialog,
+  pokiesDialog,
   spinSlotsButton,
   pokiesWagerSlider,
+  playBlackjackButton,
 } from "./elements";
 
 import './settings/index';
@@ -46,6 +50,8 @@ import "./ui";
 import "./gambling/blackjack";
 import { checkBuyables } from "./ui";
 import { settings } from "./settings/index";
+import { wait } from "./utils";
+import { bjGameDialog, bjWagerDialog } from "./gambling/elements";
 
 export const formatter = new SharedMutable(
   new Intl.NumberFormat(navigator.language, {
@@ -77,12 +83,13 @@ export const hdps = new GeneralBinding<number, number>({
   },
 });
 
+let canGamble = true;
+
 /**
  * The total worth of the user's assets.
- * The way assets work is similar to how shares work;
- * when you buy a new asset each of those assets which you already owned increases
- * to the new price of that asset. This creates a unique strategy for dominating
- * the leaderboard.
+ * The way assets work is similar to how shares work; when you buy a new asset
+ * each of those assets which you already owned increases to the new price of
+ * that asset.
  */
 export const hdnw = new GeneralBinding<number, number>({
   backing: 0,
@@ -90,6 +97,71 @@ export const hdnw = new GeneralBinding<number, number>({
   setfn(to: number, dispatcher?: string) {
     this.value = to;
     hdnwElement.textContent = formatter.value.format(to);
+
+    updateWealthinessDisplay();
+
+    // Check if we should allow gambling (> 50 hdnw)
+    if (hdnw.value >= GAMBLING_NW_THRESHOLD && !canGamble && settings.value.enableGambling) {
+      canGamble = true;
+
+      openGamblingButton.removeAttribute("disabled")
+      openGamblingButton.removeAttribute("data-unbuyable")
+      openGamblingButton.title = "Pokies";
+
+      playBlackjackButton.removeAttribute("disabled")
+      playBlackjackButton.removeAttribute("data-unbuyable")
+      playBlackjackButton.title = "Blackjack";
+
+      notify({
+        body: "You can gamble now.",
+        prominence: NotificationProminence.Banner,
+        dismissalMode: NotificationDismissalMode.Automatic,
+        dismissalTimeMs: 1000,
+        pauseGame: false,
+      });
+    } else if (hdnw.value < GAMBLING_NW_THRESHOLD && canGamble) {
+      canGamble = false;
+
+      openGamblingButton.setAttribute("disabled", "true")
+      openGamblingButton.setAttribute("data-unbuyable", "true")
+      openGamblingButton.title = "Pokies (LOCKED)";
+
+      playBlackjackButton.setAttribute("disabled", "true")
+      playBlackjackButton.setAttribute("data-unbuyable", "true")
+      playBlackjackButton.title = "Blackjack (LOCKED)";
+
+      const notifyKickedOut = () => notify({
+        body: "You have been kicked out of the casino for being too poor.",
+        prominence: NotificationProminence.Banner,
+        dismissalMode: NotificationDismissalMode.Automatic,
+      });
+
+      // Kick the player out of any gambling menus
+      if (pokiesDialog.open) {
+        pokiesDialog.close();
+        notifyKickedOut();
+      }
+
+      if (bjWagerDialog.open) {
+        bjWagerDialog.close();
+        notifyKickedOut();
+      }
+
+      if (bjGameDialog.open) {
+        bjGameDialog.close();
+        notifyKickedOut();
+      }
+    } else if (canGamble && !settings.value.enableGambling) {
+      canGamble = false;
+
+      openGamblingButton.setAttribute("disabled", "true")
+      openGamblingButton.setAttribute("data-unbuyable", "true")
+      openGamblingButton.title = "Gamble (DISABLED in settings)";
+
+      playBlackjackButton.setAttribute("disabled", "true")
+      playBlackjackButton.setAttribute("data-unbuyable", "true")
+      playBlackjackButton.title = "Blackjack (DISABLED in settings)";
+    }
   },
 
   getfn(): number {
@@ -519,7 +591,6 @@ export const franchisePrice = new GeneralBinding<number, number>({
 });
 
 
-let canGamble = true;
 let lastTime = performance.now();
 export const shouldQuitEventLoop = new SharedMutable(false);
 
@@ -534,48 +605,6 @@ export const evloop = (time: number) => {
   if (hdps.value * deltaSeconds !== 0) {
     // Add hdps adjusted for the delta
     hds.value += hdps.value * deltaSeconds;
-  }
-
-  updateWealthinessDisplay();
-
-  // Check if we should allow gambling (> 50 hdnw)
-  if (hdnw.value >= GAMBLING_NW_THRESHOLD && !canGamble && settings.value.enableGambling) {
-    canGamble = true;
-
-    openGamblingButton.removeAttribute("disabled")
-    openGamblingButton.removeAttribute("data-unbuyable")
-    openGamblingButton.title = "Gamble";
-
-    notify({
-      body: "You can gamble now.",
-      prominence: NotificationProminence.Banner,
-      dismissalMode: NotificationDismissalMode.Automatic,
-      dismissalTimeMs: 1000,
-      pauseGame: false,
-    });
-  } else if (hdnw.value < GAMBLING_NW_THRESHOLD && canGamble) {
-    canGamble = false;
-
-    openGamblingButton.setAttribute("disabled", "true")
-    openGamblingButton.setAttribute("data-unbuyable", "true")
-    openGamblingButton.title = "Gamble (LOCKED)";
-
-    // Kick the player out of the casino
-    if (gamblingDialog.open) {
-      gamblingDialog.close();
-
-      notify({
-        body: "You have been kicked out of the casino for being too poor.",
-        prominence: NotificationProminence.Banner,
-        dismissalMode: NotificationDismissalMode.Automatic,
-      })
-    }
-  } else if (canGamble && !settings.value.enableGambling) {
-    canGamble = false;
-
-    openGamblingButton.setAttribute("disabled", "true")
-    openGamblingButton.setAttribute("data-unbuyable", "true")
-    openGamblingButton.title = "Gamble (DISABLED in settings)";
   }
 
   lastTime = time;
@@ -609,3 +638,36 @@ setInterval(
       .do(),
   60e3
 );
+
+// @ts-expect-error
+window.richify = async () => {
+  for (let i = 0; i <= 10; i++) {
+    const f = i < 5 ? console.warn : console.error;
+
+    f(`${10 - i} seconds remain`);
+
+    await wait(1000);
+  }
+
+  // A fate worse than a wipe
+  // Put them into crippling debt and prevent wipes for a day
+  hds.value -= 1e15;
+
+  const factor = 1000 * 60 * 60 * 24;
+  const daysTimeoutEndsIn = wipeTimeoutEnd.value != null ? (wipeTimeoutEnd.value / factor) - (Date.now() / factor) : 0;
+
+  console.warn("Ends in", daysTimeoutEndsIn)
+
+  wipeTimeoutEnd.value = (wipeTimeoutEnd.value ?? Date.now()) + 24 * 60 ** 2 * 1000 * (1 + Number(wipeTimeoutEnd.value != null) + daysTimeoutEndsIn);
+  //                                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  //                                                                                                      Repeat offense penalty
+
+  await save();
+
+  await notify({
+    title: "CHEATER",
+    body: `You tried to cheat and shall feel the consequences of your actions. You are now in crippling debt and cannot wipe your save for another 24 hours (it can be wiped at ${new Date(wipeTimeoutEnd.value!).toLocaleString()}).`,
+    prominence: NotificationProminence.Prominent,
+    dismissalMode: NotificationDismissalMode.Manual,
+  }, 1000);
+}

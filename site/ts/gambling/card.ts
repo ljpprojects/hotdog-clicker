@@ -43,13 +43,21 @@ export const blackjackCardSum = (cards: CardRank[]): number => {
     "A": 11,
   };
 
-  const sum = cards.reduce((acc, c) => {
-    const val = cardValueTable[c];
-    // Account for the ability of Ace cards to reduce to a value of 1 if 11 would make the player bust
-    const adjustedVal = acc + val > 21 && val === 11 ? 1 : val;
+  let aceCount = 0;
 
-    return acc + adjustedVal
+  let sum = cards.reduce((acc, c) => {
+    const val = cardValueTable[c];
+
+    // Check if this card is an ace and increment counter if it is
+    aceCount += Number(val === 11);
+
+    return acc + val
   }, 0);
+
+  // If the sum is over 21, reduce the value of aces to 1 until it is under (or there are no more aces)
+  for (let i = 0; i < aceCount; i++) {
+    sum -= Number(sum > 21) * 10;
+  }
 
   return sum;
 }

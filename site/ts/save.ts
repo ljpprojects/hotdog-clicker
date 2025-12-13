@@ -51,6 +51,7 @@ import { NaNNullCoerce } from "./utils";
 import { startTransition } from "./transition";
 import { enterBuyMode } from "./mode";
 import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
+import { SharedMutable } from "./SharedMutable";
 
 /**
  * Major save editions are incremented when a previous save edition with the
@@ -174,6 +175,8 @@ export interface HDCSaveData extends HDCGeneralSave {
    */
   edition: SaveEdition;
 
+  wipeTimeoutEnd?: number;
+
   /**
    * The amount of Hot Dogs the user has (Hot Dog Count)
    */
@@ -230,7 +233,9 @@ export const DEFAULT_SAVE_DATA: HDCSaveData = {
   settings: DEFAULT_SETTINGS,
 };
 
-export const decodeSaveData = function _a<T extends HDCGeneralSave>(data: string): T | HDCSaveData {
+export let wipeTimeoutEnd: SharedMutable<number | null> = new SharedMutable(null);
+
+export const decodeSaveData = function <T extends HDCGeneralSave>(data: string): T | HDCSaveData {
   try {
     const raw = Uint8Array.fromBase64(data);
     const decoder = new TextDecoder('utf-8');
@@ -249,7 +254,7 @@ export const decodeSaveData = function _a<T extends HDCGeneralSave>(data: string
 };
 
 export const compileSave = (): HDCSaveData => {
-  return {
+  let save: HDCSaveData = {
     edition: SAVE_EDITION,
     hdc: hds.value,
     hdps: hdps.value,
@@ -266,6 +271,12 @@ export const compileSave = (): HDCSaveData => {
     hdnw: hdnw.value,
     settings: settings.value,
   };
+
+  if (wipeTimeoutEnd.value != null) {
+    save.wipeTimeoutEnd = wipeTimeoutEnd.value;
+  }
+
+  return save;
 };
 
 export const generateEncodedSave = (from?: HDCSaveData): string => {
@@ -285,6 +296,11 @@ export const save = async (from?: HDCSaveData): Promise<ServerSentWorkerData> =>
 };
 
 export const wipe = async (): Promise<ServerSentWorkerData> => {
+  // If there is a timeout and we are not past it reject
+  if (wipeTimeoutEnd.value != null && wipeTimeoutEnd.value > Date.now()) {
+    throw `lol you cannot wipe until ${new Date(wipeTimeoutEnd.value).toLocaleString()}`
+  }
+
   const saveData = generateEncodedSave(DEFAULT_SAVE_DATA);
   const req = generateReport(
     saveData,
@@ -296,6 +312,8 @@ export const wipe = async (): Promise<ServerSentWorkerData> => {
 };
 
 export const loadFromSave = (saveData: HDCSaveData) => {
+  wipeTimeoutEnd.value = saveData.wipeTimeoutEnd ?? null;
+
   hds.value = NaNNullCoerce(saveData.hdc, 0);
   hdps.value = NaNNullCoerce(saveData.hdps, 0);
 

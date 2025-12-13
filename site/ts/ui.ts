@@ -51,7 +51,7 @@ import {
   notificationPopupSet,
   mainMenuDialogElement,
   openGamblingButton,
-  gamblingDialog,
+  pokiesDialog,
   spinSlotsButton,
   playBlackjackButton,
 } from "./elements"; import { wagerBlackjack } from "./gambling/blackjack";

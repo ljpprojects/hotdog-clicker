@@ -1,3 +1,6 @@
+// Our blackjack is so fun, we have infinite splitting (but you cannot double after splitting)
+// Also the insurance button just runs and screams because it is almost always a bad choice
+
 import { Binding, GeneralBinding } from "../Binding";
 import { formatter, hdnw, hds } from "../game";
 import { enterBuyMode, enterFreezeMode } from "../mode";
@@ -6,7 +9,7 @@ import { GAMBLING_NW_THRESHOLD } from "../pokies";
 import { save } from "../save";
 import { wait } from "../utils";
 import { blackjackCardSum, Card, CardRank, drawCard, drawCardRemoving, fullDeck } from "./card";
-import { bjDealAgainButton, bjDealButton, bjGameDialog, bjHitButton, bjStandButton, bjWagerDialog, bjWagerDisplay, bjWagerSlider, dealerHand, dealerSum, playerHand, playerSum } from "./elements";
+import { bjDealAgainButton, bjDealButton, bjDoubleButton, bjGameDialog, bjHitButton, bjSplitHandsContainer, bjStandButton, bjWagerDialog, bjWagerDisplay, bjWagerSlider, dealerHand, dealerSum, playerHand, playerSum } from "./elements";
 
 export enum BlackJackWinState {
   HouseWin,
@@ -18,8 +21,8 @@ export enum BlackJackWinState {
 export type BlackJackState = {
   // Since only the rank of the cards matter, we only need to store that
 
-  houseCards: GeneralBinding<Card[], Card[]>;
-  playerCards: GeneralBinding<Card[], Card[]>;
+  houseHand: GeneralBinding<Card[], Card[]>;
+  playerHand: GeneralBinding<Card[], Card[]>;
 
   // This is true if the player has bust or stood
   playerCanPlay: boolean;
@@ -30,6 +33,11 @@ export type BlackJackState = {
 
   // The (absolute) wager
   wager: number;
+
+  /**
+   * Every split hand
+   */
+  splitHands: GeneralBinding<Card[][], Card[][]>,
 }
 
 /**
@@ -45,8 +53,8 @@ export const calculateWinState = (state: BlackJackState): BlackJackState => {
   }
 
   const
-    playerCardsSum = blackjackCardSum(state.playerCards.value!.map(c => c[0])),
-    houseCardsSum = blackjackCardSum(state.houseCards.value!.map(c => c[0]));
+    playerCardsSum = blackjackCardSum(state.playerHand.value!.map(c => c[0])),
+    houseCardsSum = blackjackCardSum(state.houseHand.value!.map(c => c[0]));
 
   // Check if the player has bust (loss)
   if (playerCardsSum > 21) {
@@ -97,13 +105,18 @@ export const calculateWinState = (state: BlackJackState): BlackJackState => {
 export const dealerAction = async (state: BlackJackState): Promise<BlackJackState> => {
   // If the player can still play, something is wrong
   if (state.playerCanPlay) {
-    throw `Player still can play; therefore the dealer cannot perform actions.`
+    throw `Player still can play, therefore the dealer cannot perform actions.`
+  }
+
+  // If the player has bust, exit early
+  if (blackjackCardSum(state.playerHand.value!.map(c => c[0])) > 21) {
+    return calculateWinState(state);
   }
 
   // The dealer has a very simple algorithm
   // We just need to draw cards until the sum of our cards is >= 17
 
-  let houseTotal = blackjackCardSum(state.houseCards.value!.map(c => c[0]));
+  let houseTotal = blackjackCardSum(state.houseHand.value!.map(c => c[0]));
 
   if (houseTotal < 17) {
     // Draw cards until the houseTotal >= 17
@@ -114,10 +127,10 @@ export const dealerAction = async (state: BlackJackState): Promise<BlackJackStat
       const card = drawCardRemoving(state.deck);
 
       // Add the card to the house's cards
-      state.houseCards.value = [...state.houseCards.value!, card];
+      state.houseHand.value = [...state.houseHand.value!, card];
 
       // Recalculate the sum (ace rules mean we cannot just add it)
-      houseTotal = blackjackCardSum(state.houseCards.value!.map(c => c[0]));
+      houseTotal = blackjackCardSum(state.houseHand.value!.map(c => c[0]));
 
       await wait(500);
     }
@@ -130,15 +143,17 @@ export const dealerAction = async (state: BlackJackState): Promise<BlackJackStat
 let currentDeck = structuredClone(fullDeck) as Card[];
 
 const stand = async () => {
-  // Disable the hit button
+  // Disable the hit & double button
   bjHitButton.disabled = true;
+  bjDoubleButton.disabled = true;
 
-  // Hide both buttons
+  // Hide all buttons
   bjHitButton.classList.add("hide");
+  bjDoubleButton.classList.add("hide");
   bjStandButton.classList.add("hide");
 
   // Reveal the dealer's second card
-  blackjackState.houseCards.runSet("bj-stand");
+  blackjackState.houseHand.runSet("bj-stand");
 
   blackjackState.playerCanPlay = false;
 
@@ -159,19 +174,10 @@ const stand = async () => {
       break;
     case PlayerWin:
       const winnings = blackjackState.wager * 1.5;
-      const formatterConfig: Intl.ResolvedNumberFormatOptions = {
-        ...formatter.value.resolvedOptions(),
-        notation: "compact",
-        maximumFractionDigits: 0,
-        minimumFractionDigits: 0,
-      };
 
       hds.value += winnings;
-
-      const compactFormatter = new Intl.NumberFormat(navigator.languages, formatterConfig);
-
       notify({
-        body: `You win 1.5x (${compactFormatter.format(winnings)})!`,
+        body: `You win 1.5x (+${formatter.value.format(winnings - blackjackState.wager)})!`,
         prominence: NotificationProminence.Banner,
         dismissalMode: NotificationDismissalMode.Automatic,
         dismissalTimeMs: 5000,
@@ -205,7 +211,7 @@ export let blackjackState: BlackJackState = {
   playerCanPlay: true,
   winState: BlackJackWinState.Undecided,
   wager: 0,
-  houseCards: new GeneralBinding<Card[], Card[]>({
+  houseHand: new GeneralBinding<Card[], Card[]>({
     backing: [drawCardRemoving(currentDeck), drawCardRemoving(currentDeck)],
     setfn(to, dispatcher?) {
       this.value = to;
@@ -237,7 +243,7 @@ export let blackjackState: BlackJackState = {
       return this.value! as unknown as Card[];
     }
   }),
-  playerCards: new GeneralBinding<Card[], Card[]>({
+  playerHand: new GeneralBinding<Card[], Card[]>({
     backing: [drawCardRemoving(currentDeck), drawCardRemoving(currentDeck)],
     async setfn(to, dispatcher?) {
       this.value = to;
@@ -268,23 +274,70 @@ export let blackjackState: BlackJackState = {
     },
 
     getfn(dispatcher?) {
-      return this.value! as unknown as Card[];
+      return this.value! as Card[];
     }
   }),
+  splitHands: new GeneralBinding<Card[][], Card[][]>({
+    backing: [],
+
+    setfn(to, _dispatcher?) {
+      // Remove existing child elements
+      bjSplitHandsContainer.innerHTML = "";
+
+      // Add cards to UI
+
+      for (const hand of to) {
+        const sum = blackjackCardSum(hand.map(c => c[0]));
+
+        const sumIndicator = document.createElement("p");
+        sumIndicator.textContent = `${sum}`;
+
+        playerHand.appendChild(sumIndicator);
+      }
+
+      if (to.length === 0) {
+        const indicator = document.createElement("p");
+        indicator.textContent = "No split hands";
+
+        playerHand.appendChild(indicator);
+      }
+    },
+
+    getfn(_dispatcher?) {
+      return this.value! as Card[][];
+    }
+  })
 }
 
-bjHitButton.addEventListener("click", () => {
+const hit = () => {
   // Select a card
   const card = drawCardRemoving(blackjackState.deck);
 
-  blackjackState.playerCards.value = [...blackjackState.playerCards.value, card];
-});
+  blackjackState.playerHand.value = [...blackjackState.playerHand.value, card];
+};
 
+const double = async () => {
+  // Double wager
+
+  hds.value -= blackjackState.wager;
+  await save();
+  blackjackState.wager *= 2;
+
+  hit();
+
+  // If we can still play, stand
+  if (blackjackState.playerCanPlay) {
+    stand();
+  }
+}
+
+bjHitButton.addEventListener("click", hit);
+bjDoubleButton.addEventListener("click", double);
 bjStandButton.addEventListener("click", stand);
 
 setTimeout(() => {
-  blackjackState.playerCards.value = blackjackState.playerCards.value;
-  blackjackState.houseCards.value = blackjackState.houseCards.value;
+  blackjackState.playerHand.value = blackjackState.playerHand.value;
+  blackjackState.houseHand.value = blackjackState.houseHand.value;
 }, 500)
 
 export const updateBlackjackWagerDisplay = () => {
@@ -294,22 +347,13 @@ export const updateBlackjackWagerDisplay = () => {
   bjWagerSlider.max = `${maxPercent}`;
   bjWagerSlider.valueAsNumber %= maxPercent;
 
-  const formatterConfig: Intl.ResolvedNumberFormatOptions = {
-    ...formatter.value.resolvedOptions(),
-    notation: "compact",
-    maximumFractionDigits: 0,
-    minimumFractionDigits: 0,
-  };
-
-  const compactFormatter = new Intl.NumberFormat(navigator.languages, formatterConfig);
-
   const absolute = bjWagerSlider.valueAsNumber / 100 * hdnw.value;
-  bjWagerDisplay.textContent = `${bjWagerSlider.valueAsNumber}% (${compactFormatter.format(absolute)})`
+  bjWagerDisplay.textContent = `${bjWagerSlider.valueAsNumber}% (${formatter.value.format(absolute)})`
 }
 
 bjWagerSlider.oninput = updateBlackjackWagerDisplay
 
-bjDealButton.addEventListener("click", () => {
+bjDealButton.addEventListener("click", async () => {
   // Hide the wager dialog
   bjWagerDialog.close();
 
@@ -322,15 +366,20 @@ bjDealButton.addEventListener("click", () => {
   // Subtract the wager from the hds
   hds.value -= blackjackState.wager;
 
+  // Save to prevent people from just reloading if their hand is bad
+  await save();
+
   // Hide deal again button
   bjDealAgainButton.classList.add("hide");
 
-  // Unhide hit & stand buttons
+  // Unhide buttons
   bjHitButton.classList.remove("hide");
+  bjDoubleButton.classList.remove("hide");
   bjStandButton.classList.remove("hide");
 
-  // Enable the hit button
+  // Enable the hit & double button
   bjHitButton.disabled = false;
+  bjDoubleButton.disabled = false;
 
   // Show the game dialog
   bjGameDialog.showModal();
@@ -346,8 +395,8 @@ export const wagerBlackjack = () => {
   blackjackState.playerCanPlay = true;
   blackjackState.winState = BlackJackWinState.Undecided;
   blackjackState.deck = currentDeck;
-  blackjackState.houseCards.value = [drawCardRemoving(currentDeck), drawCardRemoving(currentDeck)];
-  blackjackState.playerCards.value = [drawCardRemoving(currentDeck), drawCardRemoving(currentDeck)];
+  blackjackState.houseHand.value = [drawCardRemoving(currentDeck), drawCardRemoving(currentDeck)];
+  blackjackState.playerHand.value = [drawCardRemoving(currentDeck), drawCardRemoving(currentDeck)];
 
   // Show the wager dialog
   bjWagerDialog.showModal();
