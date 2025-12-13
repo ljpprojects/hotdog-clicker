@@ -144,5 +144,5 @@ export const drawCard = (): DeepReadonly<Card> => {
 export const drawCardRemoving = (deck: Card[]): Card => {
   const index = randomUint16() % deck.length;
 
-  return [CardRank.Ace, CardSuit.Spades]//deck.splice(index, 1)[0];
+  return deck.splice(index, 1)[0];
 }
