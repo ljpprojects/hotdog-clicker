@@ -541,6 +541,10 @@ dialog:not([open]) {
     width: 45vw;
 }
 
+#bj-split-button {
+    font-size: 1.5em;
+}
+
 #bj-split-hand-sums>p {
     font-size: 1.3em;
 }

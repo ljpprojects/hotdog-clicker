@@ -1,6 +1,6 @@
 import { LeaderboardData } from "../../shared/types";
 import { generateLeaderboard, makeWorkerReq } from "./worker/interfacing";
-import { leaderboardElements, youLeaderboardElement } from "./elements";
+import { leaderboardContainerList, leaderboardElements } from "./elements";
 import { formatter } from "./game";
 import { isValidNickname, MAX_NICKNAME_LENGTH } from "./nickname";
 import { Mode, ModeBasedAction } from "./mode";
@@ -58,11 +58,16 @@ export const updateLeaderboard = () => new Promise<void>(async (res, rej) => {
   const youLdbd = ldbd[ldbd.length - 1];
 
   if (youLdbd.ldbd_rank <= leaderboardElements.length) {
-    youLeaderboardElement.classList.add("hide");
+    const maybeYouLdbdEl = document.getElementById("you-ldbd");
+    maybeYouLdbdEl?.remove();
   } else {
-    youLeaderboardElement.classList.remove("hide");
+    const youLeaderboardElement = document.createElement("li");
+    youLeaderboardElement.id = "you-ldbd";
+
     youLeaderboardElement.value = youLdbd.ldbd_rank;
     youLeaderboardElement.textContent = `You (actual rank) — ${formatter.value.format(youLdbd.net_worth)}`;
+
+    leaderboardContainerList.appendChild(youLeaderboardElement);
   }
 
   res()

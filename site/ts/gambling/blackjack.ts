@@ -9,7 +9,7 @@ import { GAMBLING_NW_THRESHOLD } from "../pokies";
 import { save } from "../save";
 import { wait } from "../utils";
 import { blackjackCardSum, Card, CardRank, drawCard, drawCardRemoving, fullDeck } from "./card";
-import { bjDealAgainButton, bjDealButton, bjDoubleButton, bjGameDialog, bjHitButton, bjSplitHandsContainer, bjStandButton, bjWagerDialog, bjWagerDisplay, bjWagerSlider, dealerHand, dealerSum, playerHand, playerSum } from "./elements";
+import { bjDealAgainButton, bjDealButton, bjDoubleButton, bjGameDialog, bjHitButton, bjSplitButton, bjSplitHandsContainer, bjStandButton, bjWagerDialog, bjWagerDisplay, bjWagerSlider, dealerHand, dealerSum, playerHand, playerSum } from "./elements";
 
 export enum BlackJackWinState {
   HouseWin,
@@ -24,6 +24,11 @@ export type BlackJackState = {
   houseHand: GeneralBinding<Card[], Card[]>;
   playerHand: GeneralBinding<Card[], Card[]>;
 
+  /**
+   * This indicates whether or not the hand in play is a split-hand
+   */
+  handInPlayWasSplit: boolean,
+
   // This is true if the player has bust or stood
   playerCanPlay: boolean;
 
@@ -35,7 +40,7 @@ export type BlackJackState = {
   wager: number;
 
   /**
-   * Every split hand
+   * Every split hand.
    */
   splitHands: GeneralBinding<Card[][], Card[][]>,
 }
@@ -142,27 +147,12 @@ export const dealerAction = async (state: BlackJackState): Promise<BlackJackStat
 
 let currentDeck = structuredClone(fullDeck) as Card[];
 
-const stand = async () => {
-  // Disable the hit & double button
-  bjHitButton.disabled = true;
-  bjDoubleButton.disabled = true;
-
-  // Hide all buttons
-  bjHitButton.classList.add("hide");
-  bjDoubleButton.classList.add("hide");
-  bjStandButton.classList.add("hide");
-
-  // Reveal the dealer's second card
-  blackjackState.houseHand.runSet("bj-stand");
-
-  blackjackState.playerCanPlay = false;
-
-  // Run dealer algorithm
-  blackjackState = await dealerAction(blackjackState);
-
-  const { HouseWin, PlayerWin, Push } = BlackJackWinState;
+const calculatePayout = () => {
+  const { HouseWin, PlayerWin, Push, Undecided } = BlackJackWinState;
 
   switch (blackjackState.winState) {
+    case Undecided:
+      throw "Cannot call calculatePayout with an undecided win state."
     case HouseWin:
       notify({
         body: `You lost`,
@@ -196,14 +186,6 @@ const stand = async () => {
 
       break;
   };
-
-  // Enter buy mode
-  enterBuyMode();
-
-  // Show deal again button
-  bjDealAgainButton.classList.remove("hide");
-
-  await save();
 }
 
 export let blackjackState: BlackJackState = {
@@ -211,6 +193,7 @@ export let blackjackState: BlackJackState = {
   playerCanPlay: true,
   winState: BlackJackWinState.Undecided,
   wager: 0,
+  handInPlayWasSplit: false,
   houseHand: new GeneralBinding<Card[], Card[]>({
     backing: [drawCardRemoving(currentDeck), drawCardRemoving(currentDeck)],
     setfn(to, dispatcher?) {
@@ -270,6 +253,15 @@ export let blackjackState: BlackJackState = {
 
         // Auto stand
         stand()
+
+        return
+      }
+
+      // If we can split (i.e. two dealt cards are of the same rank) unhide the button
+      if (blackjackState.playerCanPlay && to.length === 2 && to[0][0] === to[1][0]) {
+        bjSplitButton.classList.remove("hide");
+      } else {
+        bjSplitButton.classList.add("hide");
       }
     },
 
@@ -281,6 +273,8 @@ export let blackjackState: BlackJackState = {
     backing: [],
 
     setfn(to, _dispatcher?) {
+      this.value = to;
+
       // Remove existing child elements
       bjSplitHandsContainer.innerHTML = "";
 
@@ -292,14 +286,14 @@ export let blackjackState: BlackJackState = {
         const sumIndicator = document.createElement("p");
         sumIndicator.textContent = `${sum}`;
 
-        playerHand.appendChild(sumIndicator);
+        bjSplitHandsContainer.appendChild(sumIndicator);
       }
 
       if (to.length === 0) {
         const indicator = document.createElement("p");
         indicator.textContent = "No split hands";
 
-        playerHand.appendChild(indicator);
+        bjSplitHandsContainer.appendChild(indicator);
       }
     },
 
@@ -313,8 +307,93 @@ const hit = () => {
   // Select a card
   const card = drawCardRemoving(blackjackState.deck);
 
+  // Since hitting adds another card to the hand, splitting must be disabled
+  bjSplitButton.classList.add("hide");
+
   blackjackState.playerHand.value = [...blackjackState.playerHand.value, card];
 };
+
+const stand = async () => {
+  console.log("Split hands length", blackjackState.splitHands.value.length)
+
+  // Check if we have any split hands to play
+  if (blackjackState.splitHands.value.length > 0) {
+    blackjackState.playerCanPlay = false;
+
+    // Calculate the win state for this hand
+    // If the hand we are playing is not a split hand, run the dealer algorithm
+    if (!blackjackState.handInPlayWasSplit) {
+      blackjackState = await dealerAction(blackjackState);
+    } else {
+      blackjackState = calculateWinState(blackjackState);
+    }
+
+    calculatePayout();
+
+    const splitHands = blackjackState.splitHands.value;
+
+    // Take the first hand
+    const nextHand = splitHands.splice(0, 1)[0];
+    blackjackState.splitHands.value = splitHands;
+
+    // Put that hand into play
+    blackjackState.handInPlayWasSplit = true;
+    blackjackState.playerHand.value = nextHand;
+
+    // Hide deal again button
+    bjDealAgainButton.classList.add("hide");
+
+    // Unhide buttons
+    bjHitButton.classList.remove("hide");
+    bjDoubleButton.classList.remove("hide");
+    bjStandButton.classList.remove("hide");
+
+    // Enable the hit & double button
+    bjHitButton.disabled = false;
+    bjDoubleButton.disabled = false;
+
+    // Hope for the best?
+
+    console.log("Next hand", nextHand)
+
+    blackjackState.playerCanPlay = true;
+
+    return
+  }
+
+  // Disable the hit & double button
+  bjHitButton.disabled = true;
+  bjDoubleButton.disabled = true;
+
+  // Hide all buttons
+  bjHitButton.classList.add("hide");
+  bjDoubleButton.classList.add("hide");
+  bjStandButton.classList.add("hide");
+
+  // Reveal the dealer's second card
+  blackjackState.houseHand.runSet("bj-stand");
+
+  blackjackState.playerCanPlay = false;
+
+  // If this is a split hand do NOT run the dealer algorithm
+  if (blackjackState.handInPlayWasSplit) {
+    // Just compute win state
+    blackjackState = calculateWinState(blackjackState);
+  } else {
+    // Run dealer algorithm
+    blackjackState = await dealerAction(blackjackState);
+  }
+
+  calculatePayout();
+
+  // Enter buy mode
+  enterBuyMode();
+
+  // Show deal again button
+  bjDealAgainButton.classList.remove("hide");
+
+  await save();
+}
 
 const double = async () => {
   // Double wager
@@ -331,13 +410,48 @@ const double = async () => {
   }
 }
 
+const split = async () => {
+  const playerHand = blackjackState.playerHand.value;
+
+  // Make sure there are only two cards in the hand
+  if (playerHand.length > 2) {
+    throw "Hand is too long; cannot split."
+  }
+
+  // Make sure the cards are indeed of the same rank
+  if (playerHand[0][0] !== playerHand[1][0]) {
+    throw "Cards in hand are not of the same rank; cannot split."
+  }
+
+  // Make sure the player can still play
+  if (!blackjackState.playerCanPlay) {
+    throw "Player can no longer action; cannot split."
+  }
+
+  // Deduct wager for the split hand
+
+  hds.value -= blackjackState.wager;
+  await save();
+
+  blackjackState.playerHand.value = [playerHand[0], drawCardRemoving(blackjackState.deck)];
+
+  // Create the split hand
+  const splitHand: Card[] = [playerHand[1], drawCardRemoving(blackjackState.deck)];
+
+  // Add the split hand
+  blackjackState.splitHands.value = [...blackjackState.splitHands.value, splitHand];
+
+  console.log("Split hands", blackjackState.splitHands.value)
+}
+
 bjHitButton.addEventListener("click", hit);
 bjDoubleButton.addEventListener("click", double);
+bjSplitButton.addEventListener("click", split);
 bjStandButton.addEventListener("click", stand);
 
 setTimeout(() => {
-  blackjackState.playerHand.value = blackjackState.playerHand.value;
-  blackjackState.houseHand.value = blackjackState.houseHand.value;
+  blackjackState.playerHand.runSet();
+  blackjackState.houseHand.runSet();
 }, 500)
 
 export const updateBlackjackWagerDisplay = () => {
@@ -393,6 +507,7 @@ export const wagerBlackjack = () => {
 
   // Reset the state
   blackjackState.playerCanPlay = true;
+  blackjackState.handInPlayWasSplit = false;
   blackjackState.winState = BlackJackWinState.Undecided;
   blackjackState.deck = currentDeck;
   blackjackState.houseHand.value = [drawCardRemoving(currentDeck), drawCardRemoving(currentDeck)];

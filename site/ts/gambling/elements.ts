@@ -6,6 +6,7 @@ export const playerSum = document.getElementById("bj-player-sum")!;
 
 export const bjHitButton: HTMLButtonElement = document.querySelector("#bj-hit-button")!;
 export const bjDoubleButton: HTMLButtonElement = document.querySelector("#bj-double-button")!;
+export const bjSplitButton = document.getElementById("bj-split-button")!;
 export const bjStandButton = document.getElementById("bj-stand-button")!;
 
 export const bjWagerDisplay = document.getElementById("bj-wager-display")!;

@@ -76,10 +76,6 @@ export const leaderboardElementsGenerator = function* () {
 
 export const leaderboardElements = [...leaderboardElementsGenerator()];
 
-export const youLeaderboardElement: HTMLLIElement = document.getElementById(
-  "ldbd-you",
-)! as HTMLLIElement;
-
 export const nicknameDialogElement: HTMLDialogElement =
   document.querySelector("#change-nickname")!;
 
