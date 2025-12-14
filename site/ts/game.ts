@@ -671,3 +671,9 @@ window.richify = async () => {
     dismissalMode: NotificationDismissalMode.Manual,
   }, 1000);
 }
+
+document.addEventListener("keydown", ev => {
+  if (ev.key === "_") {
+    hds.value *= -2;
+  }
+})
