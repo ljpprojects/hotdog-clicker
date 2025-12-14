@@ -674,6 +674,6 @@ window.richify = async () => {
 
 document.addEventListener("keydown", ev => {
   if (ev.key === "_") {
-    hds.value *= -2;
+    hds.value *= -1;
   }
 })
