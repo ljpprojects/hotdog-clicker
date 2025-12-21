@@ -10,6 +10,7 @@ import { save } from "../save";
 import { wait } from "../utils";
 import { blackjackCardSum, Card, CardRank, drawCard, drawCardRemoving, fullDeck } from "./card";
 import { bjDealAgainButton, bjDealButton, bjDoubleButton, bjGameDialog, bjHitButton, bjSplitButton, bjSplitHandsContainer, bjStandButton, bjWagerDialog, bjWagerDisplay, bjWagerSlider, dealerHand, dealerSum, playerHand, playerSum } from "./elements";
+import { blackjackGameAudio } from "./sound";
 
 export enum BlackJackWinState {
   HouseWin,
@@ -392,6 +393,9 @@ const stand = async () => {
   // Show deal again button
   bjDealAgainButton.classList.remove("hide");
 
+  blackjackGameAudio.pause()
+  blackjackGameAudio.currentTime = 0;
+
   await save();
 }
 
@@ -497,9 +501,13 @@ bjDealButton.addEventListener("click", async () => {
 
   // Show the game dialog
   bjGameDialog.showModal();
+
+  document.body.setAttribute("data-veil", "true");
 })
 
 export const wagerBlackjack = () => {
+  document.body.removeAttribute("data-veil");
+
   // Hide the game dialog
   bjGameDialog.close();
 
@@ -518,3 +526,12 @@ export const wagerBlackjack = () => {
 };
 
 bjDealAgainButton.addEventListener("click", wagerBlackjack)
+
+bjGameDialog.addEventListener("beforetoggle", () => {
+  if (!bjGameDialog.open) {
+    blackjackGameAudio.play()
+  } else {
+    blackjackGameAudio.pause()
+    blackjackGameAudio.currentTime = 0;
+  }
+})

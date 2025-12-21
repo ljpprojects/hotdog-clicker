@@ -26,6 +26,15 @@ body[data-progress] {
     cursor: progress;
 }
 
+body[data-veil] {
+    filter: brightness(0) saturate(0);
+    background: #000;
+}
+
+body[data-veil]>#blackjack-menu {
+    filter: brightness(100%) saturate(100%);
+}
+
 :root,
 button,
 option,
