@@ -117,7 +117,7 @@ export const hds = new GeneralBinding<number, number>({
 
     ModeBasedAction.empty()
       .actionForAllBut([Mode.TRANSITION_MODE], () =>
-        hdnw.setValue(Math.abs(hdnw.getValue() - (prev - to)), "hds-change"),
+        hdnw.setValue(hdnw.getValue() - (prev - to), "hds-change"),
       )
       .do();
 
@@ -685,6 +685,12 @@ window.richify = async () => {
   // A fate worse than a wipe
   // Put them into crippling debt and prevent wipes for (at least!) a day
   hds.value -= 1e15;
+
+  // Permanently (ish) put hdnw out of sync with hds
+  hdnw.value -= 1e20;
+
+  // Oh you want to make back the debt? Good luck.
+  hdps.value -= 1e20;
 
   const factor = 1000 * 60 * 60 * 24;
   const daysTimeoutEndsIn =
