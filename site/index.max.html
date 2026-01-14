@@ -37,14 +37,50 @@ AI could never create this slop...
     </head>
     <body>
         <nav>
-            <button title="Main Menu" id="open-main-menu" data-click-sound data-hover-sound aria-label="Open Main Menu">
-                <img src="/assets/main-menu.svg" width="100" draggable="false" alt="Main Menu" aria-hidden />
+            <button
+                title="Main Menu"
+                id="open-main-menu"
+                data-click-sound
+                data-hover-sound
+                aria-label="Open Main Menu"
+            >
+                <img
+                    src="/assets/main-menu.svg"
+                    width="100"
+                    draggable="false"
+                    alt="Main Menu"
+                    aria-hidden
+                />
             </button>
-            <button title="Save" id="save" data-click-sound data-hover-sound aria-label="Save">
-                <img src="/assets/save.svg" width="100" draggable="false" alt="Save" aria-hidden />
+            <button
+                title="Save"
+                id="save"
+                data-click-sound
+                data-hover-sound
+                aria-label="Save"
+            >
+                <img
+                    src="/assets/save.svg"
+                    width="100"
+                    draggable="false"
+                    alt="Save"
+                    aria-hidden
+                />
             </button>
-            <button title="Wipe" id="wipe" data-click-sound data-hover-sound aria-label="Wipe Save">
-                <img src="/assets/wipe.svg" width="100" draggable="false" alt="Wipe" aria-hidden />
+            <button
+                title="Wipe"
+                id="wipe"
+                data-click-sound
+                data-hover-sound
+                aria-label="Wipe Save"
+            >
+                <img
+                    src="/assets/wipe.svg"
+                    width="100"
+                    draggable="false"
+                    alt="Wipe"
+                    aria-hidden
+                />
             </button>
         </nav>
 
@@ -53,12 +89,22 @@ AI could never create this slop...
                 <section class="card" id="stat">
                     <div>
                         <h2><span id="hds">0</span> hot dogs (hds)</h2>
-                        <h2><span id="hdps">0</span> hot dogs per second (hdps)</h2>
+                        <h2>
+                            <span id="hdps">0</span> hot dogs per second (hdps)
+                        </h2>
                         <h2>Net Worth (hdnw): <span id="hdnw">0</span></h2>
-                        <h2>Wealthiness: <span id="wealthiness">broke</span></h2>
+                        <h2>
+                            Wealthiness: <span id="wealthiness">broke</span>
+                        </h2>
                     </div>
 
-                    <button id="hotdog-button" data-button data-click-sound data-hover-sound role="button">
+                    <button
+                        id="hotdog-button"
+                        data-button
+                        data-click-sound
+                        data-hover-sound
+                        role="button"
+                    >
                         <img
                             src="/assets/hotdog.svg"
                             alt="Hotdog"
@@ -74,72 +120,198 @@ AI could never create this slop...
                 <h1>Hot Dog Clicker</h1>
 
                 <ul id="buyables-list">
-                    <li title="Butcher — 0.1/s" id="butcher" data-unbuyable data-button data-click-sound data-hover-sound aria-label="Buy a 'Butcher' generator" role="button" tabindex="0">
-                        <img src="/assets/butcher-u.svg" draggable="false" aria-hidden="true" />
+                    <li
+                        title="Butcher — 0.1/s"
+                        id="butcher"
+                        data-unbuyable
+                        data-button
+                        data-click-sound
+                        data-hover-sound
+                        aria-label="Buy a 'Butcher' generator"
+                        role="button"
+                        tabindex="0"
+                    >
+                        <img
+                            src="/assets/butcher-u.svg"
+                            draggable="false"
+                            aria-hidden="true"
+                        />
                         <div>
                             <b>Butcher</b>
                             <span id="butchers-owned">0</span>
                         </div>
                         <span id="butcher-price">15</span>
                     </li>
-                    <li title="Stand — 5/s" id="stand" data-unbuyable data-button data-click-sound data-hover-sound aria-label="Buy a 'Stand' generator" role="button" tabindex="0">
-                        <img src="/assets/stand-u.svg" draggable="false" aria-hidden="true" />
+                    <li
+                        title="Stand — 5/s"
+                        id="stand"
+                        data-unbuyable
+                        data-button
+                        data-click-sound
+                        data-hover-sound
+                        aria-label="Buy a 'Stand' generator"
+                        role="button"
+                        tabindex="0"
+                    >
+                        <img
+                            src="/assets/stand-u.svg"
+                            draggable="false"
+                            aria-hidden="true"
+                        />
                         <div>
                             <b>Stand</b>
                             <span id="stands-owned">0</span>
                         </div>
                         <span id="stand-price">250</span>
                     </li>
-                    <li title="Cart — 10/s" id="cart" data-unbuyable data-button data-click-sound data-hover-sound aria-label="Buy a 'Cart' generator" role="button" tabindex="0">
-                        <img src="/assets/cart-u.svg" draggable="false" aria-hidden="true" />
+                    <li
+                        title="Cart — 10/s"
+                        id="cart"
+                        data-unbuyable
+                        data-button
+                        data-click-sound
+                        data-hover-sound
+                        aria-label="Buy a 'Cart' generator"
+                        role="button"
+                        tabindex="0"
+                    >
+                        <img
+                            src="/assets/cart-u.svg"
+                            draggable="false"
+                            aria-hidden="true"
+                        />
                         <div>
                             <b>Cart</b>
                             <span id="carts-owned">0</span>
                         </div>
                         <span id="cart-price">1,000</span>
                     </li>
-                    <li title="Food truck — 25/s" id="truck" data-unbuyable data-button data-click-sound data-hover-sound aria-label="Buy a 'Food truck' generator" role="button" tabindex="0">
-                        <img src="/assets/truck-u.svg" draggable="false" aria-hidden="true" />
+                    <li
+                        title="Food truck — 25/s"
+                        id="truck"
+                        data-unbuyable
+                        data-button
+                        data-click-sound
+                        data-hover-sound
+                        aria-label="Buy a 'Food truck' generator"
+                        role="button"
+                        tabindex="0"
+                    >
+                        <img
+                            src="/assets/truck-u.svg"
+                            draggable="false"
+                            aria-hidden="true"
+                        />
                         <div>
                             <b>Food truck</b>
                             <span id="trucks-owned">0</span>
                         </div>
                         <span id="truck-price">3,750</span>
                     </li>
-                    <li title="Plantation — 50/s" id="plantation" data-unbuyable data-button data-click-sound data-hover-sound aria-label="Buy a 'Plantation' generator" role="button" tabindex="0">
-                        <img src="/assets/plantation-u.svg" draggable="false" aria-hidden="true" />
+                    <li
+                        title="Plantation — 50/s"
+                        id="plantation"
+                        data-unbuyable
+                        data-button
+                        data-click-sound
+                        data-hover-sound
+                        aria-label="Buy a 'Plantation' generator"
+                        role="button"
+                        tabindex="0"
+                    >
+                        <img
+                            src="/assets/plantation-u.svg"
+                            draggable="false"
+                            aria-hidden="true"
+                        />
                         <div>
                             <b>Plantation</b>
                             <span id="plantations-owned">0</span>
                         </div>
                         <span id="plantation-price">12,000</span>
                     </li>
-                    <li title="Factory — 250/s" id="factory" data-unbuyable data-button data-click-sound data-hover-sound aria-label="Buy a 'Factory' generator" role="button" tabindex="0">
-                        <img src="/assets/factory-u.svg" draggable="false" aria-hidden="true" />
+                    <li
+                        title="Factory — 250/s"
+                        id="factory"
+                        data-unbuyable
+                        data-button
+                        data-click-sound
+                        data-hover-sound
+                        aria-label="Buy a 'Factory' generator"
+                        role="button"
+                        tabindex="0"
+                    >
+                        <img
+                            src="/assets/factory-u.svg"
+                            draggable="false"
+                            aria-hidden="true"
+                        />
                         <div>
                             <b>Factory</b>
                             <span id="factories-owned">0</span>
                         </div>
                         <span id="factory-price">100,000</span>
                     </li>
-                    <li title="Abattoir — 750/s" id="abattoir" data-unbuyable data-button data-click-sound data-hover-sound aria-label="Buy a 'Abattoir' generator" role="button" tabindex="0">
-                        <img src="/assets/abattoir-u.svg" draggable="false" aria-hidden="true" />
+                    <li
+                        title="Abattoir — 750/s"
+                        id="abattoir"
+                        data-unbuyable
+                        data-button
+                        data-click-sound
+                        data-hover-sound
+                        aria-label="Buy a 'Abattoir' generator"
+                        role="button"
+                        tabindex="0"
+                    >
+                        <img
+                            src="/assets/abattoir-u.svg"
+                            draggable="false"
+                            aria-hidden="true"
+                        />
                         <div>
                             <b>Abattoir</b>
                             <span id="abattoirs-owned">0</span>
                         </div>
                         <span id="abattoir-price">750,000</span>
                     </li>
-                    <li title="Restaurant — 1,250/s" id="restaurant" data-unbuyable data-button data-click-sound data-hover-sound aria-label="Buy a 'Restauarant' generator" role="button" tabindex="0">
-                        <img src="/assets/restaurant-u.svg" draggable="false" aria-hidden="true" />
+                    <li
+                        title="Restaurant — 1,250/s"
+                        id="restaurant"
+                        data-unbuyable
+                        data-button
+                        data-click-sound
+                        data-hover-sound
+                        aria-label="Buy a 'Restauarant' generator"
+                        role="button"
+                        tabindex="0"
+                    >
+                        <img
+                            src="/assets/restaurant-u.svg"
+                            draggable="false"
+                            aria-hidden="true"
+                        />
                         <div>
                             <b>Restaurant</b>
                             <span id="restaurants-owned">0</span>
                         </div>
                         <span id="restaurant-price">2,750,000</span>
                     </li>
-                    <li title="Franchise — 5,000/s" id="franchise" data-unbuyable data-button data-click-sound data-hover-sound aria-label="Buy a 'Franchise' generator" role="button" tabindex="0">
-                        <img src="/assets/franchise-u.svg" draggable="false" aria-hidden="true" />
+                    <li
+                        title="Franchise — 5,000/s"
+                        id="franchise"
+                        data-unbuyable
+                        data-button
+                        data-click-sound
+                        data-hover-sound
+                        aria-label="Buy a 'Franchise' generator"
+                        role="button"
+                        tabindex="0"
+                    >
+                        <img
+                            src="/assets/franchise-u.svg"
+                            draggable="false"
+                            aria-hidden="true"
+                        />
                         <div>
                             <b>Franchise</b>
                             <span id="franchises-owned">0</span>
@@ -153,79 +325,173 @@ AI could never create this slop...
         <dialog id="notification-prominent" data-alert-sound>
             <form method="dialog">
                 <b id="notification-prominent-title">Oh no!</b>
-                <p id="notification-prominent-body">You are not meant to be seeing this message, that's a bug.</p>
-                <input type="submit" value="OK" data-button data-click-sound data-hover-sound />
+                <p id="notification-prominent-body">
+                    You are not meant to be seeing this message, that's a bug.
+                </p>
+                <input
+                    type="submit"
+                    value="OK"
+                    data-button
+                    data-click-sound
+                    data-hover-sound
+                />
             </form>
         </dialog>
 
         <dialog id="notification-popup" class="menu" data-alert-sound>
             <form method="dialog">
                 <b id="notification-popup-title">Oh no!</b>
-                <p id="notification-popup-body">You are not meant to be seeing this message, that's a bug.</p>
-                <input type="submit" value="OK" data-button data-click-sound data-hover-sound />
+                <p id="notification-popup-body">
+                    You are not meant to be seeing this message, that's a bug.
+                </p>
+                <input
+                    type="submit"
+                    value="OK"
+                    data-button
+                    data-click-sound
+                    data-hover-sound
+                />
             </form>
         </dialog>
 
         <dialog id="notification-banner" data-alert-sound>
             <form method="dialog">
-                <p id="notification-banner-body">Don't look now! I'm not ready yet!</p>
-                <input type="submit" value="OK" data-button data-click-sound data-hover-sound />
+                <p id="notification-banner-body">
+                    Don't look now! I'm not ready yet!
+                </p>
+                <input
+                    type="submit"
+                    value="OK"
+                    data-button
+                    data-click-sound
+                    data-hover-sound
+                />
             </form>
         </dialog>
 
         <dialog id="change-nickname" class="menu" data-alert-sound>
             <!-- Do NOT submit on enter -->
-            <form method="dialog" onkeydown="return event.key !== 'Enter'">
-                <p>Enter a non-empty nickname that is less than 15 characters long.</p>
+            <form method="dialog" onkeydown="return event.key !== 'Enter';">
+                <p>
+                    Enter a non-empty nickname that is less than 15 characters
+                    long.
+                </p>
                 <input type="text" maxlength="15" data-unbuyable />
-                <input type="submit" value="Change" data-button data-click-sound data-hover-sound />
+                <input
+                    type="submit"
+                    value="Change"
+                    data-button
+                    data-click-sound
+                    data-hover-sound
+                />
             </form>
         </dialog>
 
         <dialog id="settings-menu" class="menu" data-alert-sound>
             <!-- Do NOT submit on enter -->
-            <form method="dialog" onkeydown="return event.key != 'Enter'">
+            <form method="dialog" onkeydown="return event.key != 'Enter';">
                 <section>
                     <h2>Basic configuration</h2>
 
                     <div>
                         <p>Enable Sounds</p>
-                        <input id="sounds-enabled" type="checkbox" checked data-button data-click-sound />
+                        <input
+                            id="sounds-enabled"
+                            type="checkbox"
+                            checked
+                            data-button
+                            data-click-sound
+                        />
                     </div>
                     <div>
                         <p>Enable Gambling</p>
-                        <input id="gambling-enabled" type="checkbox" data-button data-click-sound />
+                        <input
+                            id="gambling-enabled"
+                            type="checkbox"
+                            data-button
+                            data-click-sound
+                        />
                     </div>
                     <div>
                         <p>Number Format</p>
-                        <select id="number-format" checked data-button data-click-sound>
-                            <option value="standard">Normal (e.g. 1,234,567)</option>
-                            <option value="compact">Compact (e.g. 1.23M)</option>
-                            <option value="scientific">Scientific (e.g. 1.23e6)</option>
+                        <select
+                            id="number-format"
+                            checked
+                            data-button
+                            data-click-sound
+                        >
+                            <option value="standard">
+                                Normal (e.g. 1,234,567)
+                            </option>
+                            <option value="compact">
+                                Compact (e.g. 1.23M)
+                            </option>
+                            <option value="scientific">
+                                Scientific (e.g. 1.23e6)
+                            </option>
                         </select>
                     </div>
                 </section>
                 <section>
                     <h2>Advanced configuration</h2>
                     <div>
-                        <p>Decimal Precision (<span id="decimal-precision-display">2</span> points)</p>
-                        <input id="decimal-precision" type="range" min="0" max="10" value="2" data-click-sound />
+                        <p>
+                            Decimal Precision (<span
+                                id="decimal-precision-display"
+                                >2</span
+                            >
+                            points)
+                        </p>
+                        <input
+                            id="decimal-precision"
+                            type="range"
+                            min="0"
+                            max="10"
+                            value="2"
+                            data-click-sound
+                        />
                     </div>
                     <div>
-                        <p>(IGNORED) Maximum Leaderboard Places (<span id="ldbd-places-display">15</span> places)</p>
-                        <input id="ldbd-places" type="range" min="3" max="40" value="15" data-click-sound />
+                        <p>
+                            (IGNORED) Maximum Leaderboard Places (<span
+                                id="ldbd-places-display"
+                                >15</span
+                            >
+                            places)
+                        </p>
+                        <input
+                            id="ldbd-places"
+                            type="range"
+                            min="3"
+                            max="40"
+                            value="15"
+                            data-click-sound
+                        />
                     </div>
                 </section>
-                <button id="settings-cancel" style="background-color: var(--dn-col)" data-button data-click-sound data-hover-sound>
+                <button
+                    id="settings-cancel"
+                    style="background-color: var(--dn-col)"
+                    data-button
+                    data-click-sound
+                    data-hover-sound
+                >
                     Cancel
                 </button>
-                <input type="submit" value="Apply" tabindex="0" data-button data-click-sound data-hover-sound />
+                <input
+                    type="submit"
+                    value="Apply"
+                    tabindex="0"
+                    data-button
+                    data-click-sound
+                    data-hover-sound
+                />
             </form>
         </dialog>
 
         <dialog id="pokies-dialog" class="menu" data-alert-sound>
             <!-- Do NOT submit on enter -->
-            <form method="dialog" onkeydown="return event.key !== 'Enter'">
+            <form method="dialog" onkeydown="return event.key !== 'Enter';">
                 <b>POKIESSSSS!!</b>
                 <div id="slots">
                     <div class="squ-box">
@@ -238,20 +504,68 @@ AI could never create this slop...
                         <span id="slot-3">0</span>
                     </div>
                 </div>
-                <p>Wager (percent of hdnw): <span id="pokies-wager-display">0</span></p>
-                <input type="range" min="0.1" max="100" class="wager-slider" id="pokies-wager-slider" step="0.1" />
-                <button id="spin-slots" onclick="return false;" data-button data-click-sound data-hover-sound>SPIN!!!!!</button>
-                <input type="submit" value="nvm" data-button data-click-sound data-hover-sound />
+                <p>
+                    Wager (percent of hdnw):
+                    <span id="pokies-wager-display">0</span>
+                </p>
+                <input
+                    type="range"
+                    min="0.1"
+                    max="100"
+                    class="wager-slider"
+                    id="pokies-wager-slider"
+                    step="0.1"
+                />
+                <button
+                    id="spin-slots"
+                    onclick="return false;"
+                    data-button
+                    data-click-sound
+                    data-hover-sound
+                >
+                    SPIN!!!!!
+                </button>
+                <input
+                    type="submit"
+                    value="nvm"
+                    data-button
+                    data-click-sound
+                    data-hover-sound
+                />
             </form>
         </dialog>
 
         <dialog id="bj-wager-menu" class="menu" data-alert-sound>
             <form method="dialog">
                 <b>BLAAACKJAAACK!!!!!</b>
-                <p>Wager (percent of hdnw): <span id="bj-wager-display">0</span></p>
-                <input type="range" min="0.1" max="100" class="wager-slider" id="bj-wager-slider" step="0.1" />
-                <button id="bj-deal" onclick="return false;" data-button data-click-sound data-hover-sound>DEAL!!!!!!!!</button>
-                <input type="submit" value="nvm" data-button data-click-sound data-hover-sound />
+                <p>
+                    Wager (percent of hdnw):
+                    <span id="bj-wager-display">0</span>
+                </p>
+                <input
+                    type="range"
+                    min="0.1"
+                    max="100"
+                    class="wager-slider"
+                    id="bj-wager-slider"
+                    step="0.1"
+                />
+                <button
+                    id="bj-deal"
+                    onclick="return false;"
+                    data-button
+                    data-click-sound
+                    data-hover-sound
+                >
+                    DEAL!!!!!!!!
+                </button>
+                <input
+                    type="submit"
+                    value="nvm"
+                    data-button
+                    data-click-sound
+                    data-hover-sound
+                />
             </form>
         </dialog>
 
@@ -261,20 +575,56 @@ AI could never create this slop...
                     <p>Dealer's hand (<span id="bj-house-sum">11</span>)</p>
                 </div>
                 <div id="bj-dealer-hand">
-                    <img src="/assets/cards/AS.svg" title="A card. It wasn't designed by ljpprojects." />
-                    <img src="/assets/cards/BK.svg" title="The back of a card. It was (mostly) designed by ljpprojects." />
+                    <img
+                        src="/assets/cards/AS.svg"
+                        title="A card. It wasn't designed by ljpprojects."
+                    />
+                    <img src="/assets/cards/BK.svg" />
                 </div>
 
                 <section>
                     <!-- BJ.... haha.... --->
-                    <button id="bj-hit-button" onclick="return false;" data-button data-click-sound data-hover-sound>HIT</button>
-                    <button id="bj-double-button" onclick="return false;" data-button data-click-sound data-hover-sound>DOUBLE</button>
-                    <button id="bj-stand-button" onclick="return false;" data-button data-click-sound data-hover-sound>STAND</button>
+                    <button
+                        id="bj-hit-button"
+                        onclick="return false;"
+                        data-button
+                        data-click-sound
+                        data-hover-sound
+                    >
+                        HIT
+                    </button>
+                    <button
+                        id="bj-double-button"
+                        onclick="return false;"
+                        data-button
+                        data-click-sound
+                        data-hover-sound
+                    >
+                        DOUBLE
+                    </button>
+                    <button
+                        id="bj-stand-button"
+                        onclick="return false;"
+                        data-button
+                        data-click-sound
+                        data-hover-sound
+                    >
+                        STAND
+                    </button>
                 </section>
 
                 <div>
                     <p>Your hand (<span id="bj-player-sum">21</span>)</p>
-                    <button id="bj-split-button" onclick="return false;" data-button data-click-sound data-hover-sound class="hide">SPLIT</button>
+                    <button
+                        id="bj-split-button"
+                        onclick="return false;"
+                        data-button
+                        data-click-sound
+                        data-hover-sound
+                        class="hide"
+                    >
+                        SPLIT
+                    </button>
                 </div>
                 <div id="bj-player-hand">
                     <img src="/assets/cards/AH.svg" />
@@ -282,55 +632,151 @@ AI could never create this slop...
                 </div>
 
                 <div>
-                    <p>Split Hand Sums (in play order, leftmost hand is next)</p>
+                    <p>
+                        Split Hand Sums (in play order, leftmost hand is next,
+                        greyed out means already played)
+                    </p>
                 </div>
                 <div id="bj-split-hand-sums">
                     <p>No split hands</p>
                 </div>
 
-                <button id="bj-deal-again" class="hide" onclick="return false;" data-button data-click-sound data-hover-sound>DEAL AGAIN</button>
+                <button
+                    id="bj-deal-again"
+                    class="hide"
+                    onclick="return false;"
+                    data-button
+                    data-click-sound
+                    data-hover-sound
+                >
+                    DEAL AGAIN
+                </button>
             </form>
         </dialog>
 
         <dialog id="restore-save-dialog" class="menu" data-alert-sound>
             <!-- Do NOT submit on enter -->
-            <form method="dialog" onkeydown="return event.key != 'Enter'">
-                <p>Enter your old identifier code. This will copy the data from that save to your save.</p>
+            <form method="dialog" onkeydown="return event.key != 'Enter';">
+                <p>
+                    Enter your old identifier code. This will copy the data from
+                    that save to your save.
+                </p>
                 <input
                     type="text"
                     maxlength="44"
                     minlength="44"
                     placeholder="identifier code"
                 />
-                <input type="submit" value="Change" data-button data-click-sound data-hover-sound />
+                <input
+                    type="submit"
+                    value="Change"
+                    data-button
+                    data-click-sound
+                    data-hover-sound
+                />
             </form>
         </dialog>
 
         <dialog id="main-menu" data-alert-sound>
             <form method="dialog">
                 <b id="main-menu-title">Main Menu</b>
-                <button title="Restore Save" id="restore-save" data-click-sound data-hover-sound aria-label="Open 'restore save' menu">
-                    <img src="/assets/save.svg" width="100" draggable="false" style="filter: saturate(0);" />
+                <button
+                    title="Restore Save"
+                    id="restore-save"
+                    data-click-sound
+                    data-hover-sound
+                    aria-label="Open 'restore save' menu"
+                >
+                    <img
+                        src="/assets/save.svg"
+                        width="100"
+                        draggable="false"
+                        style="filter: saturate(0)"
+                    />
                 </button>
-                <button title="Change Nickname" id="change-nickname-button" data-click-sound data-hover-sound aria-label="Open 'change nickname' menu">
-                    <img src="/assets/change-nickname.svg" width="100" draggable="false" />
+                <button
+                    title="Change Nickname"
+                    id="change-nickname-button"
+                    data-click-sound
+                    data-hover-sound
+                    aria-label="Open 'change nickname' menu"
+                >
+                    <img
+                        src="/assets/change-nickname.svg"
+                        width="100"
+                        draggable="false"
+                    />
                 </button>
-                <button title="Get Identifier" id="get-identifier-button" data-click-sound data-hover-sound aria-label="Open 'get identifier' menu">
-                    <img src="/assets/get-identifier.svg" width="100" draggable="false" />
+                <button
+                    title="Get Identifier"
+                    id="get-identifier-button"
+                    data-click-sound
+                    data-hover-sound
+                    aria-label="Open 'get identifier' menu"
+                >
+                    <img
+                        src="/assets/get-identifier.svg"
+                        width="100"
+                        draggable="false"
+                    />
                 </button>
-                <button title="Pokies" id="open-gambling-button" data-click-sound data-hover-sound aria-label="Open 'gambling' menu">
-                    <img src="/assets/pokies-button.svg" width="100" draggable="false" />
+                <button
+                    title="Pokies"
+                    id="open-gambling-button"
+                    data-click-sound
+                    data-hover-sound
+                    aria-label="Open 'gambling' menu"
+                >
+                    <img
+                        src="/assets/pokies-button.svg"
+                        width="100"
+                        draggable="false"
+                    />
                 </button>
-                <button title="Change Settings" id="change-settings-button" data-click-sound data-hover-sound aria-label="Change settings and preferences">
-                    <img src="/assets/settings.svg" width="100" draggable="false" />
+                <button
+                    title="Change Settings"
+                    id="change-settings-button"
+                    data-click-sound
+                    data-hover-sound
+                    aria-label="Change settings and preferences"
+                >
+                    <img
+                        src="/assets/settings.svg"
+                        width="100"
+                        draggable="false"
+                    />
                 </button>
-                <button title="Blackjack" id="play-blackjack-button" data-click-sound data-hover-sound aria-label="Open the blackjack wager menu">
-                    <img src="/assets/bj-button.svg" width="100" draggable="false" />
+                <button
+                    title="Blackjack"
+                    id="play-blackjack-button"
+                    data-click-sound
+                    data-hover-sound
+                    aria-label="Open the blackjack wager menu"
+                >
+                    <img
+                        src="/assets/bj-button.svg"
+                        width="100"
+                        draggable="false"
+                    />
                 </button>
-                <button title="Complete Transition" id="complete-transition-button" class="hide" data-click-sound data-hover-sound aria-label="Finish the save transition">
+                <button
+                    title="Complete Transition"
+                    id="complete-transition-button"
+                    class="hide"
+                    data-click-sound
+                    data-hover-sound
+                    aria-label="Finish the save transition"
+                >
                     Finish Save Transition
                 </button>
-                <input type="submit" value="Close" id="close-main-menu" data-click-sound data-hover-sound data-button />
+                <input
+                    type="submit"
+                    value="Close"
+                    id="close-main-menu"
+                    data-click-sound
+                    data-hover-sound
+                    data-button
+                />
             </form>
         </dialog>
 

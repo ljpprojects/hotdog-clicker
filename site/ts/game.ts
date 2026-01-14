@@ -1,57 +1,52 @@
 import { GeneralBinding } from "./Binding";
-import {
-  save,
-  load,
-  wipe,
-  DEFAULT_SAVE_DATA,
-  wipeTimeoutEnd,
-} from "./save";
+import { load, save, wipeTimeoutEnd } from "./save";
 
 import {
+  abattoirPriceElement,
+  abattoirsOwnedElement,
+  butcherPriceElement,
+  butchersOwnedElement,
+  cartPriceElement,
+  cartsOwnedElement,
+  factoriesOwnedElement,
+  factoryPriceElement,
+  franchisePriceElement,
+  franchisesOwnedElement,
+  hdnwElement,
   hdpsElement,
   hdsElement,
-  hdnwElement,
-  butchersOwnedElement,
-  standsOwnedElement,
-  cartsOwnedElement,
-  trucksOwnedElement,
-  plantationsOwnedElement,
-  factoriesOwnedElement,
-  abattoirsOwnedElement,
-  restaurantsOwnedElement,
-  franchisesOwnedElement,
-  butcherPriceElement,
-  standPriceElement,
-  cartPriceElement,
-  truckPriceElement,
-  plantationPriceElement,
-  factoryPriceElement,
-  abattoirPriceElement,
-  restaurantPriceElement,
-  franchisePriceElement,
   openGamblingButton,
-  pokiesDialog,
-  spinSlotsButton,
-  pokiesWagerSlider,
+  plantationPriceElement,
+  plantationsOwnedElement,
   playBlackjackButton,
+  pokiesDialog,
+  restaurantPriceElement,
+  restaurantsOwnedElement,
+  standPriceElement,
+  standsOwnedElement,
+  truckPriceElement,
+  trucksOwnedElement,
 } from "./elements";
 
-import './settings/index';
+import "./settings/index";
 
 import { updateLeaderboard } from "./leaderboard";
-import { SharedMutable } from "./SharedMutable";
-import { updateWealthinessDisplay } from "./wealth";
-import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
-import { GAMBLING_NW_THRESHOLD } from "./pokies";
 import { mode, Mode, ModeBasedAction } from "./mode";
+import {
+  NotificationDismissalMode,
+  NotificationProminence,
+  notify,
+} from "./notify";
+import { GAMBLING_NW_THRESHOLD } from "./pokies";
+import { SharedMutable } from "./SharedMutable";
 
+import "./gambling/blackjack";
+import { bjGameDialog, bjWagerDialog } from "./gambling/elements";
+import { settings } from "./settings/index";
 import "./sound";
 import "./ui";
-import "./gambling/blackjack";
-import { checkBuyables } from "./ui";
-import { settings } from "./settings/index";
 import { wait } from "./utils";
-import { bjGameDialog, bjWagerDialog } from "./gambling/elements";
+import { updateWealthinessDisplay } from "./wealth";
 
 export const formatter = new SharedMutable(
   new Intl.NumberFormat(navigator.language, {
@@ -59,9 +54,9 @@ export const formatter = new SharedMutable(
     maximumFractionDigits: 2,
     useGrouping: true,
     notation: "standard",
-    localeMatcher: "best fit"
-  })
-)
+    localeMatcher: "best fit",
+  }),
+);
 
 /**
  * How many hotdogs the user will earn passively (i.e. without action)
@@ -97,71 +92,6 @@ export const hdnw = new GeneralBinding<number, number>({
   setfn(to: number, dispatcher?: string) {
     this.value = to;
     hdnwElement.textContent = formatter.value.format(to);
-
-    updateWealthinessDisplay();
-
-    // Check if we should allow gambling (> 50 hdnw)
-    if (hdnw.value >= GAMBLING_NW_THRESHOLD && !canGamble && settings.value.enableGambling) {
-      canGamble = true;
-
-      openGamblingButton.removeAttribute("disabled")
-      openGamblingButton.removeAttribute("data-unbuyable")
-      openGamblingButton.title = "Pokies";
-
-      playBlackjackButton.removeAttribute("disabled")
-      playBlackjackButton.removeAttribute("data-unbuyable")
-      playBlackjackButton.title = "Blackjack";
-
-      notify({
-        body: "You can gamble now.",
-        prominence: NotificationProminence.Banner,
-        dismissalMode: NotificationDismissalMode.Automatic,
-        dismissalTimeMs: 1000,
-        pauseGame: false,
-      });
-    } else if (hdnw.value < GAMBLING_NW_THRESHOLD && canGamble) {
-      canGamble = false;
-
-      openGamblingButton.setAttribute("disabled", "true")
-      openGamblingButton.setAttribute("data-unbuyable", "true")
-      openGamblingButton.title = "Pokies (LOCKED)";
-
-      playBlackjackButton.setAttribute("disabled", "true")
-      playBlackjackButton.setAttribute("data-unbuyable", "true")
-      playBlackjackButton.title = "Blackjack (LOCKED)";
-
-      const notifyKickedOut = () => notify({
-        body: "You have been kicked out of the casino for being too poor.",
-        prominence: NotificationProminence.Banner,
-        dismissalMode: NotificationDismissalMode.Automatic,
-      });
-
-      // Kick the player out of any gambling menus
-      if (pokiesDialog.open) {
-        pokiesDialog.close();
-        notifyKickedOut();
-      }
-
-      if (bjWagerDialog.open) {
-        bjWagerDialog.close();
-        notifyKickedOut();
-      }
-
-      if (bjGameDialog.open) {
-        bjGameDialog.close();
-        notifyKickedOut();
-      }
-    } else if (canGamble && !settings.value.enableGambling) {
-      canGamble = false;
-
-      openGamblingButton.setAttribute("disabled", "true")
-      openGamblingButton.setAttribute("data-unbuyable", "true")
-      openGamblingButton.title = "Gamble (DISABLED in settings)";
-
-      playBlackjackButton.setAttribute("disabled", "true")
-      playBlackjackButton.setAttribute("data-unbuyable", "true")
-      playBlackjackButton.title = "Blackjack (DISABLED in settings)";
-    }
   },
 
   getfn(): number {
@@ -170,7 +100,6 @@ export const hdnw = new GeneralBinding<number, number>({
 });
 
 let hdsIncTimeoutEnd = Date.now();
-let slotsAreSafe = true;
 
 export const HD_CLICKS_PER_SEC = 20;
 
@@ -187,17 +116,15 @@ export const hds = new GeneralBinding<number, number>({
     this.value = to;
 
     ModeBasedAction.empty()
-      .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.setValue(
-        Math.abs(hdnw.getValue() - (prev - to)),
-        "hds-change"
-      ))
+      .actionForAllBut([Mode.TRANSITION_MODE], () =>
+        hdnw.setValue(Math.abs(hdnw.getValue() - (prev - to)), "hds-change"),
+      )
       .do();
 
     hdsElement.textContent = formatter.value.format(to);
 
-    checkBuyables();
-
-    if (dispatcher === "btn-click") hdsIncTimeoutEnd = Date.now() + (1000 / HD_CLICKS_PER_SEC);
+    if (dispatcher === "btn-click")
+      hdsIncTimeoutEnd = Date.now() + 1000 / HD_CLICKS_PER_SEC;
   },
 
   getfn(): number {
@@ -218,7 +145,12 @@ export const butchersOwned = new GeneralBinding<number, number>({
 
     hdnw.setValue(
       ModeBasedAction.empty<number>()
-        .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
+        .actionForAllBut(
+          [Mode.TRANSITION_MODE],
+          () =>
+            hdnw.getValue() -
+            (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+        )
         .transitionAction(() => hdnw.getValue() + prevPrice)
         .do()!,
       "acquire-asset-butcher",
@@ -245,7 +177,12 @@ export const standsOwned = new GeneralBinding<number, number>({
 
     hdnw.setValue(
       ModeBasedAction.empty<number>()
-        .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
+        .actionForAllBut(
+          [Mode.TRANSITION_MODE],
+          () =>
+            hdnw.getValue() -
+            (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+        )
         .transitionAction(() => hdnw.getValue() + prevPrice)
         .do()!,
       "acquire-asset-stand",
@@ -271,7 +208,12 @@ export const cartsOwned = new GeneralBinding<number, number>({
 
     hdnw.setValue(
       ModeBasedAction.empty<number>()
-        .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
+        .actionForAllBut(
+          [Mode.TRANSITION_MODE],
+          () =>
+            hdnw.getValue() -
+            (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+        )
         .transitionAction(() => hdnw.getValue() + prevPrice)
         .do()!,
       "acquire-asset-cart",
@@ -300,7 +242,12 @@ export const trucksOwned = new GeneralBinding<number, number>({
 
     hdnw.setValue(
       ModeBasedAction.empty<number>()
-        .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
+        .actionForAllBut(
+          [Mode.TRANSITION_MODE],
+          () =>
+            hdnw.getValue() -
+            (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+        )
         .transitionAction(() => hdnw.getValue() + prevPrice)
         .do()!,
       "acquire-asset-truck",
@@ -329,7 +276,12 @@ export const plantationsOwned = new GeneralBinding<number, number>({
 
     hdnw.setValue(
       ModeBasedAction.empty<number>()
-        .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
+        .actionForAllBut(
+          [Mode.TRANSITION_MODE],
+          () =>
+            hdnw.getValue() -
+            (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+        )
         .transitionAction(() => hdnw.getValue() + prevPrice)
         .do()!,
       "acquire-asset-plantation",
@@ -358,7 +310,12 @@ export const factoriesOwned = new GeneralBinding<number, number>({
 
     hdnw.setValue(
       ModeBasedAction.empty<number>()
-        .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
+        .actionForAllBut(
+          [Mode.TRANSITION_MODE],
+          () =>
+            hdnw.getValue() -
+            (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+        )
         .transitionAction(() => hdnw.getValue() + prevPrice)
         .do()!,
       "acquire-asset-plantation",
@@ -387,7 +344,12 @@ export const abattoirsOwned = new GeneralBinding<number, number>({
 
     hdnw.setValue(
       ModeBasedAction.empty<number>()
-        .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
+        .actionForAllBut(
+          [Mode.TRANSITION_MODE],
+          () =>
+            hdnw.getValue() -
+            (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+        )
         .transitionAction(() => hdnw.getValue() + prevPrice)
         .do()!,
       "acquire-asset-abattoir",
@@ -416,7 +378,12 @@ export const restaurantsOwned = new GeneralBinding<number, number>({
 
     hdnw.setValue(
       ModeBasedAction.empty<number>()
-        .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
+        .actionForAllBut(
+          [Mode.TRANSITION_MODE],
+          () =>
+            hdnw.getValue() -
+            (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+        )
         .transitionAction(() => hdnw.getValue() + prevPrice)
         .do()!,
       "acquire-asset-restaurant",
@@ -446,7 +413,12 @@ export const franchisesOwned = new GeneralBinding<number, number>({
 
     hdnw.setValue(
       ModeBasedAction.empty<number>()
-        .actionForAllBut([Mode.TRANSITION_MODE], () => hdnw.getValue() - (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset))
+        .actionForAllBut(
+          [Mode.TRANSITION_MODE],
+          () =>
+            hdnw.getValue() -
+            (netWorthMadeUpOfAsset - newNetWorthMadeUpOfAsset),
+        )
         .transitionAction(() => hdnw.getValue() + prevPrice)
         .do()!,
       "acquire-asset-franchise",
@@ -590,15 +562,87 @@ export const franchisePrice = new GeneralBinding<number, number>({
   },
 });
 
-
 let lastTime = performance.now();
 export const shouldQuitEventLoop = new SharedMutable(false);
+
+// Only check if we can gamble every 5s
+setInterval(() => {
+  updateWealthinessDisplay();
+
+  // Check if we should allow gambling (> 50 hdnw)
+  if (
+    hdnw.value >= GAMBLING_NW_THRESHOLD &&
+    !canGamble &&
+    settings.value.enableGambling
+  ) {
+    canGamble = true;
+
+    openGamblingButton.removeAttribute("disabled");
+    openGamblingButton.removeAttribute("data-unbuyable");
+    openGamblingButton.title = "Pokies";
+
+    playBlackjackButton.removeAttribute("disabled");
+    playBlackjackButton.removeAttribute("data-unbuyable");
+    playBlackjackButton.title = "Blackjack";
+
+    notify({
+      body: "You can gamble now.",
+      prominence: NotificationProminence.Banner,
+      dismissalMode: NotificationDismissalMode.Automatic,
+      dismissalTimeMs: 1000,
+      pauseGame: false,
+    });
+  } else if (hdnw.value < GAMBLING_NW_THRESHOLD && canGamble) {
+    canGamble = false;
+
+    openGamblingButton.setAttribute("disabled", "true");
+    openGamblingButton.setAttribute("data-unbuyable", "true");
+    openGamblingButton.title = "Pokies (LOCKED)";
+
+    playBlackjackButton.setAttribute("disabled", "true");
+    playBlackjackButton.setAttribute("data-unbuyable", "true");
+    playBlackjackButton.title = "Blackjack (LOCKED)";
+
+    const notifyKickedOut = () =>
+      notify({
+        body: "You have been kicked out of the casino for being too poor.",
+        prominence: NotificationProminence.Banner,
+        dismissalMode: NotificationDismissalMode.Automatic,
+      });
+
+    // Kick the player out of any gambling menus
+    if (pokiesDialog.open) {
+      pokiesDialog.close();
+      notifyKickedOut();
+    }
+
+    if (bjWagerDialog.open) {
+      bjWagerDialog.close();
+      notifyKickedOut();
+    }
+
+    if (bjGameDialog.open) {
+      bjGameDialog.close();
+      notifyKickedOut();
+    }
+  } else if (canGamble && !settings.value.enableGambling) {
+    canGamble = false;
+
+    openGamblingButton.setAttribute("disabled", "true");
+    openGamblingButton.setAttribute("data-unbuyable", "true");
+    openGamblingButton.title = "Gamble (DISABLED in settings)";
+
+    playBlackjackButton.setAttribute("disabled", "true");
+    playBlackjackButton.setAttribute("data-unbuyable", "true");
+    playBlackjackButton.title = "Blackjack (DISABLED in settings)";
+  }
+}, 5000);
 
 export const evloop = (time: number) => {
   if (mode === Mode.FREEZE_MODE) return;
 
   // First, add the delta-adjusted hdps to the hds
-  //
+
   const deltaSeconds = (time - lastTime) / 1000;
 
   // Only change if there is something to add
@@ -609,25 +653,14 @@ export const evloop = (time: number) => {
 
   lastTime = time;
 
-  // Check if it is 'safe' to spin slots
-  // It is 'safe' if the hds is more than 5% of the hdnw (which is the most you can lose)
-  if (hds.value < hdnw.value * pokiesWagerSlider.valueAsNumber / 100 && slotsAreSafe) {
-    console.log("UNSAFE 4 SLOTS")
-
-    slotsAreSafe = false;
-    spinSlotsButton.setAttribute("data-unsafe", "true");
-  } else if (hds.value > hdnw.value * pokiesWagerSlider.valueAsNumber / 100 && !slotsAreSafe) {
-    console.log("SAFE 4 SLOTS")
-
-    spinSlotsButton.removeAttribute("data-unsafe")
-  }
-
   if (!shouldQuitEventLoop.value) {
     requestAnimationFrame(evloop);
   }
 };
 
-load().then(() => setInterval(save, 60e3)).then(() => requestAnimationFrame(evloop));
+load()
+  .then(() => setInterval(save, 60e3))
+  .then(() => requestAnimationFrame(evloop));
 
 // #BeaverMoon 2025
 
@@ -636,7 +669,7 @@ setInterval(
     ModeBasedAction.empty()
       .buyAction(async () => await save().then(updateLeaderboard))
       .do(),
-  60e3
+  60e3,
 );
 
 // @ts-expect-error
@@ -650,30 +683,42 @@ window.richify = async () => {
   }
 
   // A fate worse than a wipe
-  // Put them into crippling debt and prevent wipes for a day
+  // Put them into crippling debt and prevent wipes for (at least!) a day
   hds.value -= 1e15;
 
   const factor = 1000 * 60 * 60 * 24;
-  const daysTimeoutEndsIn = wipeTimeoutEnd.value != null ? (wipeTimeoutEnd.value / factor) - (Date.now() / factor) : 0;
+  const daysTimeoutEndsIn =
+    wipeTimeoutEnd.value != null
+      ? wipeTimeoutEnd.value / factor - Date.now() / factor
+      : 0;
 
-  console.warn("Ends in", daysTimeoutEndsIn)
+  console.warn("Ends in", daysTimeoutEndsIn);
 
-  wipeTimeoutEnd.value = (wipeTimeoutEnd.value ?? Date.now()) + 24 * 60 ** 2 * 1000 * (1 + Number(wipeTimeoutEnd.value != null) + daysTimeoutEndsIn);
+  wipeTimeoutEnd.value =
+    (wipeTimeoutEnd.value ?? Date.now()) +
+    24 *
+      60 ** 2 *
+      1000 *
+      (1 + Number(wipeTimeoutEnd.value != null) + daysTimeoutEndsIn);
   //                                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   //                                                                                                      Repeat offense penalty
 
   await save();
 
-  await notify({
-    title: "CHEATER",
-    body: `You tried to cheat and shall feel the consequences of your actions. You are now in crippling debt and cannot wipe your save for another 24 hours (it can be wiped at ${new Date(wipeTimeoutEnd.value!).toLocaleString()}).`,
-    prominence: NotificationProminence.Prominent,
-    dismissalMode: NotificationDismissalMode.Manual,
-  }, 1000);
-}
+  await notify(
+    {
+      title: "CHEATER",
+      body: `You tried to cheat and shall feel the consequences of your actions. You are now in crippling debt and cannot wipe your save for another 24 hours (it can be wiped at ${new Date(wipeTimeoutEnd.value!).toLocaleString()}).`,
+      prominence: NotificationProminence.Prominent,
+      dismissalMode: NotificationDismissalMode.Manual,
+    },
+    1000,
+  );
+};
 
-document.addEventListener("keydown", ev => {
+document.addEventListener("keydown", (ev) => {
   if (ev.key === "_") {
-    hds.value *= -0.5;
+    // @ts-ignore-error
+    window.richify();
   }
-})
+});

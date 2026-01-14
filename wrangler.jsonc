@@ -1,17 +1,61 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "hotdog-clicker",
   "compatibility_date": "2025-11-17",
   "main": "./worker/index.ts",
   "workers_dev": false,
   "send_metrics": false,
   "first_party_worker": true,
+  "tsconfig": "./worker/tsconfig.json",
   "assets": {
     "directory": "./site",
-    "not_found_handling": "none"
+    "not_found_handling": "none",
   },
   "vars": {
-    "ENVIRONMENT": "prod:nightly",
+    "ENVIRONMENT": "unknown",
+  },
+  "env": {
+    "local": {
+      "name": "hotdog-clicker",
+      "vars": {
+        "ENVIRONMENT": "dev:nightly",
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "hotdog-clicker-db",
+          "database_id": "323937b2-8bb1-4f6d-a7cd-fc1a9146acb1",
+          "remote": false,
+        },
+      ],
+      "kv_namespaces": [
+        {
+          "binding": "SESSIONS",
+          "id": "9db16a9b3e4d43719c1be95fad218fb0",
+          "remote": false,
+        },
+      ],
+    },
+    "nightly": {
+      "name": "hotdog-clicker",
+      "vars": {
+        "ENVIRONMENT": "prod:nightly",
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "hotdog-clicker-db",
+          "database_id": "323937b2-8bb1-4f6d-a7cd-fc1a9146acb1",
+          "remote": true,
+        },
+      ],
+      "kv_namespaces": [
+        {
+          "binding": "SESSIONS",
+          "id": "9db16a9b3e4d43719c1be95fad218fb0",
+          "remote": true,
+        },
+      ],
+    },
   },
   "observability": {
     "enabled": false,
@@ -20,13 +64,13 @@
       "enabled": true,
       "head_sampling_rate": 1,
       "persist": true,
-      "invocation_logs": true
+      "invocation_logs": true,
     },
     "traces": {
       "enabled": true,
       "persist": true,
-      "head_sampling_rate": 1
-    }
+      "head_sampling_rate": 1,
+    },
   },
   "build": {
     "command": "bash ./build.sh",
@@ -41,21 +85,22 @@
       "./worker/tsconfig.json",
       "./wrangler.json",
       "./build.sh",
-      "./build-guard.sh"
-    ]
+      "./build-guard.sh",
+    ],
   },
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "hotdog-clicker-db",
       "database_id": "323937b2-8bb1-4f6d-a7cd-fc1a9146acb1",
-    }
+      "remote": false,
+    },
   ],
   "kv_namespaces": [
     {
       "binding": "SESSIONS",
       "id": "9db16a9b3e4d43719c1be95fad218fb0",
-      "preview_id": "4c757708188742a5a9c582ce23fb37c2"
-    }
-  ]
+      "remote": false,
+    },
+  ],
 }
