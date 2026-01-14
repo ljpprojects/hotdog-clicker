@@ -612,9 +612,6 @@ bjDealButton.addEventListener("click", async () => {
   bjGameDialog.showModal();
 
   document.body.setAttribute("data-veil", "true");
-
-  blackjackState.playerHand.value[1] = blackjackState.playerHand.value[0];
-  blackjackState.playerHand.value = blackjackState.playerHand.value;
 });
 
 export const wagerBlackjack = () => {
@@ -641,8 +638,6 @@ export const wagerBlackjack = () => {
     drawCardRemoving(currentDeck),
     drawCardRemoving(currentDeck),
   ];
-
-  blackjackState.playerHand.value[1] = blackjackState.playerHand.value[0];
 
   // Show the wager dialog
   bjWagerDialog.showModal();

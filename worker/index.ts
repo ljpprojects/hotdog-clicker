@@ -1,24 +1,24 @@
-import { Hono, Context, TypedResponse } from "hono";
-import { trimTrailingSlash } from 'hono/trailing-slash';
+import { Context, Hono } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 import { logger } from "hono/logger";
+import { trimTrailingSlash } from "hono/trailing-slash";
 import type {
-  DBData,
-  LeaderboardData,
-  ServerSentWorkerData,
   ClientSentWorkerData,
   ClientSentWorkerDataReportAction,
-  DBDataFull,
   ClientSentWorkerDataRestoreAction,
+  DBData,
+  DBDataFull,
+  LeaderboardData,
+  ServerSentWorkerData,
 } from "../shared/types.d.ts";
 
-import { CookieOptions } from "hono/utils/cookie";
 import { env } from "cloudflare:workers";
 import { BlankInput } from "hono/types";
+import { CookieOptions } from "hono/utils/cookie";
 
 type SessionData = {
-  identifier: string
-}
+  identifier: string;
+};
 
 const IDENT_COOKIE_NAME = "identifier";
 
@@ -36,30 +36,33 @@ const COOKIE_OPTS: (age: number) => CookieOptions = (age: number) => {
       maxAge: age,
       secure: true,
       path: "/",
-      domain: env.ENVIRONMENT === "prod:release" ? 'hdc.ljpprojects.org' : 'dev.hdc.ljpprojects.org'
-    }
+      domain:
+        env.ENVIRONMENT === "prod:release"
+          ? "hdc.ljpprojects.org"
+          : "dev.hdc.ljpprojects.org",
+    };
   } else {
     return {
       httpOnly: true,
       sameSite: "Strict",
       maxAge: age,
       path: "/",
-    }
+    };
   }
 };
 
 const KV_PUT_OPTS: KVNamespacePutOptions = {
   expirationTtl: SESSION_MAX_AGE,
   metadata: {
-    environment: env.ENVIRONMENT
-  }
-}
+    environment: env.ENVIRONMENT,
+  },
+};
 
 const sanitiseDBData = (full: DBDataFull): DBData => {
   return {
     encoded_save: full.encoded_save,
     nickname: full.nickname,
-    net_worth: full.net_worth
+    net_worth: full.net_worth,
   } as DBData;
 };
 
@@ -75,7 +78,7 @@ app.use(logger());
 
 const createRefreshToken = (identifier: Uint8Array) => {
   if (identifier.length !== 32) {
-    return null
+    return null;
   }
 
   // Identifier should be 32 bytes long
@@ -89,11 +92,11 @@ const createRefreshToken = (identifier: Uint8Array) => {
   bytes.set(identifier, 96);
 
   return bytes;
-}
+};
 
 const checkRefreshToken = (refreshToken: Uint8Array) => {
   if (refreshToken.length !== 128) {
-    return false
+    return false;
   }
 
   // refreshToken should be 128 bytes long
@@ -102,14 +105,18 @@ const checkRefreshToken = (refreshToken: Uint8Array) => {
   const identifierRegex = /^[a-zA-Z0-9+\/]{43}=$/;
 
   return identifierRegex.test(identifierBytes.toBase64());
-}
+};
 
 const initSession = async (
-  c: Context<{
-    Bindings: Cloudflare.Env;
-  }, string, BlankInput>,
+  c: Context<
+    {
+      Bindings: Cloudflare.Env;
+    },
+    string,
+    BlankInput
+  >,
 
-  identifier: string
+  identifier: string,
 ): Promise<[Response, string]> => {
   const bytes = new Uint8Array(128);
   crypto.getRandomValues(bytes);
@@ -122,35 +129,41 @@ const initSession = async (
   const sessionCode = bytes.toBase64();
 
   // We have an identifier, so we need to create a new session
-  await c.env.SESSIONS.put(`session:${sessionCode}`, JSON.stringify({
-    identifier,
-  } as SessionData), KV_PUT_OPTS);
-
-  setCookie(
-    c,
-    SESSION_COOKIE_NAME,
-    sessionCode,
-    COOKIE_OPTS(SESSION_MAX_AGE)
+  await c.env.SESSIONS.put(
+    `session:${sessionCode}`,
+    JSON.stringify({
+      identifier,
+    } as SessionData),
+    KV_PUT_OPTS,
   );
+
+  setCookie(c, SESSION_COOKIE_NAME, sessionCode, COOKIE_OPTS(SESSION_MAX_AGE));
 
   const callback = c.req.query("callback");
   if (callback != null) {
-    return [c.redirect(callback), sessionCode]
+    return [c.redirect(callback), sessionCode];
   }
 
-  return [c.json(
-    workerData({
-      success: true,
-    })
-  ), sessionCode]
-}
+  return [
+    c.json(
+      workerData({
+        success: true,
+      }),
+    ),
+    sessionCode,
+  ];
+};
 
 const checkSession = async (
-  c: Context<{
-    Bindings: Cloudflare.Env;
-  }, string, BlankInput>,
+  c: Context<
+    {
+      Bindings: Cloudflare.Env;
+    },
+    string,
+    BlankInput
+  >,
 
-  sessionCode: string
+  sessionCode: string,
 ): Promise<SessionData | null> => {
   const identifierRegex = /^[a-zA-Z0-9+\/]{43}=$/;
   const sessionRegex = /^[a-zA-Z0-9+\/]{171}=$/;
@@ -159,7 +172,10 @@ const checkSession = async (
     return null;
   }
 
-  const sessionData = await c.env.SESSIONS.get<SessionData>(`session:${sessionCode}`, "json");
+  const sessionData = await c.env.SESSIONS.get<SessionData>(
+    `session:${sessionCode}`,
+    "json",
+  );
   if (sessionData == null) {
     return null;
   }
@@ -168,8 +184,8 @@ const checkSession = async (
     return null;
   }
 
-  return sessionData
-}
+  return sessionData;
+};
 
 app.get("/auth", async (c) => {
   // Get the identifier cookie
@@ -179,14 +195,16 @@ app.get("/auth", async (c) => {
     // Check if we have a refresh token
     const refreshToken = getCookie(c, REFRESH_TOKEN_NAME);
     if (refreshToken == null) {
-      const newRefreshToken = createRefreshToken(Uint8Array.fromBase64(maybeIdentifier))!;
+      const newRefreshToken = createRefreshToken(
+        Uint8Array.fromBase64(maybeIdentifier),
+      )!;
 
       // Set refresh token
       setCookie(
         c,
         REFRESH_TOKEN_NAME,
         newRefreshToken.toBase64(),
-        COOKIE_OPTS(REFRESH_TOKEN_MAX_AGE)
+        COOKIE_OPTS(REFRESH_TOKEN_MAX_AGE),
       );
     }
 
@@ -200,14 +218,16 @@ app.get("/auth", async (c) => {
       // Check if we have a refresh token
       const refreshToken = getCookie(c, REFRESH_TOKEN_NAME);
       if (refreshToken == null) {
-        const newRefreshToken = createRefreshToken(Uint8Array.fromBase64(sessionData.identifier))!;
+        const newRefreshToken = createRefreshToken(
+          Uint8Array.fromBase64(sessionData.identifier),
+        )!;
 
         // Set refresh token
         setCookie(
           c,
           REFRESH_TOKEN_NAME,
           newRefreshToken.toBase64(),
-          COOKIE_OPTS(REFRESH_TOKEN_MAX_AGE)
+          COOKIE_OPTS(REFRESH_TOKEN_MAX_AGE),
         );
       }
 
@@ -219,7 +239,7 @@ app.get("/auth", async (c) => {
       return c.json(
         workerData({
           success: true,
-        })
+        }),
       );
     }
   }
@@ -240,7 +260,7 @@ app.get("/auth", async (c) => {
         c,
         REFRESH_TOKEN_NAME,
         newRefreshToken.toBase64(),
-        COOKIE_OPTS(REFRESH_TOKEN_MAX_AGE)
+        COOKIE_OPTS(REFRESH_TOKEN_MAX_AGE),
       );
 
       return (await initSession(c, identifier.toBase64()))[0];
@@ -258,7 +278,7 @@ app.get("/auth", async (c) => {
     c,
     REFRESH_TOKEN_NAME,
     newRefreshToken.toBase64(),
-    COOKIE_OPTS(REFRESH_TOKEN_MAX_AGE)
+    COOKIE_OPTS(REFRESH_TOKEN_MAX_AGE),
   );
 
   return (await initSession(c, identifier))[0];
@@ -281,20 +301,44 @@ app.post("/api", async (c) => {
     );
   }
 
-  const session = getCookie(c, SESSION_COOKIE_NAME);
+  let session = getCookie(c, SESSION_COOKIE_NAME);
   if (session == null) {
-    return c.json(
-      workerData({
-        success: false,
-        error: {
-          abbrev: "EAUTH",
-          message: "Must be authenticated to run an action.",
-        },
-      }),
-    );
+    // Check for a refresh token
+    const refreshToken = getCookie(c, REFRESH_TOKEN_NAME);
+    if (refreshToken != null) {
+      const refreshTokenBytes = Uint8Array.fromBase64(refreshToken);
+      if (checkRefreshToken(refreshTokenBytes)) {
+        const identifier = refreshTokenBytes.slice(96, 128);
+
+        console.log(identifier.toBase64());
+
+        const newRefreshToken = createRefreshToken(identifier)!;
+
+        // Rotate refresh token
+        setCookie(
+          c,
+          REFRESH_TOKEN_NAME,
+          newRefreshToken.toBase64(),
+          COOKIE_OPTS(REFRESH_TOKEN_MAX_AGE),
+        );
+
+        const newSession = (await initSession(c, identifier.toBase64()))[1];
+        session = newSession;
+      }
+    } else {
+      return c.json(
+        workerData({
+          success: false,
+          error: {
+            abbrev: "EAUTH",
+            message: "Must be authenticated to run an action.",
+          },
+        }),
+      );
+    }
   }
 
-  const sessionData = await checkSession(c, session);
+  const sessionData = await checkSession(c, session!);
   if (sessionData == null) {
     return c.json(
       workerData({
@@ -312,14 +356,16 @@ app.post("/api", async (c) => {
   // Check if we have a refresh token, and ensure we create one (everyone needs one!!!!)
   const refreshToken = getCookie(c, REFRESH_TOKEN_NAME);
   if (refreshToken == null) {
-    const newRefreshToken = createRefreshToken(Uint8Array.fromBase64(identifier))!;
+    const newRefreshToken = createRefreshToken(
+      Uint8Array.fromBase64(identifier),
+    )!;
 
     // Set refresh token
     setCookie(
       c,
       REFRESH_TOKEN_NAME,
       newRefreshToken.toBase64(),
-      COOKIE_OPTS(REFRESH_TOKEN_MAX_AGE)
+      COOKIE_OPTS(REFRESH_TOKEN_MAX_AGE),
     );
   }
 
@@ -464,9 +510,12 @@ app.post("/api", async (c) => {
       const { oldIdentifier } = body as ClientSentWorkerDataRestoreAction;
 
       // Set the session to have the old identifier
-      c.env.SESSIONS.put(`session:${session}`, JSON.stringify({
-        identifier: oldIdentifier,
-      } as SessionData))
+      c.env.SESSIONS.put(
+        `session:${session}`,
+        JSON.stringify({
+          identifier: oldIdentifier,
+        } as SessionData),
+      );
 
       return c.json(
         workerData({
@@ -479,8 +528,8 @@ app.post("/api", async (c) => {
         workerData({
           success: true,
           ident: identifier,
-        })
-      )
+        }),
+      );
   }
 });
 
