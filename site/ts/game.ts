@@ -2,6 +2,7 @@ import { GeneralBinding } from "./Binding";
 import { load, save, wipeTimeoutEnd } from "./save";
 
 import {
+  abattoirButtonElement,
   abattoirPriceElement,
   abattoirsOwnedElement,
   butcherPriceElement,
@@ -15,6 +16,7 @@ import {
   hdnwElement,
   hdpsElement,
   hdsElement,
+  notificationProminentSet,
   openGamblingButton,
   plantationPriceElement,
   plantationsOwnedElement,
@@ -339,10 +341,27 @@ export const abattoirsOwned = new GeneralBinding<number, number>({
   backing: 0,
 
   setfn(to: number) {
+    // First time?
+    if (to === 1) {
+      notify({
+        title: "",
+        body: "You are complicit.",
+        prominence: NotificationProminence.Prominent,
+        dismissalMode: NotificationDismissalMode.Manual,
+      });
+
+      notificationProminentSet.body.style.color = "var(--dn-col)";
+    }
+
     const curr = this.value ?? 0;
     const prevPrice = abattoirPrice.backing.prevValue ?? 0;
     const netWorthMadeUpOfAsset = prevPrice * curr;
     const newNetWorthMadeUpOfAsset = abattoirPrice.value * to;
+
+    // Oh, you have 5 or more?
+    if (to >= 5 || (this.value ?? 0) >= 5) {
+      abattoirButtonElement.title = "It is your fault.";
+    }
 
     hdnw.setValue(
       ModeBasedAction.empty<number>()
