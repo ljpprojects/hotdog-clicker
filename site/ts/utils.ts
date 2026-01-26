@@ -1,10 +1,6 @@
 export const NaNNullCoerce = function <T>(n: T | null | undefined, to: T): T {
-  return typeof n == "number"
-    ? Number.isNaN(n)
-      ? to
-      : n ?? to
-    : n ?? to
-}
+  return typeof n == "number" ? (Number.isNaN(n) ? to : (n ?? to)) : (n ?? to);
+};
 
 /**
  * Waits for a certain amount of time, resolving once that duration has passed.
@@ -12,9 +8,9 @@ export const NaNNullCoerce = function <T>(n: T | null | undefined, to: T): T {
  * @returns A promise that resolves after the given time.
  */
 export const wait = async (ms: number): Promise<void> => {
-  return new Promise(res => {
-    setTimeout(res, ms)
-  })
+  return new Promise((res) => {
+    setTimeout(res, ms);
+  });
 };
 
 export type TimeoutError = "Error: promise timed out";
@@ -27,8 +23,8 @@ export const TIMEOUT_ERROR: TimeoutError = "Error: promise timed out";
  */
 export const timeout = async (ms: number): Promise<TimeoutError> => {
   return new Promise((_, rej) => {
-    setTimeout(rej, ms, TIMEOUT_ERROR)
-  })
+    setTimeout(rej, ms, TIMEOUT_ERROR);
+  });
 };
 
 /**
@@ -37,8 +33,11 @@ export const timeout = async (ms: number): Promise<TimeoutError> => {
  * @param ms The time to wait before timing out the task.
  * @returns A promise that has either the resolved promise's value or a TimeoutError.
  */
-export const withTimeout = async function _<T>(task: Promise<T>, ms: number): Promise<T | TimeoutError> {
-  return Promise.race([task, timeout(ms)])
+export const withTimeout = async function _<T>(
+  task: Promise<T>,
+  ms: number,
+): Promise<T | TimeoutError> {
+  return Promise.race([task, timeout(ms)]);
 };
 
 /**
@@ -49,28 +48,33 @@ export const withTimeout = async function _<T>(task: Promise<T>, ms: number): Pr
  * @param thresh The threshold at which to wrap the value
  * @returns The wrapped sum
  */
-export const wrappingAdd = (x: number, y: number, thresh: number) => (x + y) % thresh
+export const wrappingAdd = (x: number, y: number, thresh: number) =>
+  (x + y) % thresh;
 
 type DeepObject<T> = {
   [P in keyof T]: DeepObject<T[P]> | T[P];
-}
+};
 
 export type DeepReadonly<T> = {
   readonly [P in keyof T]: DeepReadonly<T[P]>;
-}
+};
 
-export const makeReadonlyCT = function <T extends { [name: string]: any }>(obj: T): DeepReadonly<T> {
+export const makeReadonlyCT = function <T extends { [name: string]: any }>(
+  obj: T,
+): DeepReadonly<T> {
   return obj;
-}
+};
 
-export const deepFreeze = function <T extends { [name: string]: any }>(obj: T): DeepReadonly<T> {
+export const deepFreeze = function <T extends { [name: string]: any }>(
+  obj: T,
+): DeepReadonly<T> {
   const propNames = Object.getOwnPropertyNames(obj);
   const newObj: DeepObject<T> = obj;
 
   propNames.forEach((name) => {
     const prop = obj[name];
 
-    if (typeof prop === 'object' && prop !== null) {
+    if (typeof prop === "object" && prop !== null) {
       // @ts-ignore
       newObj[name] = deepFreeze(prop);
     }
@@ -85,30 +89,38 @@ export const equal = function <A, B>(lhs: A, rhs: B): boolean {
   }
 
   if (lhs != null && rhs != null && Array.isArray(lhs) && Array.isArray(rhs)) {
-    return lhs.length === rhs.length && lhs.every((v, i) => equal(v, rhs[i]))
+    return lhs.length === rhs.length && lhs.every((v, i) => equal(v, rhs[i]));
   }
 
-  if (lhs != null && rhs != null && typeof lhs === "object" && typeof rhs === "object") {
-    return deepEqual(lhs, rhs)
+  if (
+    lhs != null &&
+    rhs != null &&
+    typeof lhs === "object" &&
+    typeof rhs === "object"
+  ) {
+    return deepEqual(lhs, rhs);
   }
 
-  return lhs as any === rhs as any;
-}
+  return (lhs as any) === (rhs as any);
+};
 
 export const arraysOverlap = function <A, B>(a: A[], b: B[]) {
-  const [largest, smallest]: [any[], any[]] = a.length <= b.length ? [a, b] : [b, a];
+  const [largest, smallest]: [any[], any[]] =
+    a.length <= b.length ? [a, b] : [b, a];
 
-  return smallest.every(v => largest.includes(v))
-}
+  return smallest.every((v) => largest.includes(v));
+};
 
-export const deepEqual = function <A extends { [name: string]: any }, B extends { [name: string]: any }>(lhs: A, rhs: B) {
+export const deepEqual = function <
+  A extends { [name: string]: any },
+  B extends { [name: string]: any },
+>(lhs: A, rhs: B) {
   // Check if they are the same reference
-  if (lhs as object === rhs as object) {
+  if ((lhs as object) === (rhs as object)) {
     return true;
   }
 
-  const
-    keysA = Object.getOwnPropertyNames(lhs),
+  const keysA = Object.getOwnPropertyNames(lhs),
     keysB = Object.getOwnPropertyNames(rhs);
 
   console.log(keysA, keysB);
@@ -122,4 +134,4 @@ export const deepEqual = function <A extends { [name: string]: any }, B extends 
   }
 
   return true;
-}
+};

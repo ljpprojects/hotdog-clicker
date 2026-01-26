@@ -1,4 +1,4 @@
-import { randomUint16 } from "../rand";
+import { randomIntUpTo, randomUint16 } from "../rand";
 import { deepFreeze, DeepReadonly } from "../utils";
 
 export enum CardSuit {
@@ -24,7 +24,7 @@ export enum CardRank {
   Ace = "A",
 }
 
-export type Card = [CardRank, CardSuit]
+export type Card = [CardRank, CardSuit];
 
 export const blackjackCardSum = (cards: CardRank[]): number => {
   const cardValueTable: Record<CardRank, number> = {
@@ -37,10 +37,10 @@ export const blackjackCardSum = (cards: CardRank[]): number => {
     "8": 8,
     "9": 9,
     "10": 10,
-    "J": 10,
-    "Q": 10,
-    "K": 10,
-    "A": 11,
+    J: 10,
+    Q: 10,
+    K: 10,
+    A: 11,
   };
 
   let aceCount = 0;
@@ -51,7 +51,7 @@ export const blackjackCardSum = (cards: CardRank[]): number => {
     // Check if this card is an ace and increment counter if it is
     aceCount += Number(val === 11);
 
-    return acc + val
+    return acc + val;
   }, 0);
 
   // If the sum is over 21, reduce the value of aces to 1 until it is under (or there are no more aces)
@@ -60,7 +60,7 @@ export const blackjackCardSum = (cards: CardRank[]): number => {
   }
 
   return sum;
-}
+};
 
 /// A full deck of cards with no joker
 export const fullDeck: DeepReadonly<Card[]> = deepFreeze([
@@ -136,13 +136,34 @@ export const drawCard = (): DeepReadonly<Card> => {
   const index = randomUint16() % fullDeck.length;
 
   return fullDeck[index];
-}
+};
 
 /**
- * Draws a card, removing it from the deck (the given deck is mutated).
+ * Draws the top card, removing it from the deck in-place (the given deck is mutated).
  */
 export const drawCardRemoving = (deck: Card[]): Card => {
   const index = randomUint16() % deck.length;
 
   return deck.splice(index, 1)[0];
-}
+};
+
+/**
+ * Shuffles the deck in-place (the given deck is mutated).
+ */
+export const shuffleDeck = (deck: Card[]) => {
+  const ROUNDS = 4;
+
+  for (let i = 0; i < ROUNDS; i++) {
+    // Fisher-yates backwards
+    for (let i = deck.length - 1; i > 0; i--) {
+      const j = randomIntUpTo(i);
+      [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+
+    // Fisher-yates forwards
+    for (let i = 0; i < deck.length - 1; i++) {
+      const j = randomIntUpTo(deck.length - i);
+      [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+  }
+};

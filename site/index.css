@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Tiny5&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Tiny5&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 
 :root {
     --safe-margin: 10px;
@@ -22,6 +22,28 @@
     scrollbar-width: none;
 }
 
+@media (prefers-color-scheme: light) {
+    :root {
+        --fg-col: #171717;
+        --bg-col: #fafafa;
+        --dn-col: #dc143c;
+        --en-col: #7cfc00;
+
+        --fg-col-t: #1717178a;
+        --bg-col-t: #fafafa8a;
+        --dn-col-t: #dc143c8a;
+        --en-col-t: #7cfc008a;
+
+        --fg-tint: #1717174a;
+        --bg-tint: #fafafa4a;
+        --dn-tint: #dc143c4a;
+        --en-tint: #7cfc004a;
+
+        touch-action: none;
+        scrollbar-width: none;
+    }
+}
+
 body[data-progress] {
     cursor: progress;
 }
@@ -31,7 +53,7 @@ body[data-veil] {
     background: #000;
 }
 
-body[data-veil]>#blackjack-menu {
+body[data-veil] > #blackjack-menu {
     filter: brightness(100%) saturate(100%);
 }
 
@@ -57,7 +79,6 @@ code {
     text-decoration: none;
     text-wrap-mode: wrap;
 }
-
 
 h1 {
     font-size: 3em;
@@ -124,7 +145,7 @@ main {
     align-items: center;
 }
 
-#stat>button>img {
+#stat > button > img {
     height: 20vmin;
 }
 
@@ -186,7 +207,7 @@ dialog:not([open]) {
     padding: 0;
 }
 
-#buyables-list>li {
+#buyables-list > li {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: none;
@@ -197,18 +218,18 @@ dialog:not([open]) {
     padding: 0;
 }
 
-#buyables-list>li>img {
+#buyables-list > li > img {
     height: 7.5vmin;
 }
 
-#buyables-list>li>div {
+#buyables-list > li > div {
     display: flex;
     flex-direction: column;
     justify-items: center;
     align-items: center;
 }
 
-#buyables-list>li b {
+#buyables-list > li b {
     font-size: 1.5em;
 }
 
@@ -222,15 +243,15 @@ dialog:not([open]) {
     font-size: 2em;
 }
 
-#leaderboard>ul {
+#leaderboard > ul {
     list-style-type: decimal-leading-zero;
 }
 
-#leaderboard>ul>li {
+#leaderboard > ul > li {
     font-size: 1.5em;
 }
 
-#leaderboard>ul>li::marker {
+#leaderboard > ul > li::marker {
     font-weight: bold;
 }
 
@@ -264,11 +285,11 @@ dialog:not([open]) {
     font-size: 2em;
 }
 
-#notification-prominent>form {
+#notification-prominent > form {
     padding: 0 10vmin;
 }
 
-#notification-prominent>form>input[type="submit"] {
+#notification-prominent > form > input[type="submit"] {
     border: none;
     width: 20vmin;
     font-family: "Tiny5", sans-serif;
@@ -305,7 +326,7 @@ dialog:not([open]) {
     font-size: 2em;
 }
 
-#notification-popup>form>input[type="submit"] {
+#notification-popup > form > input[type="submit"] {
     border: none;
     width: 10vmin;
     font-family: "Tiny5", sans-serif;
@@ -341,11 +362,11 @@ dialog:not([open]) {
     font-size: 2em;
 }
 
-#notification-banner>form>input[type="submit"] {
+#notification-banner > form > input[type="submit"] {
     border: none;
     width: 20vmin;
     font-family: "Tiny5", sans-serif;
-    border-radius: .5vmin;
+    border-radius: 0.5vmin;
     background-color: var(--fg-col);
     color: var(--bg-col);
 }
@@ -367,7 +388,7 @@ dialog:not([open]) {
     color: var(--fg-col);
 }
 
-#main-menu>form {
+#main-menu > form {
     display: grid;
     justify-content: center;
     justify-items: start;
@@ -385,7 +406,7 @@ dialog:not([open]) {
     font-size: 2em;
 }
 
-#main-menu>form>input[type="submit"] {
+#main-menu > form > input[type="submit"] {
     border: none;
     width: 20vmin;
     font-family: "Tiny5", sans-serif;
@@ -421,7 +442,7 @@ dialog:not([open]) {
     overflow: auto;
 }
 
-.menu>form {
+.menu > form {
     display: grid;
     justify-content: center;
     justify-items: start;
@@ -432,8 +453,8 @@ dialog:not([open]) {
     color: var(--fg-col);
 }
 
-#change-nickname>form>p,
-#restore-save-dialog>form>p {
+#change-nickname > form > p,
+#restore-save-dialog > form > p {
     font-size: 2em;
 }
 
@@ -441,27 +462,27 @@ dialog:not([open]) {
     padding: 5vmin;
 }
 
-#gambling-dialog>form>p,
-#settings-menu>form>p {
+#gambling-dialog > form > p,
+#settings-menu > form > p {
     font-size: 1.2em;
 }
 
-#gambling-dialog>form>b {
+#gambling-dialog > form > b {
     font-size: 2em;
 }
 
-#change-nickname>form>input[type="text"],
-#restore-save-dialog>form>input[type="text"] {
+#change-nickname > form > input[type="text"],
+#restore-save-dialog > form > input[type="text"] {
     width: 20vmin;
     height: 2.5vmin;
     border: none;
-    border-radius: .5vmin;
+    border-radius: 0.5vmin;
 }
 
-.menu>form>input[type="submit"],
-.menu>form>[data-button],
-#gambling-dialog>form>[data-button],
-#settings-menu>form>[data-button] {
+.menu > form > input[type="submit"],
+.menu > form > [data-button],
+#gambling-dialog > form > [data-button],
+#settings-menu > form > [data-button] {
     border: none;
     width: 10vmin;
     font-family: "Tiny5", sans-serif;
@@ -505,13 +526,13 @@ dialog:not([open]) {
     padding: 10vmin;
 }
 
-#settings-menu>form>section {
+#settings-menu > form > section {
     display: flex;
     flex-direction: column;
     gap: 0;
 }
 
-#settings-menu>form>section>div {
+#settings-menu > form > section > div {
     display: flex;
     justify-content: space-between;
     width: 30vw;
@@ -521,20 +542,20 @@ dialog:not([open]) {
     padding: 5vmin;
 }
 
-#blackjack-menu>form>div {
+#blackjack-menu > form > div {
     display: flex;
     width: 40vw;
     justify-content: center;
 }
 
-#blackjack-menu>form>section {
+#blackjack-menu > form > section {
     display: grid;
     width: 40vw;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
 }
 
-#blackjack-menu>form>section>button {
+#blackjack-menu > form > section > button {
     font-size: 2em;
     font-weight: bold;
 }
@@ -554,10 +575,107 @@ dialog:not([open]) {
     font-size: 1.5em;
 }
 
-#bj-split-hand-sums>p {
+#bj-split-hand-sums > p {
     font-size: 1.3em;
 }
 
 .wager-slider {
     width: 30vw;
+}
+
+#keno-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 70vw;
+    z-index: 9;
+}
+
+#the-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    width: 30vw;
+    text-align: center;
+}
+
+.keno-number {
+    color: var(--fg-col-t);
+    height: 2vmin;
+    width: 2vmin;
+    line-height: 2vmin;
+}
+
+.keno-number[data-sel]:not([data-drawn]) {
+    color: var(--fg-col);
+    border-color: var(--dn-col);
+    border-radius: 50%;
+    border-width: 2px;
+    border-style: solid;
+}
+
+.keno-number[data-sel]:is([data-drawn]) {
+    color: var(--en-col);
+    border-color: var(--en-col);
+    border-radius: 50%;
+    border-width: 2px;
+    border-style: solid;
+}
+
+.keno-number[data-drawn]:not([data-sel]) {
+    color: var(--fg-col);
+}
+
+#split-keno-grid-paytable-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#keno-paytable-container {
+    display: grid;
+    justify-content: center;
+}
+
+table {
+    font-family: "Tiny5", monospace;
+    border-collapse: collapse;
+    border: 2px solid var(--fg-col);
+}
+
+thead,
+tfoot {
+    background-color: var(--bg-col);
+}
+
+th {
+    font-size: 1.5em;
+}
+
+th,
+td {
+    border: 2px solid var(--fg-col);
+    padding: 8px 10px;
+}
+
+td:nth-last-of-type(2) {
+    text-align: center;
+}
+
+td:last-of-type {
+    text-align: right;
+}
+
+tbody > tr {
+    background-color: var(--bg-col);
+}
+
+tbody > tr:nth-of-type(even) {
+    background-color: var(--fg-col);
+    color: var(--bg-col);
+    border: 2px solid var(--bg-col);
+}
+
+tbody > tr:nth-of-type(even) > td,
+tbody > tr:nth-of-type(even) > th {
+    border: 2px solid var(--bg-col);
 }

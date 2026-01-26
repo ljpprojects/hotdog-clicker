@@ -1,91 +1,117 @@
-import { abattoirIconSet, butcherIconSet, cartIconSet, factoryIconSet, franchiseIconSet, plantationIconSet, restaurantIconSet, standIconSet, truckIconSet } from "./assets";
 import {
-  hdpsElement,
-  hdsElement,
-  hdnwElement,
-  butchersOwnedElement,
-  standsOwnedElement,
-  cartsOwnedElement,
-  trucksOwnedElement,
-  plantationsOwnedElement,
-  factoriesOwnedElement,
-  abattoirsOwnedElement,
-  restaurantsOwnedElement,
-  franchisesOwnedElement,
-  butcherPriceElement,
-  standPriceElement,
-  cartPriceElement,
-  truckPriceElement,
-  plantationPriceElement,
-  factoryPriceElement,
-  abattoirPriceElement,
-  restaurantPriceElement,
-  franchisePriceElement,
-  wipeButton,
-  saveButton,
-  butcherButtonElement,
-  standButtonElement,
-  cartButtonElement,
-  truckButtonElement,
-  plantationButtonElement,
-  factoryButtonElement,
+  abattoirIconSet,
+  butcherIconSet,
+  cartIconSet,
+  factoryIconSet,
+  franchiseIconSet,
+  plantationIconSet,
+  restaurantIconSet,
+  standIconSet,
+  truckIconSet,
+} from "./assets";
+import {
   abattoirButtonElement,
-  restaurantButtonElement,
-  franchiseButtonElement,
-  changeNicknameButton,
-  closeMainMenuButton,
-  openMainMenuButton,
-  restoreSaveButton,
-  getIdentifierButton,
-  changeSettingsButton,
-  hotdogButtonElement,
-  butcherImageElement,
-  standImageElement,
-  cartImageElement,
-  truckImageElement,
-  plantationImageElement,
-  factoryImageElement,
   abattoirImageElement,
-  restaurantImageElement,
+  butcherButtonElement,
+  butcherImageElement,
+  cartButtonElement,
+  cartImageElement,
+  changeSettingsButton,
+  closeMainMenuButton,
+  factoryButtonElement,
+  factoryImageElement,
+  franchiseButtonElement,
   franchiseImageElement,
-  notificationPopupSet,
+  getIdentifierButton,
+  hotdogButtonElement,
   mainMenuDialogElement,
-  openGamblingButton,
-  pokiesDialog,
-  spinSlotsButton,
+  openMainMenuButton,
+  plantationButtonElement,
+  plantationImageElement,
   playBlackjackButton,
-} from "./elements"; import { wagerBlackjack } from "./gambling/blackjack";
-import { abattoirPrice, abattoirRate, abattoirsOwned, butcherPrice, butcherRate, butchersOwned, cartPrice, cartRate, cartsOwned, factoriesOwned, factoryPrice, factoryRate, franchisePrice, franchiseRate, franchisesOwned, hdps, hds, plantationPrice, plantationRate, plantationsOwned, restaurantPrice, restaurantRate, restaurantsOwned, standPrice, standRate, standsOwned, truckPrice, truckRate, trucksOwned } from "./game";
+  restaurantButtonElement,
+  restaurantImageElement,
+  restoreSaveButton,
+  saveButton,
+  standButtonElement,
+  standImageElement,
+  truckButtonElement,
+  truckImageElement,
+  wipeButton,
+} from "./elements";
+import { wagerBlackjack } from "./gambling/blackjack";
+import {
+  abattoirPrice,
+  abattoirRate,
+  abattoirsOwned,
+  butcherPrice,
+  butcherRate,
+  butchersOwned,
+  cartPrice,
+  cartRate,
+  cartsOwned,
+  factoriesOwned,
+  factoryPrice,
+  factoryRate,
+  franchisePrice,
+  franchiseRate,
+  franchisesOwned,
+  hdps,
+  hds,
+  plantationPrice,
+  plantationRate,
+  plantationsOwned,
+  restaurantPrice,
+  restaurantRate,
+  restaurantsOwned,
+  standPrice,
+  standRate,
+  standsOwned,
+  truckPrice,
+  truckRate,
+  trucksOwned,
+} from "./game";
 import { increase } from "./maths";
 import { Mode, ModeBasedAction } from "./mode";
-import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
-import { DEFAULT_SAVE_DATA, getAndShowIdentifierCode, load, restoreSave, save, wipe } from "./save";
+import {
+  NotificationDismissalMode,
+  NotificationProminence,
+  notify,
+} from "./notify";
+import {
+  DEFAULT_SAVE_DATA,
+  getAndShowIdentifierCode,
+  load,
+  restoreSave,
+  save,
+  wipe,
+} from "./save";
 import { changeSettings } from "./settings";
 
 export const beginLoading = () => {
-  document.body.setAttribute("data-progress", "true")
-}
+  document.body.setAttribute("data-progress", "true");
+};
 
 export const endLoading = () => {
   document.body.removeAttribute("data-progress");
-}
+};
 
 const openMainMenu = () => {
   document.querySelector("main")?.classList.add("blur");
   document.querySelector("nav")?.classList.add("blur");
   document.querySelector("#leaderboard")?.classList.add("blur");
   mainMenuDialogElement.showModal();
-}
+};
 
 export const closeMainMenu = () => {
   document.querySelector("main")?.classList.remove("blur");
   document.querySelector("nav")?.classList.remove("blur");
   document.querySelector("#leaderboard")?.classList.remove("blur");
   mainMenuDialogElement.close();
-}
+};
 
 document.oncontextmenu = () => {
-  openMainMenu()
+  openMainMenu();
 
   document.ondblclick = () => {
     closeMainMenu();
@@ -96,31 +122,29 @@ document.oncontextmenu = () => {
   return false;
 };
 
-openMainMenuButton.addEventListener("click", document.oncontextmenu)
-closeMainMenuButton.addEventListener("click", closeMainMenu)
+openMainMenuButton.addEventListener("click", document.oncontextmenu);
+closeMainMenuButton.addEventListener("click", closeMainMenu);
 
 window.addEventListener("visibilitychange", async () => {
   if (document.visibilityState === "hidden") {
-    await save()
+    await save();
   }
-})
+});
 
-saveButton.addEventListener(
-  "click",
-  async () => {
-    beginLoading()
+saveButton.addEventListener("click", async () => {
+  beginLoading();
 
-    await save().then(endLoading).then(
+  await save()
+    .then(endLoading)
+    .then(
       async () =>
         await notify({
           body: "Saved successfully.",
           prominence: NotificationProminence.Banner,
           dismissalMode: NotificationDismissalMode.Automatic,
-        })
-    )
-  }
-);
-
+        }),
+    );
+});
 
 wipeButton.addEventListener(
   "click",
@@ -135,31 +159,31 @@ wipeButton.addEventListener(
           await save(DEFAULT_SAVE_DATA);
           await load();
 
-          window.location.reload()
-        })
-    )
+          window.location.reload();
+        }),
+    ),
 );
 
 restoreSaveButton.addEventListener("click", async () => {
-  closeMainMenu()
+  closeMainMenu();
 
-  await restoreSave()
-})
+  await restoreSave();
+});
 
 changeSettingsButton.addEventListener("click", async () => {
-  closeMainMenu()
-  await changeSettings()
-})
+  closeMainMenu();
+  await changeSettings();
+});
 
 getIdentifierButton.addEventListener("click", async () => {
-  closeMainMenu()
+  closeMainMenu();
   await getAndShowIdentifierCode();
-})
+});
 
 playBlackjackButton.addEventListener("click", () => {
   closeMainMenu();
   wagerBlackjack();
-})
+});
 
 export const checkBuyables = () => {
   if (hds.value >= butcherPrice.value) {
@@ -240,8 +264,10 @@ hotdogButtonElement.addEventListener("click", (event) => {
   if (!event.isTrusted) return;
 
   ModeBasedAction.empty()
-    .actionFor([Mode.BUY_MODE, Mode.SELL_MODE], () => hds.setValue(hds.value + 1, "btn-click"))
-    .do()
+    .actionFor([Mode.BUY_MODE, Mode.SELL_MODE], () =>
+      hds.setValue(hds.value + 1, "btn-click"),
+    )
+    .do();
 });
 
 butcherButtonElement.addEventListener("click", () => {
@@ -283,7 +309,10 @@ truckButtonElement.addEventListener("click", () => {
 plantationButtonElement.addEventListener("click", () => {
   if (hds.value >= plantationPrice.value) {
     hds.value -= plantationPrice.value;
-    plantationPrice.value = increase(plantationPrice.value, plantationsOwned.value);
+    plantationPrice.value = increase(
+      plantationPrice.value,
+      plantationsOwned.value,
+    );
     plantationsOwned.value++;
     hdps.value += plantationRate;
   }
@@ -310,7 +339,10 @@ abattoirButtonElement.addEventListener("click", () => {
 restaurantButtonElement.addEventListener("click", () => {
   if (hds.value >= restaurantPrice.value) {
     hds.value -= restaurantPrice.value;
-    restaurantPrice.value = increase(restaurantPrice.value, restaurantsOwned.value);
+    restaurantPrice.value = increase(
+      restaurantPrice.value,
+      restaurantsOwned.value,
+    );
     restaurantsOwned.value++;
     hdps.value += restaurantRate;
   }
@@ -319,7 +351,10 @@ restaurantButtonElement.addEventListener("click", () => {
 franchiseButtonElement.addEventListener("click", () => {
   if (hds.value >= franchisePrice.value) {
     hds.value -= franchisePrice.value;
-    franchisePrice.value = increase(franchisePrice.value, franchisesOwned.value);
+    franchisePrice.value = increase(
+      franchisePrice.value,
+      franchisesOwned.value,
+    );
     franchisesOwned.value++;
     hdps.value += franchiseRate;
   }

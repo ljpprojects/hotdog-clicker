@@ -30,6 +30,7 @@ import {
 
 import "./settings/index";
 
+import { GAMBLING_NW_THRESHOLD } from "./gambling/pokies";
 import { updateLeaderboard } from "./leaderboard";
 import { mode, Mode, ModeBasedAction } from "./mode";
 import {
@@ -37,14 +38,15 @@ import {
   NotificationProminence,
   notify,
 } from "./notify";
-import { GAMBLING_NW_THRESHOLD } from "./pokies";
 import { SharedMutable } from "./SharedMutable";
 
 import "./gambling/blackjack";
 import { bjGameDialog, bjWagerDialog } from "./gambling/elements";
+import { paytableFill } from "./gambling/Lottery Bingo - a game based on the game referred to as keno in [[COUNTRY WITH GOOD TRADEMARK LAWS]] or traditionally 白鸽票 in China";
 import { settings } from "./settings/index";
 import "./sound";
 import "./ui";
+import { checkBuyables } from "./ui";
 import { wait } from "./utils";
 import { updateWealthinessDisplay } from "./wealth";
 
@@ -672,6 +674,9 @@ setInterval(
   60e3,
 );
 
+// This doesnt have to be realtime
+setInterval(checkBuyables, 500);
+
 // @ts-expect-error
 window.richify = async () => {
   for (let i = 0; i <= 10; i++) {
@@ -728,3 +733,5 @@ document.addEventListener("keydown", (ev) => {
     window.richify();
   }
 });
+
+paytableFill();

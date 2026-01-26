@@ -9,10 +9,15 @@ import {
   NotificationProminence,
   notify,
 } from "../notify";
-import { GAMBLING_NW_THRESHOLD } from "../pokies";
 import { save } from "../save";
 import { wait } from "../utils";
-import { blackjackCardSum, Card, drawCardRemoving, fullDeck } from "./card";
+import {
+  blackjackCardSum,
+  Card,
+  drawCardRemoving,
+  fullDeck,
+  shuffleDeck,
+} from "./card";
 import {
   bjDealAgainButton,
   bjDealButton,
@@ -30,6 +35,7 @@ import {
   playerHand,
   playerSum,
 } from "./elements";
+import { GAMBLING_NW_THRESHOLD } from "./pokies";
 import { blackjackGameAudio } from "./sound";
 
 export enum BlackJackWinState {
@@ -45,7 +51,7 @@ export type SplitHand = {
 };
 
 export type BlackJackState = {
-  // Since only the rank of the cards matter, we only need to store that
+  // Since only the rank of the cards matter, we only need to store that (wait why are we storing suits too now?????)
 
   houseHand: GeneralBinding<Card[], Card[]>;
   playerHand: GeneralBinding<Card[], Card[]>;
@@ -628,6 +634,9 @@ export const wagerBlackjack = () => {
   blackjackState.winState = BlackJackWinState.Undecided;
   blackjackState.deck = currentDeck;
   blackjackState.splitHands.value = [];
+
+  // Shuffle deck
+  shuffleDeck(blackjackState.deck);
 
   blackjackState.houseHand.value = [
     drawCardRemoving(currentDeck),
