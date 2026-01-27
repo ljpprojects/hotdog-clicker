@@ -1,10 +1,23 @@
 // I AM NOT AFFILIATED WITH Keno™ (iykyk)
 
 import { GeneralBinding } from "../Binding";
-import { formatter, hdnw } from "../game";
+import { playKenoButton } from "../elements";
+import { formatter, hdnw, hds } from "../game";
+import { enterBuyMode, enterFreezeMode } from "../mode";
+import {
+  NotificationDismissalMode,
+  NotificationProminence,
+  notify,
+} from "../notify";
+import { randomIntUpTo } from "../rand";
+import { save } from "../save";
+import { closeMainMenu } from "../ui";
+import { wait } from "../utils";
 import {
   kenoGridNumbers,
+  kenoMenuElement,
   kenoPaytableBodyElement,
+  kenoStartButton,
   kenoWagerDisplay,
   kenoWagerSlider,
 } from "./elements";
@@ -31,6 +44,14 @@ export const updateKenoWagerDisplay = () => {
 
   const absolute = (kenoWagerSlider.valueAsNumber / 100) * hdnw.value;
   kenoWagerDisplay.textContent = `${kenoWagerSlider.valueAsNumber}% (${formatter.value.format(absolute)})`;
+
+  kenoState.wager = absolute;
+
+  // If we have selected numbers too then we can allow the player to start
+  if (kenoState.numbersToMatch.length > 0) {
+    kenoStartButton.removeAttribute("data-unbuyable");
+    kenoStartButton.removeAttribute("disabled");
+  }
 };
 
 kenoWagerSlider.oninput = updateKenoWagerDisplay;
@@ -42,65 +63,65 @@ kenoWagerSlider.oninput = updateKenoWagerDisplay;
  *
  * The paths leading to a multiplier of 0 are not defined.
  *
- * 1 multiplier = $100 in the ■■■■™ payout (see https://www.■■■■.com.au/■■■■-pdfs/NSW_Game%20Guide.pdf, who I am 100% absolutely guaranteed unaffiliated and this is not claiming to be affiliated in case you think this is some mental gymnastics reverse psychology gaslighting sarcasm shit genuinely lowkirkenuinely provably not affiliated to you know who, iykyk)
+ * 1 multiplier = $50 in the ■■■■™ payout (see https://www.■■■■.com.au/■■■■-pdfs/NSW_Game%20Guide.pdf, who I am 100% absolutely guaranteed unaffiliated and this is not claiming to be affiliated in case you think this is some mental gymnastics reverse psychology gaslighting sarcasm shit genuinely lowkirkenuinely provably not affiliated to you know who, iykyk)
  */
 export const FULL_PAYTABLE: { [g: number]: { [n: number]: number } } = {
   1: {
-    1: 0.03,
+    1: 0.06,
   },
   2: {
-    2: 0.12,
+    2: 0.24,
   },
   3: {
-    2: 0.01,
-    3: 0.44,
+    2: 0.02,
+    3: 0.88,
   },
   4: {
-    2: 0.01,
-    3: 0.04,
-    4: 1.2,
+    2: 0.02,
+    3: 0.08,
+    4: 2.4,
   },
   5: {
-    3: 0.02,
-    4: 0.14,
-    5: 6.4,
+    3: 0.04,
+    4: 0.28,
+    5: 12.8,
   },
   6: {
-    3: 0.01,
-    4: 0.05,
-    5: 0.8,
-    6: 18,
+    3: 0.02,
+    4: 0.1,
+    5: 1.6,
+    6: 36,
   },
   7: {
-    3: 0.01,
-    4: 0.03,
-    5: 0.12,
-    6: 1.25,
-    7: 50,
+    3: 0.02,
+    4: 0.06,
+    5: 0.24,
+    6: 2.5,
+    7: 100,
   },
   8: {
-    4: 0.02,
-    5: 0.07,
-    6: 0.6,
-    7: 6.75,
-    8: 250,
+    4: 0.04,
+    5: 0.14,
+    6: 1.2,
+    7: 13.6,
+    8: 500,
   },
   9: {
-    4: 0.01,
-    5: 0.05,
-    6: 0.2,
-    7: 2.1,
-    8: 25,
-    9: 1000,
+    4: 0.02,
+    5: 0.1,
+    6: 0.4,
+    7: 4.2,
+    8: 50,
+    9: 2000,
   },
   10: {
-    4: 0.01,
-    5: 0.02,
-    6: 0.06,
-    7: 0.5,
-    8: 5.8,
-    9: 100,
-    10: 10000, // holy shit
+    4: 0.02,
+    5: 0.04,
+    6: 0.12,
+    7: 1,
+    8: 11.6,
+    9: 200,
+    10: 20000, // HOLY SHIT!!!!!!!!!!!!!!!!!!!
   },
 };
 
@@ -112,6 +133,19 @@ export let kenoState: LotteryBingoːAGameBasedOnTheGameReferredToAsKenoInFinland
     drawnNumbers: new GeneralBinding<number[], number[]>({
       backing: [],
       setfn(to, _dispatcher?) {
+        if (to.length === 0) {
+          // mark as undrawn all grid numbers
+          for (const el of kenoGridNumbers) {
+            el.removeAttribute("data-drawn");
+
+            console.log(`${el.id} is no longer drawn`);
+          }
+
+          this.value = to;
+
+          return;
+        }
+
         const [newNumber] = to.filter((v) => !this.value!.includes(v));
 
         for (const el of kenoGridNumbers!) {
@@ -136,7 +170,7 @@ export let kenoState: LotteryBingoːAGameBasedOnTheGameReferredToAsKenoInFinland
 
 for (const el of kenoGridNumbers) {
   el.addEventListener("click", () => {
-    if (kenoState.numbersToMatch.length == 10) {
+    if (kenoState.numbersToMatch.length == 10 || kenoState.isInDrawingStage) {
       return;
     }
 
@@ -151,16 +185,6 @@ for (const el of kenoGridNumbers) {
     }
   });
 }
-
-// @ts-ignore
-window.kenoDrawNumber = (n) => {
-  kenoState.drawnNumbers.value = [...kenoState.drawnNumbers.value, n];
-
-  console.log(
-    `Number ${n} drawn, new drawnNumbers`,
-    kenoState.drawnNumbers.value,
-  );
-};
 
 export const paytableFill = () => {
   // Dynamically fill the paytable
@@ -202,3 +226,126 @@ export const paytableFill = () => {
     }
   }
 };
+
+export const calculatePayout = async () => {
+  const matches = kenoState.drawnNumbers.value.filter((n) =>
+    kenoState.numbersToMatch.includes(n),
+  );
+
+  const toMatch = kenoState.numbersToMatch.length;
+
+  const multiplier =
+    FULL_PAYTABLE[toMatch][matches.length] != null
+      ? 1 + FULL_PAYTABLE[toMatch][matches.length]
+      : 0;
+
+  const payout = kenoState.wager * multiplier;
+  hds.value += payout;
+
+  if (matches.length === toMatch && toMatch >= 7) {
+    // JACKPOT
+    await notify(
+      {
+        body: `JACKPOT!!!!! You won ${multiplier}x (+${formatter.value.format(payout - kenoState.wager)})!`,
+        prominence: NotificationProminence.Banner,
+        dismissalMode: NotificationDismissalMode.Automatic,
+        dismissalTimeMs: 5000,
+      },
+      250,
+    );
+  } else if (matches.length === toMatch) {
+    // BIG WIN
+    await notify(
+      {
+        body: `BIG WIN!!!!! You won ${multiplier}x (+${formatter.value.format(payout - kenoState.wager)})!`,
+        prominence: NotificationProminence.Banner,
+        dismissalMode: NotificationDismissalMode.Automatic,
+        dismissalTimeMs: 5000,
+      },
+      250,
+    );
+  } else if (multiplier > 0) {
+    await notify(
+      {
+        body: `SMALL WIN! You won ${multiplier}x (+${formatter.value.format(payout - kenoState.wager)})!`,
+        prominence: NotificationProminence.Banner,
+        dismissalMode: NotificationDismissalMode.Automatic,
+        dismissalTimeMs: 5000,
+      },
+      250,
+    );
+  } else {
+    await notify(
+      {
+        body: `lmao you lost (-${formatter.value.format(kenoState.wager)})!`,
+        prominence: NotificationProminence.Banner,
+        dismissalMode: NotificationDismissalMode.Automatic,
+        dismissalTimeMs: 5000,
+      },
+      250,
+    );
+  }
+};
+
+export const kenoStart = async () => {
+  if (kenoState.isInDrawingStage) {
+    throw "wtf no don't start it now thats cheating";
+  }
+
+  kenoStartButton.setAttribute("data-unbuyable", "duh");
+  kenoStartButton.setAttribute("disabled", "true");
+
+  kenoWagerSlider.setAttribute("data-unbuyable", "yep");
+  kenoWagerSlider.disabled = true;
+
+  enterFreezeMode();
+
+  // deduct wager
+  hds.value -= kenoState.wager;
+
+  await save();
+
+  kenoState.isInDrawingStage = true;
+
+  for (let i = 0; i < 20; i++) {
+    for (let n = randomIntUpTo(70) + 1; ; n = randomIntUpTo(70) + 1) {
+      if (kenoState.drawnNumbers.value.includes(n)) {
+        continue;
+      }
+
+      kenoState.drawnNumbers.value = [...kenoState.drawnNumbers.value, n];
+
+      break;
+    }
+
+    await wait(750);
+  }
+
+  // Done drawing numbers; calculate payout
+  calculatePayout();
+
+  // Reset state
+  kenoState.drawnNumbers.value = [];
+  kenoState.isInDrawingStage = false;
+
+  enterBuyMode();
+
+  kenoStartButton.removeAttribute("data-unbuyable");
+  kenoStartButton.removeAttribute("disabled");
+
+  kenoWagerSlider.removeAttribute("data-unbuyable");
+  kenoWagerSlider.disabled = false;
+};
+
+kenoStartButton.addEventListener("click", kenoStart);
+
+playKenoButton.addEventListener("click", () => {
+  closeMainMenu();
+
+  // Reset state
+  kenoState.drawnNumbers.value = [];
+  kenoState.isInDrawingStage = false;
+
+  // Open menu
+  kenoMenuElement.showModal();
+});

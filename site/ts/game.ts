@@ -21,6 +21,7 @@ import {
   plantationPriceElement,
   plantationsOwnedElement,
   playBlackjackButton,
+  playKenoButton,
   pokiesDialog,
   restaurantPriceElement,
   restaurantsOwnedElement,
@@ -43,7 +44,11 @@ import {
 import { SharedMutable } from "./SharedMutable";
 
 import "./gambling/blackjack";
-import { bjGameDialog, bjWagerDialog } from "./gambling/elements";
+import {
+  bjGameDialog,
+  bjWagerDialog,
+  kenoMenuElement,
+} from "./gambling/elements";
 import { paytableFill } from "./gambling/Lottery Bingo - a game based on the game referred to as keno in [[COUNTRY WITH GOOD TRADEMARK LAWS]] or traditionally 白鸽票 in China";
 import { settings } from "./settings/index";
 import "./sound";
@@ -606,6 +611,10 @@ setInterval(() => {
     playBlackjackButton.removeAttribute("data-unbuyable");
     playBlackjackButton.title = "Blackjack";
 
+    playKenoButton.removeAttribute("disabled");
+    playKenoButton.removeAttribute("data-unbuyable");
+    playKenoButton.title = "Ke- I mean Lottery Bingo! haha...";
+
     notify({
       body: "You can gamble now.",
       prominence: NotificationProminence.Banner,
@@ -623,6 +632,11 @@ setInterval(() => {
     playBlackjackButton.setAttribute("disabled", "true");
     playBlackjackButton.setAttribute("data-unbuyable", "true");
     playBlackjackButton.title = "Blackjack (LOCKED)";
+
+    playKenoButton.setAttribute("disabled", "true");
+    playKenoButton.setAttribute("data-unbuyable", "true");
+    playKenoButton.title =
+      "Ke- I mean Lottery Bingo! haha... Oh you can't play anyway...";
 
     const notifyKickedOut = () =>
       notify({
@@ -646,6 +660,11 @@ setInterval(() => {
       bjGameDialog.close();
       notifyKickedOut();
     }
+
+    if (kenoMenuElement.open) {
+      kenoMenuElement.close();
+      notifyKickedOut();
+    }
   } else if (canGamble && !settings.value.enableGambling) {
     canGamble = false;
 
@@ -656,6 +675,10 @@ setInterval(() => {
     playBlackjackButton.setAttribute("disabled", "true");
     playBlackjackButton.setAttribute("data-unbuyable", "true");
     playBlackjackButton.title = "Blackjack (DISABLED in settings)";
+
+    playKenoButton.setAttribute("disabled", "true");
+    playKenoButton.setAttribute("data-unbuyable", "true");
+    playKenoButton.title = "Ke-no you CANNOT play it is disabled in settings";
   }
 }, 5000);
 

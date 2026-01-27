@@ -44,3 +44,8 @@ export const kenoPaytableElement: HTMLTableElement =
 
 export const kenoPaytableBodyElement: HTMLTableSectionElement =
   document.querySelector("#keno-paytable > tbody")!;
+
+export const kenoStartButton = document.getElementById("keno-start")!;
+
+export const kenoMenuElement: HTMLDialogElement =
+  document.querySelector("#keno-menu")!;

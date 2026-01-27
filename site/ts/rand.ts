@@ -33,7 +33,7 @@ export const randomUint32 = (): number => {
  */
 export const randomIntUpTo = (N: number) => {
   const t = 2 ** 32 % N;
-  for (const r = randomUint32(); ; ) {
+  for (let r = randomUint32(); ; r = randomUint32()) {
     if (r >= t) {
       return r % N;
     }

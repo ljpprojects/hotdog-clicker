@@ -48,13 +48,73 @@ body[data-progress] {
     cursor: progress;
 }
 
-body[data-veil] {
-    filter: brightness(0) saturate(0);
-    background: #000;
+body[data-veil]::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-col);
+    z-index: 5;
+    transition-duration: 0.15s;
+    transition-timing-function: cubic-bezier(0.26, 0.91, 0.76, 1);
 }
 
+body[data-rveil]::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--dn-col);
+    z-index: 5;
+    transition-duration: 0.15s;
+    transition-timing-function: cubic-bezier(0.26, 0.91, 0.76, 1);
+}
+
+body[data-genocide],
+body[data-genocide] dialog {
+    background: var(--dn-col);
+}
+
+body[data-genocide="1"],
+body[data-genocide="1"] dialog > form * {
+    filter: brightness(90%) saturate(90%);
+}
+
+body[data-genocide="2"],
+body[data-genocide="2"] dialog > form * {
+    filter: brightness(70%) saturate(70%);
+}
+
+body[data-genocide="3"],
+body[data-genocide="3"] dialog > form * {
+    filter: brightness(50%) saturate(50%);
+}
+
+body[data-genocide="4"],
+body[data-genocide="4"] dialog > form * {
+    filter: brightness(30%) saturate(30%);
+}
+
+body[data-genocide="5"],
+body[data-genocide="5"] dialog > form * {
+    filter: brightness(0) saturate(0);
+}
+
+/*
+No, you can't differentiate colours
+that is intended
+*/
+
 body[data-veil] > #blackjack-menu {
-    filter: brightness(100%) saturate(100%);
+    z-index: 6;
+}
+
+body[data-veil] > #liquidation {
+    z-index: 6;
 }
 
 :root,
@@ -678,4 +738,60 @@ tbody > tr:nth-of-type(even) {
 tbody > tr:nth-of-type(even) > td,
 tbody > tr:nth-of-type(even) > th {
     border: 2px solid var(--bg-col);
+}
+
+#liquidation,
+#liquidation > form {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    padding: 0;
+    margin: 0;
+    background: none;
+}
+
+#liquidation > form > .splvert {
+    width: 100vw;
+    height: 100vh;
+}
+
+#liquidation > form > .splvert > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50%;
+}
+
+#liquidation > form > .splvert > div:first-child > img {
+    width: 40vw;
+}
+
+#liquidation > form > .splvert > div:last-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--dn-col);
+    font-size: 1.6em;
+
+    padding: 0 0 10vw 10vw;
+}
+
+#liquidation > form > .splvert > div:last-child > button {
+    display: flex;
+    justify-content: space-between;
+    width: 15vw;
+    align-items: center;
+    color: var(--dn-col);
+    font-size: 1.6em;
+}
+
+#liquidation > form > div > div > button > img {
+    aspect-ratio: 1/1;
+    width: 3em;
+}
+
+#liquidation-cancel {
+    color: var(--en-col) !important;
 }

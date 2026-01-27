@@ -1,70 +1,74 @@
-import { CachedAsset } from "./Asset"
-import { settings } from "./settings"
+import { CachedAsset } from "./Asset";
+import { settings } from "./settings";
 
 export type SoundAssetSet = {
-  click: CachedAsset,
-  hover: CachedAsset,
-  alert: CachedAsset
-}
+  click: CachedAsset;
+  hover: CachedAsset;
+  alert: CachedAsset;
+};
 
 export type SoundAudioSet = {
-  click: HTMLAudioElement,
-  hover: HTMLAudioElement,
-  alert: HTMLAudioElement
-}
+  click: HTMLAudioElement;
+  hover: HTMLAudioElement;
+  alert: HTMLAudioElement;
+};
 
 export enum Sound {
   Click,
   Hover,
-  Alert
+  Alert,
 }
 
 export const uiSoundSet: SoundAssetSet = {
   click: new CachedAsset("/assets/click.mp3"),
   hover: new CachedAsset("/assets/hover.mp3"),
   alert: new CachedAsset("/assets/alert.mp3"),
-}
+};
 
 export const uiAudioSet: () => SoundAudioSet = () => ({
   click: new Audio(uiSoundSet.click.loadedUrl),
   hover: new Audio(uiSoundSet.hover.loadedUrl),
   alert: new Audio(uiSoundSet.alert.loadedUrl),
-})
+});
 
 export const playSound = async (s: Sound) => {
   if (!settings.value.enableSounds) {
-    return
+    return;
   }
 
   const { Click, Hover, Alert } = Sound;
 
   switch (s) {
     case Click:
-      await uiAudioSet().click.play()
-      break
+      await uiAudioSet().click.play();
+      break;
     case Hover:
-      await uiAudioSet().hover.play()
-      break
+      await uiAudioSet().hover.play();
+      break;
     case Alert:
-      await uiAudioSet().alert.play()
-      break
+      await uiAudioSet().alert.play();
+      break;
   }
-}
+};
 
-const clickSoundElements: NodeListOf<HTMLElement> = document.querySelectorAll("[data-click-sound]")
-const hoverSoundElements: NodeListOf<HTMLElement> = document.querySelectorAll("[data-hover-sound]")
-const alertSoundElements: NodeListOf<HTMLDialogElement> = document.querySelectorAll("[data-alert-sound]")
+const clickSoundElements: NodeListOf<HTMLElement> =
+  document.querySelectorAll("[data-click-sound]");
+const hoverSoundElements: NodeListOf<HTMLElement> =
+  document.querySelectorAll("[data-hover-sound]");
+const alertSoundElements: NodeListOf<HTMLDialogElement> =
+  document.querySelectorAll("[data-alert-sound]");
 
 for (const el of clickSoundElements) {
-  el.addEventListener("mousedown", async e => {
+  el.addEventListener("mousedown", async (e) => {
     if (!(e.target instanceof HTMLElement)) {
-      return
+      return;
     }
 
-    playSound(Sound.Click)
-  })
+    playSound(Sound.Click);
+  });
 }
 
+/* this tanks performance, dont ask why
 for (const el of hoverSoundElements) {
   el.addEventListener("mouseenter", async e => {
     // If the element that got hovered over is a descendant of el, ignore it
@@ -82,11 +86,11 @@ for (const el of hoverSoundElements) {
     playSound(Sound.Hover)
   })
 }
-
+*/
 for (const el of alertSoundElements) {
   el.addEventListener("toggle", async () => {
     if (el.open) {
-      playSound(Sound.Alert)
+      playSound(Sound.Alert);
     }
-  })
+  });
 }

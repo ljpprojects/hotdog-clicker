@@ -1,5 +1,3 @@
-import { settings } from "./settings";
-
 export const hdpsElement = document.getElementById("hdps")!;
 export const hdsElement = document.getElementById("hds")!;
 export const hdnwElement = document.getElementById("hdnw")!;
@@ -11,37 +9,60 @@ export const butchersOwnedElement = document.getElementById("butchers-owned")!;
 export const standsOwnedElement = document.getElementById("stands-owned")!;
 export const cartsOwnedElement = document.getElementById("carts-owned")!;
 export const trucksOwnedElement = document.getElementById("trucks-owned")!;
-export const plantationsOwnedElement = document.getElementById("plantations-owned")!;
-export const factoriesOwnedElement = document.getElementById("factories-owned")!;
-export const abattoirsOwnedElement = document.getElementById("abattoirs-owned")!;
-export const restaurantsOwnedElement = document.getElementById("restaurants-owned")!;
-export const franchisesOwnedElement = document.getElementById("franchises-owned")!;
+export const plantationsOwnedElement =
+  document.getElementById("plantations-owned")!;
+export const factoriesOwnedElement =
+  document.getElementById("factories-owned")!;
+export const abattoirsOwnedElement =
+  document.getElementById("abattoirs-owned")!;
+export const restaurantsOwnedElement =
+  document.getElementById("restaurants-owned")!;
+export const franchisesOwnedElement =
+  document.getElementById("franchises-owned")!;
 
 export const butcherPriceElement = document.getElementById("butcher-price")!;
 export const standPriceElement = document.getElementById("stand-price")!;
 export const cartPriceElement = document.getElementById("cart-price")!;
 export const truckPriceElement = document.getElementById("truck-price")!;
-export const plantationPriceElement = document.getElementById("plantation-price")!;
+export const plantationPriceElement =
+  document.getElementById("plantation-price")!;
 export const factoryPriceElement = document.getElementById("factory-price")!;
 export const abattoirPriceElement = document.getElementById("abattoir-price")!;
-export const restaurantPriceElement = document.getElementById("restaurant-price")!;
-export const franchisePriceElement = document.getElementById("franchise-price")!;
+export const restaurantPriceElement =
+  document.getElementById("restaurant-price")!;
+export const franchisePriceElement =
+  document.getElementById("franchise-price")!;
 
-export const mainMenuDialogElement: HTMLDialogElement = document.querySelector("#main-menu")!;
+export const mainMenuDialogElement: HTMLDialogElement =
+  document.querySelector("#main-menu")!;
 
 export const wipeButton = document.getElementById("wipe")!;
 export const saveButton = document.getElementById("save")!;
-export const changeNicknameButton = document.getElementById("change-nickname-button")!;
+export const changeNicknameButton = document.getElementById(
+  "change-nickname-button",
+)!;
 export const restoreSaveButton = document.getElementById("restore-save")!;
-export const getIdentifierButton = document.getElementById("get-identifier-button")!;
-export const changeSettingsButton = document.getElementById("change-settings-button")!;
+export const getIdentifierButton = document.getElementById(
+  "get-identifier-button",
+)!;
+export const changeSettingsButton = document.getElementById(
+  "change-settings-button",
+)!;
 export const openMainMenuButton = document.getElementById("open-main-menu")!;
-export const openGamblingButton = document.getElementById("open-gambling-button")!;
+export const openGamblingButton = document.getElementById(
+  "open-gambling-button",
+)!;
 export const closeMainMenuButton = document.getElementById("close-main-menu")!;
-export const completeSaveTransitionButton = document.getElementById("complete-transition-button")!;
-export const playBlackjackButton = document.getElementById("play-blackjack-button")!;
+export const completeSaveTransitionButton = document.getElementById(
+  "complete-transition-button",
+)!;
+export const playBlackjackButton = document.getElementById(
+  "play-blackjack-button",
+)!;
+export const playKenoButton = document.getElementById("play-keno-button")!;
 
-export const pokiesDialog: HTMLDialogElement = document.querySelector("#pokies-dialog")!;
+export const pokiesDialog: HTMLDialogElement =
+  document.querySelector("#pokies-dialog")!;
 
 export const butcherButtonElement = document.getElementById("butcher")!;
 export const standButtonElement = document.getElementById("stand")!;
@@ -53,26 +74,36 @@ export const abattoirButtonElement = document.getElementById("abattoir")!;
 export const restaurantButtonElement = document.getElementById("restaurant")!;
 export const franchiseButtonElement = document.getElementById("franchise")!;
 
-export const butcherImageElement: HTMLImageElement = document.querySelector("#butcher > img")!;
-export const standImageElement: HTMLImageElement = document.querySelector("#stand > img")!;
-export const cartImageElement: HTMLImageElement = document.querySelector("#cart > img")!;
-export const truckImageElement: HTMLImageElement = document.querySelector("#truck > img")!;
-export const plantationImageElement: HTMLImageElement = document.querySelector("#plantation > img")!;
-export const factoryImageElement: HTMLImageElement = document.querySelector("#factory > img")!;
-export const abattoirImageElement: HTMLImageElement = document.querySelector("#abattoir > img")!;
-export const restaurantImageElement: HTMLImageElement = document.querySelector("#restaurant > img")!;
-export const franchiseImageElement: HTMLImageElement = document.querySelector("#franchise > img")!;
+export const butcherImageElement: HTMLImageElement =
+  document.querySelector("#butcher > img")!;
+export const standImageElement: HTMLImageElement =
+  document.querySelector("#stand > img")!;
+export const cartImageElement: HTMLImageElement =
+  document.querySelector("#cart > img")!;
+export const truckImageElement: HTMLImageElement =
+  document.querySelector("#truck > img")!;
+export const plantationImageElement: HTMLImageElement =
+  document.querySelector("#plantation > img")!;
+export const factoryImageElement: HTMLImageElement =
+  document.querySelector("#factory > img")!;
+export const abattoirImageElement: HTMLImageElement =
+  document.querySelector("#abattoir > img")!;
+export const restaurantImageElement: HTMLImageElement =
+  document.querySelector("#restaurant > img")!;
+export const franchiseImageElement: HTMLImageElement =
+  document.querySelector("#franchise > img")!;
 
-export const leaderboardContainerList: HTMLUListElement = document.querySelector("#leaderboard > ul")!;
+export const leaderboardContainerList: HTMLUListElement =
+  document.querySelector("#leaderboard > ul")!;
 
 export const leaderboardElementsGenerator = function* () {
   for (let i = 0; i < 15; i++) {
     const element = document.createElement("li");
     leaderboardContainerList.appendChild(element);
 
-    yield element
+    yield element;
   }
-}
+};
 
 export const leaderboardElements = [...leaderboardElementsGenerator()];
 
@@ -85,23 +116,23 @@ export const nicknameDialogFormElement: HTMLFormElement =
 export const nicknameDialogInputElement: HTMLInputElement =
   document.querySelector("#change-nickname > form > input")!;
 
+export const restoreDialogElement: HTMLDialogElement = document.querySelector(
+  "#restore-save-dialog",
+)!;
 
-export const restoreDialogElement: HTMLDialogElement =
-  document.querySelector("#restore-save-dialog")!;
-
-export const restoreDialogFormElement: HTMLFormElement =
-  document.querySelector("#restore-save-dialog > form")!;
+export const restoreDialogFormElement: HTMLFormElement = document.querySelector(
+  "#restore-save-dialog > form",
+)!;
 
 export const restoreDialogInputElement: HTMLInputElement =
   document.querySelector("#restore-save-dialog > form > input")!;
 
-
 // Notification elements
 export type NotificationElementSet = {
-  dialog: HTMLDialogElement,
-  form: HTMLFormElement,
-  title: HTMLElement | null,
-  body: HTMLParagraphElement,
+  dialog: HTMLDialogElement;
+  form: HTMLFormElement;
+  title: HTMLElement | null;
+  body: HTMLParagraphElement;
 };
 
 export const notificationProminentSet: NotificationElementSet = {
@@ -125,17 +156,26 @@ export const notificationBannerSet: NotificationElementSet = {
   body: document.querySelector("#notification-banner-body")!,
 };
 
-export const settingsDialogContainerElement = document.getElementById("settingsDialogContainer")!
-export const settingsDialogElement: HTMLDialogElement = document.querySelector("#settingsDialog")!
-export const settingsDialogFormElement: HTMLFormElement = document.querySelector("#settingsDialog > form")!
-export const settingsDialogCancelButton: HTMLInputElement = document.querySelector("#settingsDialogCancel")!
+export const settingsDialogContainerElement = document.getElementById(
+  "settingsDialogContainer",
+)!;
+export const settingsDialogElement: HTMLDialogElement =
+  document.querySelector("#settingsDialog")!;
+export const settingsDialogFormElement: HTMLFormElement =
+  document.querySelector("#settingsDialog > form")!;
+export const settingsDialogCancelButton: HTMLInputElement =
+  document.querySelector("#settingsDialogCancel")!;
 
-export const settingsNumberFormatOptionElement: HTMLSelectElement = document.querySelector("#numberFormat")!
+export const settingsNumberFormatOptionElement: HTMLSelectElement =
+  document.querySelector("#numberFormat")!;
 
-export const settingsNumberDigitsOptionElement: HTMLInputElement = document.querySelector("#numberDigits")!
-export const settingsNumberDigitsDisplayElement: HTMLSpanElement = document.querySelector("#numberDigitsDisplay")!
+export const settingsNumberDigitsOptionElement: HTMLInputElement =
+  document.querySelector("#numberDigits")!;
+export const settingsNumberDigitsDisplayElement: HTMLSpanElement =
+  document.querySelector("#numberDigitsDisplay")!;
 
-export const settingsShowTaxPopupOptionElement: HTMLInputElement = document.querySelector("#showTaxPopup")!
+export const settingsShowTaxPopupOptionElement: HTMLInputElement =
+  document.querySelector("#showTaxPopup")!;
 
 export const slotBoxes: [HTMLSpanElement, HTMLSpanElement, HTMLSpanElement] = [
   document.querySelector("#slot-1")!,
@@ -143,7 +183,16 @@ export const slotBoxes: [HTMLSpanElement, HTMLSpanElement, HTMLSpanElement] = [
   document.querySelector("#slot-3")!,
 ];
 
-export const spinSlotsButton: HTMLButtonElement = document.querySelector("#spin-slots")!;
+export const spinSlotsButton: HTMLButtonElement =
+  document.querySelector("#spin-slots")!;
 
-export const pokiesWagerDisplay = document.getElementById("pokies-wager-display")!;
-export const pokiesWagerSlider: HTMLInputElement = document.querySelector("#pokies-wager-slider")!;
+export const pokiesWagerDisplay = document.getElementById(
+  "pokies-wager-display",
+)!;
+export const pokiesWagerSlider: HTMLInputElement = document.querySelector(
+  "#pokies-wager-slider",
+)!;
+
+export const liquidationCancelButton = document.getElementById(
+  "#liquidation-cancel ",
+)!;

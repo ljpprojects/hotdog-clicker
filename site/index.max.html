@@ -35,7 +35,7 @@ AI could never create this slop...
         <link rel="canonical" href="https://dev.hdc.ljpprojects.org/" />
         <link rel="stylesheet" href="/dist/index-min.css" />
     </head>
-    <body>
+    <body data-veil>
         <nav>
             <button
                 title="Main Menu"
@@ -654,7 +654,7 @@ AI could never create this slop...
             </form>
         </dialog>
 
-        <dialog id="keno-menu" class="menu" data-alert-sound open>
+        <dialog id="keno-menu" class="menu" data-alert-sound>
             <form method="dialog">
                 <b>LOTTERY BINGOOOOO!!!!!</b>
                 <small
@@ -802,7 +802,7 @@ AI could never create this slop...
                     />
                 </div>
                 <button
-                    id="keno-deal"
+                    id="keno-start"
                     onclick="return false;"
                     data-button
                     data-click-sound
@@ -928,6 +928,15 @@ AI could never create this slop...
                     />
                 </button>
                 <button
+                    title="Ke- I mean Lottery Bingo! haha..."
+                    id="play-keno-button"
+                    data-click-sound
+                    data-hover-sound
+                    aria-label="Open the lottery bingo menu"
+                >
+                    <img src="/assets/keno.svg" width="100" draggable="false" />
+                </button>
+                <button
                     title="Complete Transition"
                     id="complete-transition-button"
                     class="hide"
@@ -945,6 +954,32 @@ AI could never create this slop...
                     data-hover-sound
                     data-button
                 />
+            </form>
+        </dialog>
+
+        <img
+            src="/assets/notneck.svg"
+            draggable="false"
+            id="cancel-bait-and-switch"
+        />
+
+        <dialog id="liquidation" open>
+            <form>
+                <div class="splvert">
+                    <div>
+                        <img src="/assets/notneck.svg" draggable="false" />
+                    </div>
+                    <div>
+                        <button id="liquidation-begin">
+                            <img
+                                src="/assets/dagger-red.svg"
+                                draggable="false"
+                            />
+                            Liquidate
+                        </button>
+                        <button id="liquidation-cancel">nvm</button>
+                    </div>
+                </div>
             </form>
         </dialog>
 
