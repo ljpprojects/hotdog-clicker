@@ -957,29 +957,26 @@ AI could never create this slop...
             </form>
         </dialog>
 
-        <img
-            src="/assets/notneck.svg"
-            draggable="false"
-            id="cancel-bait-and-switch"
-        />
+        <img id="custom-cursor" src="/assets/dagger-red.svg" />
 
         <dialog id="liquidation" open>
             <form>
-                <div class="splvert">
-                    <div>
-                        <img src="/assets/notneck.svg" draggable="false" />
-                    </div>
-                    <div>
-                        <button id="liquidation-begin">
-                            <img
-                                src="/assets/dagger-red.svg"
-                                draggable="false"
-                            />
-                            Liquidate
-                        </button>
-                        <button id="liquidation-cancel">nvm</button>
-                    </div>
-                </div>
+                <img
+                    id="liquidation-target-1"
+                    class="liquidation-target"
+                    src="/assets/butcher-b.svg"
+                />
+                <img
+                    id="liquidation-target-2"
+                    class="liquidation-target"
+                    src="/assets/butcher-b.svg"
+                />
+                <img
+                    id="liquidation-target-3"
+                    class="liquidation-target"
+                    src="/assets/butcher-b.svg"
+                />
+                <b><span id="liquidation-remaining">some</span> remaining</b>
             </form>
         </dialog>
 

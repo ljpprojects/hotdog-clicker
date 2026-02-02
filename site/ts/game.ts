@@ -50,6 +50,7 @@ import {
   kenoMenuElement,
 } from "./gambling/elements";
 import { paytableFill } from "./gambling/Lottery Bingo - a game based on the game referred to as keno in [[COUNTRY WITH GOOD TRADEMARK LAWS]] or traditionally 白鸽票 in China";
+import { init } from "./liquidate";
 import { settings } from "./settings/index";
 import "./sound";
 import "./ui";
@@ -776,4 +777,7 @@ document.addEventListener("keydown", (ev) => {
   }
 });
 
-paytableFill();
+document.addEventListener("DOMContentLoaded", async () => {
+  paytableFill();
+  init();
+});

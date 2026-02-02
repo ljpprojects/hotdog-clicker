@@ -193,6 +193,15 @@ export const pokiesWagerSlider: HTMLInputElement = document.querySelector(
   "#pokies-wager-slider",
 )!;
 
-export const liquidationCancelButton = document.getElementById(
-  "#liquidation-cancel ",
+export const liquidationTargets = [
+  document.getElementById("liquidation-target-1")!,
+  document.getElementById("liquidation-target-2")!,
+  document.getElementById("liquidation-target-3")!,
+];
+
+export const liquidationRemainingElement = document.getElementById(
+  "liquidation-remaining",
 )!;
+
+export const customCursor: HTMLImageElement =
+  document.querySelector("#custom-cursor")!;

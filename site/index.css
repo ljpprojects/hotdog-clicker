@@ -740,8 +740,7 @@ tbody > tr:nth-of-type(even) > th {
     border: 2px solid var(--bg-col);
 }
 
-#liquidation,
-#liquidation > form {
+#liquidation {
     position: fixed;
     top: 0;
     left: 0;
@@ -750,48 +749,29 @@ tbody > tr:nth-of-type(even) > th {
     padding: 0;
     margin: 0;
     background: none;
-}
-
-#liquidation > form > .splvert {
-    width: 100vw;
-    height: 100vh;
-}
-
-#liquidation > form > .splvert > div {
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 50%;
 }
 
-#liquidation > form > .splvert > div:first-child > img {
-    width: 40vw;
+#liquidation form > b {
+    color: var(--dn-col) !important;
 }
 
-#liquidation > form > .splvert > div:last-child {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--dn-col);
-    font-size: 1.6em;
-
-    padding: 0 0 10vw 10vw;
-}
-
-#liquidation > form > .splvert > div:last-child > button {
-    display: flex;
-    justify-content: space-between;
-    width: 15vw;
-    align-items: center;
-    color: var(--dn-col);
-    font-size: 1.6em;
-}
-
-#liquidation > form > div > div > button > img {
-    aspect-ratio: 1/1;
-    width: 3em;
-}
-
-#liquidation-cancel {
+.liquidation-target {
+    position: absolute;
+    left: 40vw;
+    top: 40vh;
     color: var(--en-col) !important;
+    transition-duration: 0.5ms;
+    transition-timing-function: linear;
+    width: 5vw;
+}
+
+#custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 6;
+    width: 10vw;
+    filter: hue-rotate(180deg);
 }

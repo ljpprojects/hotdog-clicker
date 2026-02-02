@@ -7,113 +7,213 @@ _  _                _      _         _
           |_|
 */
 
-import { equal } from "./utils";
-
-// Make the cancel button run away but we bait and swictht eh player by disabling and making transparent the original button while creating a cloen at the mirror position which can freely run away and to stop them from clicking it delete it if the curve returns > 90
+import { GeneralBinding } from "./Binding";
+import {
+  customCursor,
+  liquidationRemainingElement,
+  liquidationTargets,
+} from "./elements";
+import { wait } from "./utils";
 
 /**
- * Returns a distance to retreat relative to the distance of the segment of the line passing between the points which the nearest edge of the button and cursor are, within the bounds of the viewport, based on how the given distance.
+ * Returns a distance to retreat relative to the length of the viewport's diagonal.
  *
- * @param d The distance between the closest edge of the button and the cursor relative to the distance of the segment of the line passing between those points within the bounds of the viewport.
+ * @param d The distance between the cursor and some other point, relative to the length of the viewport diagonal.
  *
  * @returns The relative distance to retreat.
  */
-const runDistanceCurve = (d: number) => (100 - 11 * Math.sqrt(100 * d)) / 100;
+const runSpeedCurve = (d: number) => 0.5 - d;
 
 export type Point = [number, number];
 
-const slope = (p1: Point, p2: Point) => (p2[1] - p1[1]) / (p2[0] - p1[0]);
+// The light of the new day will help
 
-/**
- * Compute either the vw-intercept (the point at which the line meets with the rightmost boundary of the viewport), the 0h-intercept (the point at which the line and the uppermost bound of the viewport meet) or the vh-intercept (the point at which the line and lowermost bound of the viewport meet).
- *
- * If the returned point isnt the vw-intercept (e.g y == 0 || y == vh), it is the closest point within the bounds of the viewport to it.
- * @param p1 The first point
- * @param p2 The second point
- */
-const computeVwIntercept = (p1: Point, p2: Point) => {
-  // If slope won't work, don't compute it; return vh-intercept
-  if (p1[0] === p2[0]) {
-    return [p1[0], window.innerHeight];
-  }
+const distance = (p1: Point, p2: Point): number =>
+  Math.hypot(Math.abs(p1[0] - p2[0]), Math.abs(p1[1] - p2[1])); // nifty!
 
-  const m = slope(p1, p2);
+let VIEWPORT_DIAGONAL = distance(
+  [0, 0],
+  [window.innerWidth, window.innerHeight],
+);
 
-  // 0h-intercept
-  let i1: Point | null = null;
-  if (m !== 0) {
-    // Equivalent to p1[1] !== p2[1]
-    i1 = [p1[0] - p1[1] / m, 0];
-  }
+window.addEventListener("resize", () => {
+  VIEWPORT_DIAGONAL = distance([0, 0], [window.innerWidth, window.innerHeight]);
+});
 
-  // vh-intercept
-  let i2: Point | null = null;
-  if (m !== 0) {
-    i2 = [(window.innerHeight - p1[1]) / m + p1[0], window.innerHeight];
-  }
-
-  // vw-intercept
-  let i2b: Point = [window.innerWidth, m * (window.innerWidth - p1[0]) + p1[1]];
-
-  if (i1 == null && i2 == null) {
-    // We are only able to return this, but it is guaranteed to be valid
-    return i2b;
-  }
-
-  if (i2b[1] < 0) {
-    // Return the 0h-intercept as it will be closest
-    return i2;
-  }
-
-  if (i2b[1] > window.innerHeight) {
-    // Return the vh-intercept as it will be closest
-    return i2;
-  }
-
-  throw `This isnt possible? p1 = ${p1}, p2 = ${p2}, slope = ${slope}`;
+export type Vector = {
+  magnitude: number;
+  directionRadians: number;
 };
 
 /**
- * Compute either the vh-intercept (the point at which the line meets with the lowermost boundary of the viewport), or the 0w-intercept.
- *
- * If the returned point isnt the vh-intercept (i.e. y != vh), it is the closest point within the bounds of the viewport to it.
- * @param p1 The first point
- * @param p2 The second point
+ * Equivalent to vector component notation.
+ * @param xComponent The x component of the vector
+ * @param yComponent The y component
+ * @returns A position vector whose magnitude and direction are calculated from the two given components (magnitude will be relative to the length of the viewport's diagonal)
  */
-const computeVhIntercept = (p1: Point, p2: Point) => {
-  // If slope won't work, don't compute it; return vh-intercept
-  if (p1[0] === p2[0]) {
-    return [p1[0], window.innerHeight];
-  }
+const componentVector = (xComponent: number, yComponent: number): Vector => ({
+  magnitude: distance([0, 0], [xComponent, yComponent]) / VIEWPORT_DIAGONAL,
+  directionRadians: Math.atan2(yComponent, xComponent),
+});
 
-  const m = slope(p1, p2);
+const velocityVector = (speed: number, directionRadians: number) => ({
+  magnitude: speed,
+  directionRadians: directionRadians,
+});
 
-  // 0w-intercept
-  let i1b: Point = [0, m * -p1[0] + p1[1]];
+const findXComponent = (v: Vector) =>
+  v.magnitude * Math.cos(v.directionRadians);
 
-  // vh-intercept
-  let i2: Point | null = null;
-  if (m !== 0) {
-    i2 = [(window.innerHeight - p1[1]) / m + p1[0], window.innerHeight];
-  }
+const findYComponent = (v: Vector) =>
+  v.magnitude * Math.sin(v.directionRadians);
 
-  if (i2 == null) {
-    // We are only able to return this, but it is guaranteed to be valid
-    return i1b;
-  }
+// We need to make the cancel button run away.
+// A vector with the origin as the cursor and the tail at the centre of the button will be used to calculate (using the curve) how fast the button should run away
 
-  if (i2[0] > window.innerWidth) {
-    return i1b;
-  }
+// (assuming v is the final velocity, u is the starting velocity, a is the
+// acceleration vector, and d is the displacement vector)
+//
+// We need to treat the x and y axis separately (vx is the horizontal speed, vy
+// the vertical speed)
+//
+// vx = v cos θ
+// vy = v sin θ
+//
+// (sx = x displacement, sy = y displacement, ux = x speed, uy = y speed)
+//
+// 1. The acceleration is 0 (equilibrium)
+//
+// sx = ux · t
+// sy = uy · t
+//
+// And therefore we can make a displacement vector out of this (x = start x, y = start y)
+//
+// v⃗ =〈sx - x, sy - y〉
 
-  // if the vw intercept point and i2 are the same, return i1b so we can still
-  // just get the difference with no manual handling
-  if (equal(computeVwIntercept(p1, p2), i2)) {
-    return i1b;
-  }
+const buttonCentre = (target: HTMLElement): Point => {
+  let boundingRect = target.getBoundingClientRect();
 
-  return i2;
+  const xCentre = boundingRect.left + boundingRect.width / 2;
+  const yCentre = boundingRect.top + boundingRect.height / 2;
+
+  return [xCentre, yCentre];
 };
 
-// god now we can actually
-// it is 01:00 i am sick of ts
+/**
+ *
+ * @param position The position vector from the cursor to the button's centre
+ */
+const moveButton = (
+  position: Vector,
+  t: number,
+  target: HTMLElement,
+  angleOffsetRadians: number = 0,
+) => {
+  // Now we can get a velocity vector using the curve
+  let velocity = velocityVector(
+    runSpeedCurve(position.magnitude) * VIEWPORT_DIAGONAL, // px/s
+    position.directionRadians * Math.random() * (1 + Math.random()) +
+      angleOffsetRadians,
+  );
+
+  const vx = findXComponent(velocity);
+  const vy = findYComponent(velocity);
+
+  const a = -VIEWPORT_DIAGONAL; // px/s^2
+
+  // Using the second kinematic equation, find the displacement for each axis
+  const sx = vx * t + (1 / 2) * a * Math.pow(t, 2);
+  const sy = vy * t + (1 / 2) * a * Math.pow(t, 2);
+
+  // Get current button left and right (in px)
+  const tx = Number(target.style.left.slice(0, -2));
+  const ty = Number(target.style.top.slice(0, -2));
+
+  target.style.left = `${tx + sx}px`;
+  target.style.top = `${ty + sy}px`;
+};
+
+let hueShift = 180;
+
+export const liquidationRemaining = new GeneralBinding<number, number>({
+  backing: 100,
+  setfn(to, _dispatcher?) {
+    this.value = to;
+
+    liquidationRemainingElement.textContent = `${to}`;
+  },
+  getfn(_dispatcher?) {
+    return this.value!;
+  },
+});
+
+for (const [i, liquidationTarget] of liquidationTargets.entries()) {
+  liquidationTarget.onmouseenter = async (e) => {
+    e.preventDefault();
+
+    const old = liquidationTarget.onmouseenter;
+    liquidationTarget.onmouseenter = null;
+
+    // 1 down
+
+    for (let i = 0; i <= 10; i++) {
+      liquidationTarget.style.opacity = `${100 - 10 * i}%`;
+      await wait(100);
+    }
+
+    hueShift = (hueShift % 360) + 15;
+    customCursor.style.filter = `hue-rotate(${hueShift}deg)`;
+
+    liquidationRemaining.value--;
+
+    if (liquidationRemaining.value < liquidationTargets.length) {
+      liquidationTarget.remove();
+
+      return;
+    }
+
+    await wait(250);
+
+    liquidationTarget.style.opacity = `100%`;
+
+    liquidationTarget.onmouseenter = old;
+  };
+}
+
+let mouse: Point = [0, 0];
+
+export const init = () => {
+  liquidationRemaining.value = 5;
+
+  document.onmousemove = (e) => {
+    customCursor.style.left = `${e.clientX - window.innerWidth / 20}px`;
+    customCursor.style.top = `${e.clientY - window.innerWidth / 20}px`;
+
+    mouse = [e.clientX, e.clientY];
+  };
+};
+
+let lastTime = performance.now();
+requestAnimationFrame(function kill(now) {
+  const buttonCentres = liquidationTargets.map(buttonCentre);
+  const positions = buttonCentres.map(([x, y]) =>
+    componentVector(x - mouse[0], y - mouse[1]),
+  );
+
+  const closest = positions.reduce(
+    (min, c) => (c.magnitude < min.magnitude ? c : min),
+    positions[0],
+  );
+
+  customCursor.style.transform = `rotate(${closest.directionRadians + (Math.PI * 5) / 4}rad)`;
+
+  const delta = now - lastTime;
+
+  lastTime = now;
+
+  for (const [i, target] of liquidationTargets.entries()) {
+    moveButton(positions[i], Math.min(1 / 60, delta / 1000), target);
+  }
+
+  requestAnimationFrame(kill);
+});
