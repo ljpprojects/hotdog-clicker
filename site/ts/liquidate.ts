@@ -81,10 +81,10 @@ const findYComponent = (v: Vector) =>
 //
 // (sx = x displacement, sy = y displacement, ux = x speed, uy = y speed)
 //
-// 1. The acceleration is 0 (equilibrium)
+// sx = ux · t + 1/2 · a · t^2
+// sy = uy · t + 1/2 · a · t^2
 //
-// sx = ux · t
-// sy = uy · t
+// (combine deceleration with clamped delta-times)
 //
 // And therefore we can make a displacement vector out of this (x = start x, y = start y)
 //
@@ -113,7 +113,7 @@ const moveButton = (
   let velocity = velocityVector(
     runSpeedCurve(position.magnitude) * VIEWPORT_DIAGONAL, // px/s
     position.directionRadians * Math.random() * (1 + Math.random()) +
-      angleOffsetRadians,
+    angleOffsetRadians,
   );
 
   const vx = findXComponent(velocity);
