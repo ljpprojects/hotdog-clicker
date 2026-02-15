@@ -80,27 +80,27 @@ body[data-genocide] dialog {
 }
 
 body[data-genocide="1"],
-body[data-genocide="1"] dialog > form * {
+body[data-genocide="1"] dialog>form * {
     filter: brightness(90%) saturate(90%);
 }
 
 body[data-genocide="2"],
-body[data-genocide="2"] dialog > form * {
+body[data-genocide="2"] dialog>form * {
     filter: brightness(70%) saturate(70%);
 }
 
 body[data-genocide="3"],
-body[data-genocide="3"] dialog > form * {
+body[data-genocide="3"] dialog>form * {
     filter: brightness(50%) saturate(50%);
 }
 
 body[data-genocide="4"],
-body[data-genocide="4"] dialog > form * {
+body[data-genocide="4"] dialog>form * {
     filter: brightness(30%) saturate(30%);
 }
 
 body[data-genocide="5"],
-body[data-genocide="5"] dialog > form * {
+body[data-genocide="5"] dialog>form * {
     filter: brightness(0) saturate(0);
 }
 
@@ -109,11 +109,11 @@ No, you can't differentiate colours
 that is intended
 */
 
-body[data-veil] > #blackjack-menu {
+body[data-veil]>#blackjack-menu {
     z-index: 6;
 }
 
-body[data-veil] > #liquidation {
+body[data-veil]>#liquidation {
     z-index: 6;
 }
 
@@ -205,7 +205,7 @@ main {
     align-items: center;
 }
 
-#stat > button > img {
+#stat>button>img {
     height: 20vmin;
 }
 
@@ -267,7 +267,7 @@ dialog:not([open]) {
     padding: 0;
 }
 
-#buyables-list > li {
+#buyables-list>li {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: none;
@@ -278,18 +278,18 @@ dialog:not([open]) {
     padding: 0;
 }
 
-#buyables-list > li > img {
+#buyables-list>li>img {
     height: 7.5vmin;
 }
 
-#buyables-list > li > div {
+#buyables-list>li>div {
     display: flex;
     flex-direction: column;
     justify-items: center;
     align-items: center;
 }
 
-#buyables-list > li b {
+#buyables-list>li b {
     font-size: 1.5em;
 }
 
@@ -303,15 +303,15 @@ dialog:not([open]) {
     font-size: 2em;
 }
 
-#leaderboard > ul {
+#leaderboard>ul {
     list-style-type: decimal-leading-zero;
 }
 
-#leaderboard > ul > li {
+#leaderboard>ul>li {
     font-size: 1.5em;
 }
 
-#leaderboard > ul > li::marker {
+#leaderboard>ul>li::marker {
     font-weight: bold;
 }
 
@@ -345,11 +345,11 @@ dialog:not([open]) {
     font-size: 2em;
 }
 
-#notification-prominent > form {
+#notification-prominent>form {
     padding: 0 10vmin;
 }
 
-#notification-prominent > form > input[type="submit"] {
+#notification-prominent>form>input[type="submit"] {
     border: none;
     width: 20vmin;
     font-family: "Tiny5", sans-serif;
@@ -386,7 +386,7 @@ dialog:not([open]) {
     font-size: 2em;
 }
 
-#notification-popup > form > input[type="submit"] {
+#notification-popup>form>input[type="submit"] {
     border: none;
     width: 10vmin;
     font-family: "Tiny5", sans-serif;
@@ -422,7 +422,7 @@ dialog:not([open]) {
     font-size: 2em;
 }
 
-#notification-banner > form > input[type="submit"] {
+#notification-banner>form>input[type="submit"] {
     border: none;
     width: 20vmin;
     font-family: "Tiny5", sans-serif;
@@ -448,7 +448,7 @@ dialog:not([open]) {
     color: var(--fg-col);
 }
 
-#main-menu > form {
+#main-menu>form {
     display: grid;
     justify-content: center;
     justify-items: start;
@@ -466,7 +466,7 @@ dialog:not([open]) {
     font-size: 2em;
 }
 
-#main-menu > form > input[type="submit"] {
+#main-menu>form>input[type="submit"] {
     border: none;
     width: 20vmin;
     font-family: "Tiny5", sans-serif;
@@ -502,7 +502,7 @@ dialog:not([open]) {
     overflow: auto;
 }
 
-.menu > form {
+.menu>form {
     display: grid;
     justify-content: center;
     justify-items: start;
@@ -513,8 +513,8 @@ dialog:not([open]) {
     color: var(--fg-col);
 }
 
-#change-nickname > form > p,
-#restore-save-dialog > form > p {
+#change-nickname>form>p,
+#restore-save-dialog>form>p {
     font-size: 2em;
 }
 
@@ -522,27 +522,27 @@ dialog:not([open]) {
     padding: 5vmin;
 }
 
-#gambling-dialog > form > p,
-#settings-menu > form > p {
+#gambling-dialog>form>p,
+#settings-menu>form>p {
     font-size: 1.2em;
 }
 
-#gambling-dialog > form > b {
+#gambling-dialog>form>b {
     font-size: 2em;
 }
 
-#change-nickname > form > input[type="text"],
-#restore-save-dialog > form > input[type="text"] {
+#change-nickname>form>input[type="text"],
+#restore-save-dialog>form>input[type="text"] {
     width: 20vmin;
     height: 2.5vmin;
     border: none;
     border-radius: 0.5vmin;
 }
 
-.menu > form > input[type="submit"],
-.menu > form > [data-button],
-#gambling-dialog > form > [data-button],
-#settings-menu > form > [data-button] {
+.menu>form>input[type="submit"],
+.menu>form>[data-button],
+#gambling-dialog>form>[data-button],
+#settings-menu>form>[data-button] {
     border: none;
     width: 10vmin;
     font-family: "Tiny5", sans-serif;
@@ -586,13 +586,13 @@ dialog:not([open]) {
     padding: 10vmin;
 }
 
-#settings-menu > form > section {
+#settings-menu>form>section {
     display: flex;
     flex-direction: column;
     gap: 0;
 }
 
-#settings-menu > form > section > div {
+#settings-menu>form>section>div {
     display: flex;
     justify-content: space-between;
     width: 30vw;
@@ -602,20 +602,20 @@ dialog:not([open]) {
     padding: 5vmin;
 }
 
-#blackjack-menu > form > div {
+#blackjack-menu>form>div {
     display: flex;
     width: 40vw;
     justify-content: center;
 }
 
-#blackjack-menu > form > section {
+#blackjack-menu>form>section {
     display: grid;
     width: 40vw;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
 }
 
-#blackjack-menu > form > section > button {
+#blackjack-menu>form>section>button {
     font-size: 2em;
     font-weight: bold;
 }
@@ -635,7 +635,7 @@ dialog:not([open]) {
     font-size: 1.5em;
 }
 
-#bj-split-hand-sums > p {
+#bj-split-hand-sums>p {
     font-size: 1.3em;
 }
 
@@ -725,19 +725,23 @@ td:last-of-type {
     text-align: right;
 }
 
-tbody > tr {
+tbody>tr {
     background-color: var(--bg-col);
 }
 
-tbody > tr:nth-of-type(even) {
+tbody>tr:nth-of-type(even) {
     background-color: var(--fg-col);
     color: var(--bg-col);
     border: 2px solid var(--bg-col);
 }
 
-tbody > tr:nth-of-type(even) > td,
-tbody > tr:nth-of-type(even) > th {
+tbody>tr:nth-of-type(even)>td,
+tbody>tr:nth-of-type(even)>th {
     border: 2px solid var(--bg-col);
+}
+
+#liquidation:not([open]) {
+    z-index: -1;
 }
 
 #liquidation {
@@ -753,7 +757,7 @@ tbody > tr:nth-of-type(even) > th {
     justify-content: center;
 }
 
-#liquidation form > b {
+#liquidation form>b {
     color: var(--dn-col) !important;
 }
 
@@ -771,7 +775,11 @@ tbody > tr:nth-of-type(even) > th {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 6;
+    z-index: -1;
     width: 10vw;
     filter: hue-rotate(180deg);
+}
+
+body:has(#liquidation[open]) #custom-cursor {
+    z-index: 6;
 }
