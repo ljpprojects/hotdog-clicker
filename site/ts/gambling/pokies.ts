@@ -26,7 +26,6 @@ import { closeMainMenu } from "../ui";
 export const GAMBLING_NW_THRESHOLD = 250;
 
 export type SlotSymbol =
-  | "❌"
   | "🍇"
   | "🍋"
   | "🍒"
@@ -43,16 +42,7 @@ export type SlotSymbolCategory = "none" | "low" | "medium" | "𝟳";
 export type SlotWinKind = "none" | "2-split" | "2-cons" | "flush" | "3-kind";
 
 export const symbols: SlotSymbol[] = [
-  /****** LOSING SYMBOLS (6/23 on reel) ******/
-
-  "❌",
-  "❌",
-  "❌",
-  "❌",
-  "❌",
-  "❌",
-
-  /****** LOW-PAYOUT SYMBOLS (9/23 on reel) ******/
+  /****** LOW-PAYOUT SYMBOLS (9/16 on reel) ******/
 
   "🍇",
   "🍇",
@@ -64,7 +54,7 @@ export const symbols: SlotSymbol[] = [
   "🍉",
   "🥝",
 
-  /****** MEDIUM-PAYOUT SYMBOLS (6/23 on reel) ******/
+  /****** MEDIUM-PAYOUT SYMBOLS (6/16 on reel) ******/
 
   "♥️",
   "♥️",
@@ -79,8 +69,6 @@ export const symbols: SlotSymbol[] = [
 ];
 
 export const symbolCategoryTable: Record<SlotSymbol, SlotSymbolCategory> = {
-  "❌": "none",
-
   "🍇": "low",
   "🍋": "low",
   "🍒": "low",
@@ -141,7 +129,7 @@ export const payout = (
   symbols: [SlotSymbol, SlotSymbol, SlotSymbol],
   delayMs: number,
 ): number => {
-  if (symbols.every((s, _, a) => s !== "❌" && s === a[0])) {
+  if (symbols.every((s, _, a) => s === a[0])) {
     // 3-of-a-kind
     const category = symbolCategoryTable[symbols[0]];
     const multiplier = payoutTable["3-kind"][category];
@@ -181,9 +169,7 @@ export const payout = (
     );
 
     return winnings;
-  } else if (
-    symbols.some((s, i, a) => s !== "❌" && i !== 0 && s === a[i - 1])
-  ) {
+  } else if (symbols.some((s, i, a) => i !== 0 && s === a[i - 1])) {
     // 2-of-a-kind consecutive
     const category =
       symbolCategoryTable[
@@ -203,7 +189,7 @@ export const payout = (
     );
 
     return winnings;
-  } else if (symbols[0] !== "❌" && symbols[0] === symbols[2]) {
+  } else if (symbols[0] === symbols[2]) {
     // 2-of-a-kind consecutive
     const category = symbolCategoryTable[symbols[0]];
     const multiplier = payoutTable["2-split"][category];

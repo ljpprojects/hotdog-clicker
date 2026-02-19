@@ -1,6 +1,6 @@
-import { hdnw } from "./game";
+import { ImmutableBinding } from "./Binding";
 import { wealthinessElement } from "./elements";
-import { GeneralBinding, ImmutableBinding } from "./Binding";
+import { hdnw } from "./game";
 
 type WealthinessLevel =
   | "broke"
@@ -11,7 +11,9 @@ type WealthinessLevel =
   | "rich"
   | "no-life"
   | "touch-grass"
-  | "big-shot";
+  | "big-shot"
+  | "salesman"
+  | "pissing-me-off";
 
 const getWealthinessLevel = (): WealthinessLevel => {
   const determiners: Record<WealthinessLevel, (w: number) => boolean> = {
@@ -23,7 +25,9 @@ const getWealthinessLevel = (): WealthinessLevel => {
     rich: (w) => w > 1e9 && w <= 1e10,
     "no-life": (w) => w > 1e10 && w <= 1e12,
     "touch-grass": (w) => w > 1e12 && w <= 1e30,
-    "big-shot": (w) => w > 1e30,
+    "big-shot": (w) => w > 1e30 && w <= 1e50,
+    salesman: (w) => w > 1e50 && w <= 1e70,
+    "pissing-me-off": (w) => w > 1e70,
   };
 
   for (const [k, v] of Object.entries(determiners)) {
@@ -56,6 +60,8 @@ export const updateWealthinessDisplay = () => {
     "no-life": "You have no life",
     "touch-grass": "Go touch grass",
     "big-shot": "[[BIG SHOT]]",
+    salesman: "[BestSalesman1997]",
+    "pissing-me-off": "This wealth is Pissing me off...",
   };
 
   wealthinessElement.textContent = wealthinessLevelFmtMap[wealthinessLevel];
