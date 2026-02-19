@@ -10,7 +10,8 @@ type WealthinessLevel =
   | "well-off"
   | "rich"
   | "no-life"
-  | "touch-grass";
+  | "touch-grass"
+  | "big-shot";
 
 const getWealthinessLevel = (): WealthinessLevel => {
   const determiners: Record<WealthinessLevel, (w: number) => boolean> = {
@@ -21,7 +22,8 @@ const getWealthinessLevel = (): WealthinessLevel => {
     "well-off": (w) => w > 1e7 && w <= 1e9,
     rich: (w) => w > 1e9 && w <= 1e10,
     "no-life": (w) => w > 1e10 && w <= 1e12,
-    "touch-grass": (w) => w > 1e12,
+    "touch-grass": (w) => w > 1e12 && w <= 1e30,
+    "big-shot": (w) => w > 1e30,
   };
 
   for (const [k, v] of Object.entries(determiners)) {
@@ -53,6 +55,7 @@ export const updateWealthinessDisplay = () => {
     rich: "Rich",
     "no-life": "You have no life",
     "touch-grass": "Go touch grass",
+    "big-shot": "[[BIG SHOT]]",
   };
 
   wealthinessElement.textContent = wealthinessLevelFmtMap[wealthinessLevel];
