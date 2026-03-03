@@ -42,7 +42,7 @@ export type SlotSymbolCategory = "none" | "low" | "medium" | "𝟳";
 export type SlotWinKind = "none" | "2-split" | "2-cons" | "flush" | "3-kind";
 
 export const symbols: SlotSymbol[] = [
-  /****** LOW-PAYOUT SYMBOLS (9/16 on reel) ******/
+  /****** LOW-PAYOUT SYMBOLS (9/17 on reel) ******/
 
   "🍇",
   "🍇",
@@ -54,7 +54,7 @@ export const symbols: SlotSymbol[] = [
   "🍉",
   "🥝",
 
-  /****** MEDIUM-PAYOUT SYMBOLS (6/16 on reel) ******/
+  /****** MEDIUM-PAYOUT SYMBOLS (6/17 on reel) ******/
 
   "♥️",
   "♥️",
@@ -63,8 +63,9 @@ export const symbols: SlotSymbol[] = [
   "♣️",
   "♣️",
 
-  /****** HIGH-PAYOUT SYMBOLS (1 per reel) ******/
+  /****** HIGH-PAYOUT SYMBOLS (2 per reel) ******/
 
+  "𝟳",
   "𝟳",
 ];
 
@@ -173,7 +174,7 @@ export const payout = (
     // 2-of-a-kind consecutive
     const category =
       symbolCategoryTable[
-        symbols.find((s, i, a) => i !== a.length - 1 && s === a[i + 1])!
+      symbols.find((s, i, a) => i !== a.length - 1 && s === a[i + 1])!
       ];
     const multiplier = payoutTable["2-cons"][category];
     const winnings = wager * multiplier;
