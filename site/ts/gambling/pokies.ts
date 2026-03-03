@@ -67,6 +67,7 @@ export const symbols: SlotSymbol[] = [
 
   "𝟳",
   "𝟳",
+  "𝟳",
 ];
 
 export const symbolCategoryTable: Record<SlotSymbol, SlotSymbolCategory> = {
