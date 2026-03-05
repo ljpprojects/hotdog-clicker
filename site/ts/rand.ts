@@ -1,7 +1,7 @@
 import { grv } from "./game";
 
 export const randomInt16 = (): number => {
-  if (crypto.getRandomValues != grv) {
+  if (crypto.getRandomValues !== grv) {
     throw "dont cheat";
   }
 
@@ -12,7 +12,7 @@ export const randomInt16 = (): number => {
 };
 
 export const randomInt32 = (): number => {
-  if (crypto.getRandomValues != grv) {
+  if (crypto.getRandomValues !== grv) {
     throw "dont cheat";
   }
 
@@ -23,7 +23,7 @@ export const randomInt32 = (): number => {
 };
 
 export const randomUint16 = (): number => {
-  if (crypto.getRandomValues != grv) {
+  if (crypto.getRandomValues !== grv) {
     throw "dont cheat";
   }
 
@@ -34,7 +34,7 @@ export const randomUint16 = (): number => {
 };
 
 export const randomUint32 = (): number => {
-  if (crypto.getRandomValues != grv) {
+  if (crypto.getRandomValues !== grv) {
     throw "dont cheat";
   }
 
