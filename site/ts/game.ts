@@ -58,6 +58,8 @@ import { checkBuyables } from "./ui";
 import { wait } from "./utils";
 import { updateWealthinessDisplay } from "./wealth";
 
+export const grv = crypto.getRandomValues;
+
 export const formatter = new SharedMutable(
   new Intl.NumberFormat(navigator.language, {
     minimumFractionDigits: 2,

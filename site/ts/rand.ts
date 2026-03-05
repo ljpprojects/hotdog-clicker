@@ -1,4 +1,10 @@
+import { grv } from "./game";
+
 export const randomInt16 = (): number => {
+  if (crypto.getRandomValues != grv) {
+    throw "dont cheat";
+  }
+
   const randomBytes = new Int16Array(1);
   crypto.getRandomValues(randomBytes);
 
@@ -6,6 +12,10 @@ export const randomInt16 = (): number => {
 };
 
 export const randomInt32 = (): number => {
+  if (crypto.getRandomValues != grv) {
+    throw "dont cheat";
+  }
+
   const randomBytes = new Int32Array(1);
   crypto.getRandomValues(randomBytes);
 
@@ -13,6 +23,10 @@ export const randomInt32 = (): number => {
 };
 
 export const randomUint16 = (): number => {
+  if (crypto.getRandomValues != grv) {
+    throw "dont cheat";
+  }
+
   const randomBytes = new Uint16Array(1);
   crypto.getRandomValues(randomBytes);
 
@@ -20,6 +34,10 @@ export const randomUint16 = (): number => {
 };
 
 export const randomUint32 = (): number => {
+  if (crypto.getRandomValues != grv) {
+    throw "dont cheat";
+  }
+
   const randomBytes = new Uint32Array(1);
   crypto.getRandomValues(randomBytes);
 
