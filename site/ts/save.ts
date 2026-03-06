@@ -1,41 +1,39 @@
 import {
-  hds,
-  hdps,
-  butchersOwned,
-  standsOwned,
-  cartsOwned,
-  trucksOwned,
-  plantationsOwned,
-  factoriesOwned,
+  abattoirPrice,
   abattoirsOwned,
   butcherPrice,
-  standPrice,
+  butchersOwned,
   cartPrice,
-  truckPrice,
-  plantationPrice,
+  cartsOwned,
+  factoriesOwned, // BMOS_NULL_FLAG
   factoryPrice,
-  abattoirPrice,
-  restaurantsOwned,
-  hdnw,
-  franchisesOwned,
-  restaurantPrice,
   franchisePrice,
+  franchisesOwned,
+  hdnw,
+  hdps,
+  hds,
+  plantationPrice,
+  plantationsOwned,
+  restaurantPrice,
+  restaurantsOwned,
+  standPrice,
+  standsOwned,
+  truckPrice,
+  trucksOwned,
 } from "./game";
 
 import {
-  makeWorkerReq,
   generateGet,
-  generateReport,
   generateIdent,
-  generateRestore
+  generateReport,
+  generateRestore,
+  makeWorkerReq,
 } from "./worker/interfacing";
 
-import { calcCost } from "./maths";
 import { DBData, ServerSentWorkerData } from "../../shared/types";
+import { calcCost } from "./maths";
 import {
-  isValidNickname,
   MAX_NICKNAME_LENGTH,
-  selectNickname,
   nickname,
   PLACEHOLDER_NICKNAME,
   setNickname,
@@ -44,14 +42,23 @@ import {
 import {
   restoreDialogElement,
   restoreDialogFormElement,
-  restoreDialogInputElement
-} from "./elements"
-import { coerceSettings, DEFAULT_SETTINGS, HDCSettings, settings } from "./settings";
-import { NaNNullCoerce } from "./utils";
-import { startTransition } from "./transition";
+  restoreDialogInputElement,
+} from "./elements";
 import { enterBuyMode } from "./mode";
-import { NotificationDismissalMode, NotificationProminence, notify } from "./notify";
+import {
+  NotificationDismissalMode,
+  NotificationProminence,
+  notify,
+} from "./notify";
+import {
+  coerceSettings,
+  DEFAULT_SETTINGS,
+  HDCSettings,
+  settings,
+} from "./settings";
 import { SharedMutable } from "./SharedMutable";
+import { startTransition } from "./transition";
+import { NaNNullCoerce } from "./utils";
 
 /**
  * Major save editions are incremented when a previous save edition with the
@@ -61,7 +68,7 @@ import { SharedMutable } from "./SharedMutable";
  */
 export type SaveEditionMajor = "0" | 2 | "3";
 
-export type SaveEditionMinor = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+export type SaveEditionMinor = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 /**
  * There is no edition 1 because no code ever assigned that edition to a save.
@@ -73,7 +80,9 @@ export type SaveEditionMinor = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
  * no _production_ code ever assigned that edition to a save. It is the same
  * legacy format that edition 0 is.
  */
-export type SaveEdition = SaveEditionMajor | `${SaveEditionMajor}.${SaveEditionMinor}`;
+export type SaveEdition =
+  | SaveEditionMajor
+  | `${SaveEditionMajor}.${SaveEditionMinor}`;
 
 export const SAVE_EDITION: SaveEdition = "3";
 
@@ -233,15 +242,19 @@ export const DEFAULT_SAVE_DATA: HDCSaveData = {
   settings: DEFAULT_SETTINGS,
 };
 
-export let wipeTimeoutEnd: SharedMutable<number | null> = new SharedMutable(null);
+export let wipeTimeoutEnd: SharedMutable<number | null> = new SharedMutable(
+  null,
+);
 
-export const decodeSaveData = function <T extends HDCGeneralSave>(data: string): T | HDCSaveData {
+export const decodeSaveData = function <T extends HDCGeneralSave>(
+  data: string,
+): T | HDCSaveData {
   try {
     const raw = Uint8Array.fromBase64(data);
-    const decoder = new TextDecoder('utf-8');
+    const decoder = new TextDecoder("utf-8");
     const text = decoder.decode(raw);
 
-    console.log(text)
+    console.log(text);
 
     const save = JSON.parse(text) as T;
 
@@ -288,7 +301,9 @@ export const generateEncodedSave = (from?: HDCSaveData): string => {
   return encoded;
 };
 
-export const save = async (from?: HDCSaveData): Promise<ServerSentWorkerData> => {
+export const save = async (
+  from?: HDCSaveData,
+): Promise<ServerSentWorkerData> => {
   const saveData = generateEncodedSave(from);
   const req = generateReport(saveData, nickname, (from ?? compileSave()).hdnw);
 
@@ -298,7 +313,7 @@ export const save = async (from?: HDCSaveData): Promise<ServerSentWorkerData> =>
 export const wipe = async (): Promise<ServerSentWorkerData> => {
   // If there is a timeout and we are not past it reject
   if (wipeTimeoutEnd.value != null && wipeTimeoutEnd.value > Date.now()) {
-    throw `lol you cannot wipe until ${new Date(wipeTimeoutEnd.value).toLocaleString()}`
+    throw `lol you cannot wipe until ${new Date(wipeTimeoutEnd.value).toLocaleString()}`;
   }
 
   const saveData = generateEncodedSave(DEFAULT_SAVE_DATA);
@@ -318,7 +333,10 @@ export const loadFromSave = (saveData: HDCSaveData) => {
   hdps.value = NaNNullCoerce(saveData.hdps, 0);
 
   butchersOwned.value = NaNNullCoerce(saveData.ownedButchers, 0);
-  butcherPrice.value = calcCost(butcherPrice.initialBacking!, butchersOwned.value);
+  butcherPrice.value = calcCost(
+    butcherPrice.initialBacking!,
+    butchersOwned.value,
+  );
 
   standsOwned.value = NaNNullCoerce(saveData.ownedStands, 0);
   standPrice.value = calcCost(standPrice.initialBacking!, standsOwned.value);
@@ -330,28 +348,43 @@ export const loadFromSave = (saveData: HDCSaveData) => {
   truckPrice.value = calcCost(truckPrice.initialBacking!, trucksOwned.value);
 
   plantationsOwned.value = NaNNullCoerce(saveData.ownedPlantations, 0);
-  plantationPrice.value = calcCost(plantationPrice.initialBacking!, plantationsOwned.value);
+  plantationPrice.value = calcCost(
+    plantationPrice.initialBacking!,
+    plantationsOwned.value,
+  );
 
   factoriesOwned.value = NaNNullCoerce(saveData.ownedFactories, 0);
-  factoryPrice.value = calcCost(factoryPrice.initialBacking!, factoriesOwned.value);
+  factoryPrice.value = calcCost(
+    factoryPrice.initialBacking!,
+    factoriesOwned.value,
+  );
 
   abattoirsOwned.value = NaNNullCoerce(saveData.ownedAbattoirs, 0);
-  abattoirPrice.value = calcCost(abattoirPrice.initialBacking!, abattoirsOwned.value);
+  abattoirPrice.value = calcCost(
+    abattoirPrice.initialBacking!,
+    abattoirsOwned.value,
+  );
 
   restaurantsOwned.value = NaNNullCoerce(saveData.ownedRestaurants, 0);
-  restaurantPrice.value = calcCost(restaurantPrice.initialBacking!, restaurantsOwned.value);
+  restaurantPrice.value = calcCost(
+    restaurantPrice.initialBacking!,
+    restaurantsOwned.value,
+  );
 
   franchisesOwned.value = NaNNullCoerce(saveData.ownedFranchises, 0);
-  franchisePrice.value = calcCost(franchisePrice.initialBacking!, franchisesOwned.value);
+  franchisePrice.value = calcCost(
+    franchisePrice.initialBacking!,
+    franchisesOwned.value,
+  );
 
-  hdnw.value = NaNNullCoerce(saveData.hdnw, 0);
+  hdnw.value = NaNNullCoerce(saveData.hdnw, 0); // CA_SA2_2016_SA2_2021
 
   // Load settings
   settings.value = coerceSettings(saveData.settings);
-}
+};
 
 export const load = async (fromReq?: ServerSentWorkerData) => {
-  let res = fromReq ?? await makeWorkerReq(generateGet());
+  let res = fromReq ?? (await makeWorkerReq(generateGet()));
 
   if (!res.success) {
     switch (res.error?.abbrev) {
@@ -365,24 +398,29 @@ export const load = async (fromReq?: ServerSentWorkerData) => {
 
   // Check if we already have a save
   if (res.results && res.results[0]) {
-    const generalSaveData = decodeSaveData((res.results as DBData[])[0].encoded_save);
+    const generalSaveData = decodeSaveData(
+      (res.results as DBData[])[0].encoded_save,
+    );
     const edition = NaNNullCoerce(generalSaveData.edition, "0");
 
     // Check if the save is the newest edition or at least compatible with the newest edition
     // If it isn't, begin a transition
-    if (edition !== SAVE_EDITION && !compatibleEditions.includes(edition.toString() as SaveEdition)) {
+    if (
+      edition !== SAVE_EDITION &&
+      !compatibleEditions.includes(edition.toString() as SaveEdition)
+    ) {
       await startTransition(generalSaveData as HDCOldSaveData);
 
       return;
     }
 
-    setNickname(res.results![0].nickname)
+    setNickname(res.results![0].nickname);
 
     const saveData = generalSaveData as HDCSaveData;
 
     enterBuyMode();
 
-    loadFromSave(saveData)
+    loadFromSave(saveData);
   } else {
     // If we do not have a save we need to create one
 
@@ -399,10 +437,11 @@ export const load = async (fromReq?: ServerSentWorkerData) => {
 export const restoreSave = async () => {
   const identifierRegex = /^[a-zA-Z0-9+\/]{43}=$/;
 
-  const isValidIdentifier = (str: string) => str.length === 44 && identifierRegex.test(str);
+  const isValidIdentifier = (str: string) =>
+    str.length === 44 && identifierRegex.test(str);
 
   // Scroll to top
-  window.scrollTo(0, 0)
+  window.scrollTo(0, 0);
 
   // Unhide dialog
   restoreDialogElement.classList.remove("hide");
@@ -413,10 +452,10 @@ export const restoreSave = async () => {
     restoreDialogElement.classList.add("hide");
 
     // Remove listeners
-    restoreDialogInputElement.onchange = null
+    restoreDialogInputElement.onchange = null;
     restoreDialogInputElement.oninput = null;
-    restoreDialogElement.onclose = null
-  }
+    restoreDialogElement.onclose = null;
+  };
 
   // listen for changes to input and add/remove data-unbuyable based on validity of the nickname
   restoreDialogInputElement.oninput = (e) => {
@@ -430,10 +469,10 @@ export const restoreSave = async () => {
       } else {
         restoreDialogInputElement.removeAttribute("data-unbuyable");
       }
-    }
+    };
 
     setInvalidState(!isValidIdentifier(recvIdentifier));
-  }
+  };
 
   // listen for input
   restoreDialogInputElement.onchange = async (e) => {
@@ -445,8 +484,8 @@ export const restoreSave = async () => {
       restoreDialogElement.close();
 
       // Remove listeners
-      restoreDialogInputElement.onchange = null
-      restoreDialogElement.onclose = null
+      restoreDialogInputElement.onchange = null;
+      restoreDialogElement.onclose = null;
     };
 
     const recvIdentifier = restoreDialogInputElement.value.trim();
@@ -458,23 +497,23 @@ export const restoreSave = async () => {
     }
 
     // Make sure there is a save to copy data into
-    await save()
+    await save();
 
     // Generate the restore request
-    const req = generateRestore(recvIdentifier)
+    const req = generateRestore(recvIdentifier);
 
     // Make the request
-    const res = await makeWorkerReq(req)
+    const res = await makeWorkerReq(req);
 
     // Load the save from the returned data of the request
-    load(res)
+    load(res);
 
     // Submit the form
     restoreDialogFormElement.dispatchEvent(
       new SubmitEvent("submit", {
         cancelable: false,
-        submitter: restoreDialogInputElement
-      })
+        submitter: restoreDialogInputElement,
+      }),
     );
 
     cleanup();
@@ -483,22 +522,22 @@ export const restoreSave = async () => {
       body: "Save restored successfully.",
       prominence: NotificationProminence.Banner,
       dismissalMode: NotificationDismissalMode.Automatic,
-    })
+    });
   };
 };
 
 export const getAndShowIdentifierCode = async (): Promise<string> => {
-  return new Promise(async res => {
-    const req = generateIdent()
-    const { ident } = await makeWorkerReq(req)
+  return new Promise(async (res) => {
+    const req = generateIdent();
+    const { ident } = await makeWorkerReq(req);
 
-    res(ident!)
+    res(ident!);
 
     await notify({
       title: "",
       body: `Your identifier code is '${ident}'`,
       prominence: NotificationProminence.Popup,
       dismissalMode: NotificationDismissalMode.Manual,
-    })
-  })
-}
+    });
+  });
+};

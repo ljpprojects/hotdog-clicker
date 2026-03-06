@@ -19,7 +19,7 @@ import {
   NotificationProminence,
   notify,
 } from "../notify";
-import { randomUint32 } from "../rand";
+import { randomIntUpTo } from "../rand";
 import { compileSave, loadFromSave, save } from "../save";
 import { closeMainMenu } from "../ui";
 
@@ -268,20 +268,8 @@ export const updatePokiesWagerDisplay = () => {
   pokiesWagerSlider.max = `${maxPercent}`;
   pokiesWagerSlider.valueAsNumber %= maxPercent;
 
-  const formatterConfig: Intl.ResolvedNumberFormatOptions = {
-    ...formatter.value.resolvedOptions(),
-    notation: "compact",
-    maximumFractionDigits: 0,
-    minimumFractionDigits: 0,
-  };
-
-  const compactFormatter = new Intl.NumberFormat(
-    navigator.languages,
-    formatterConfig,
-  );
-
   const absolute = (pokiesWagerSlider.valueAsNumber / 100) * hdnw.value;
-  pokiesWagerDisplay.textContent = `${pokiesWagerSlider.valueAsNumber}% (${compactFormatter.format(absolute)})`;
+  pokiesWagerDisplay.textContent = `${pokiesWagerSlider.valueAsNumber}% (${formatter.value.format(absolute)})`;
 };
 
 pokiesWagerSlider.oninput = updatePokiesWagerDisplay;
@@ -300,9 +288,9 @@ spinSlotsButton.addEventListener("click", async () => {
   const WRAP_THRESH = symbols.length;
 
   // Get random symbols
-  const symbol1Index = randomUint32() % WRAP_THRESH;
-  const symbol2Index = randomUint32() % WRAP_THRESH;
-  const symbol3Index = randomUint32() % WRAP_THRESH;
+  const symbol1Index = randomIntUpTo(WRAP_THRESH);
+  const symbol2Index = randomIntUpTo(WRAP_THRESH);
+  const symbol3Index = randomIntUpTo(WRAP_THRESH);
 
   // The (approximate) time to wait before showing results
   const TIME_TO_WAIT_MS = 1000;

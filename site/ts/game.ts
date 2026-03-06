@@ -1,3 +1,5 @@
+export const pageLoadedGetRandomValues: Function = crypto.getRandomValues;
+
 import { GeneralBinding } from "./Binding";
 import { load, save, wipeTimeoutEnd } from "./save";
 
@@ -78,9 +80,8 @@ export const hdps = new GeneralBinding<number, number>({
   setfn(to: number) {
     this.value = to;
 
-    this.doAsync({ needsToWait: false }, async () => {
-      hdpsElement.textContent = formatter.value.format(to);
-    });
+    // When will the web get REAL ui/logic separation?
+    hdpsElement.textContent = formatter.value.format(to);
   },
 
   getfn(): number {
@@ -230,10 +231,7 @@ export const cartsOwned = new GeneralBinding<number, number>({
     );
 
     this.value = to;
-
-    this.doAsync({ needsToWait: false }, async () => {
-      cartsOwnedElement.textContent = String(to);
-    });
+    cartsOwnedElement.textContent = String(to);
   },
 
   getfn(): number {
@@ -264,10 +262,7 @@ export const trucksOwned = new GeneralBinding<number, number>({
     );
 
     this.value = to;
-
-    this.doAsync({ needsToWait: false }, async () => {
-      trucksOwnedElement.textContent = String(to);
-    });
+    trucksOwnedElement.textContent = String(to);
   },
 
   getfn(): number {
@@ -298,10 +293,7 @@ export const plantationsOwned = new GeneralBinding<number, number>({
     );
 
     this.value = to;
-
-    this.doAsync({ needsToWait: false }, async () => {
-      plantationsOwnedElement.textContent = String(to);
-    });
+    plantationsOwnedElement.textContent = String(to);
   },
 
   getfn(): number {
@@ -332,10 +324,7 @@ export const factoriesOwned = new GeneralBinding<number, number>({
     );
 
     this.value = to;
-
-    this.doAsync({ needsToWait: false }, async () => {
-      factoriesOwnedElement.textContent = String(to);
-    });
+    factoriesOwnedElement.textContent = String(to);
   },
 
   getfn(): number {
@@ -383,10 +372,7 @@ export const abattoirsOwned = new GeneralBinding<number, number>({
     );
 
     this.value = to;
-
-    this.doAsync({ needsToWait: false }, async () => {
-      abattoirsOwnedElement.textContent = String(to);
-    });
+    abattoirsOwnedElement.textContent = String(to);
   },
 
   getfn(): number {
@@ -417,16 +403,15 @@ export const restaurantsOwned = new GeneralBinding<number, number>({
     );
 
     this.value = to;
-
-    this.doAsync({ needsToWait: false }, async () => {
-      restaurantsOwnedElement.textContent = String(to);
-    });
+    restaurantsOwnedElement.textContent = String(to);
   },
 
   getfn(): number {
     return this.value!;
   },
 });
+
+// Donald Trump is now a so-called "cum souvenir" I HEREBY DECLARE IT TRUE
 
 export const franchisesOwned = new GeneralBinding<number, number>({
   backing: 0,
@@ -452,10 +437,7 @@ export const franchisesOwned = new GeneralBinding<number, number>({
     );
 
     this.value = to;
-
-    this.doAsync({ needsToWait: false }, async () => {
-      franchisesOwnedElement.textContent = String(to);
-    });
+    franchisesOwnedElement.textContent = String(to);
   },
 
   getfn(): number {
@@ -718,7 +700,7 @@ setInterval(
 );
 
 // This doesnt have to be realtime
-setInterval(checkBuyables, 500);
+setInterval(checkBuyables, 100);
 
 // @ts-expect-error
 window.richify = async () => {

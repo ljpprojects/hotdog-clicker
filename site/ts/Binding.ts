@@ -19,38 +19,20 @@ export abstract class BindingBacker<T> {
   }
 
   get prevValue(): T | null {
-    return this._prevValue
+    return this._prevValue;
   }
 
   set value(to: T | null) {
     this._prevValue = this._value;
     this._value = to;
   }
-
-  /**
-   * Will perform a task once the previously begun task is complete (when cfg.needsToWait is true).
-   * The returned promsie resolves once the task is finished.
-   * @param task The task to perform.
-   */
-  async doAsync(
-    cfg: BindingBackerDoAsyncConfig,
-    task: (this: BindingBacker<T>) => Promise<void>,
-  ): Promise<void> {
-    if (cfg.needsToWait) {
-      await this.currentTask;
-    }
-
-    return new Promise((res, rej) => {
-      this.currentTask = task
-        .call(this)
-        .then(() => res())
-        .catch((reason) => rej(reason));
-    });
-  }
 }
 
 export interface Binding<V, B> {
-  readonly getfn: (this: DeepReadonly<BindingBacker<B>>, dispatcher?: string) => V;
+  readonly getfn: (
+    this: DeepReadonly<BindingBacker<B>>,
+    dispatcher?: string,
+  ) => V;
 
   readonly backing: BindingBacker<B>;
   readonly initialBacking: DeepReadonly<B> | null;
@@ -63,16 +45,16 @@ export interface Binding<V, B> {
 }
 
 export class GeneralBinding<V, B> implements Binding<V, B> {
-  readonly setfn: (
-    this: BindingBacker<B>,
-    to: V,
+  readonly setfn: (this: BindingBacker<B>, to: V, dispatcher?: string) => void;
+  readonly getfn: (
+    this: DeepReadonly<BindingBacker<B>>,
     dispatcher?: string,
-  ) => void;
-  readonly getfn: (this: DeepReadonly<BindingBacker<B>>, dispatcher?: string) => V;
+  ) => V;
 
   readonly initialBacking: DeepReadonly<B> | null = null;
-  readonly backing: BindingBacker<B> =
-    new (class extends BindingBacker<B> { })(null);
+  readonly backing: BindingBacker<B> = new (class extends BindingBacker<B> {})(
+    null,
+  );
 
   constructor(options: {
     backing?: B | null;
@@ -93,11 +75,12 @@ export class GeneralBinding<V, B> implements Binding<V, B> {
     this.setfn.call(this.backing, to, dispatcher);
   }
 
-  /**
-   * Runs the set function setup for the Binding with the value returned by Binding.getValue(dispatcher: "binding-internal")
-   */
   public runSet(dispatcher?: string) {
-    this.setfn.call(this.backing, this.getValue(), dispatcher ?? "binding-internal")
+    this.setfn.call(
+      this.backing,
+      this.getValue(),
+      dispatcher ?? "binding-internal",
+    );
   }
 
   get value(): V {
