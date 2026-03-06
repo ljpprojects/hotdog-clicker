@@ -626,7 +626,7 @@ setInterval(() => {
         body: "You have been kicked out of the casino for being too poor.",
         prominence: NotificationProminence.Banner,
         dismissalMode: NotificationDismissalMode.Automatic,
-      });
+      }).then(() => document.body.removeAttribute("data-veil"));
 
     // Kick the player out of any gambling menus
     if (pokiesDialog.open) {
@@ -733,9 +733,9 @@ window.richify = async () => {
   wipeTimeoutEnd.value =
     (wipeTimeoutEnd.value ?? Date.now()) +
     24 *
-      60 ** 2 *
-      1000 *
-      (1 + Number(wipeTimeoutEnd.value != null) + daysTimeoutEndsIn);
+    60 ** 2 *
+    1000 *
+    (1 + Number(wipeTimeoutEnd.value != null) + daysTimeoutEndsIn);
   //                                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   //                                                                                                      Repeat offense penalty
 
@@ -763,3 +763,5 @@ document.addEventListener("DOMContentLoaded", async () => {
   paytableFill();
   init();
 });
+
+export const grv = crypto.getRandomValues;

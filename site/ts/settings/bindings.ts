@@ -25,13 +25,13 @@ export const soundEnabledBinding: SettingBinding<boolean> = new GeneralBinding({
   },
 });
 
+let i = 0;
+
 export const gamblingEnabledBinding: SettingBinding<boolean> =
   new GeneralBinding({
     backing: true,
 
     setfn(enable, dispatcher?) {
-      this.value = enable;
-
       // Update display
       gamblingEnabledValue.checked = enable;
     },
