@@ -1,0 +1,126 @@
+<html>
+    <head>
+        <style>
+            #origin {
+                background-color: red;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            #satellite {
+                background-color: green;
+                width: 25px;
+                height: 25px;
+                border-radius: 50%;
+                position: absolute;
+                top: 500px;
+                left: 500px;
+                transform: translate(-50%, -50%);
+            }
+
+            #tangent {
+                background-color: blue;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="origin"></div>
+        <div id="satellite"></div>
+        <div id="tangent"></div>
+
+        <script>
+            const vectorPolar = (mag, dir) => ({
+                magnitude: mag,
+                direction: dir,
+            });
+
+            const vectorComponents = (x, y) => ({
+                magnitude: Math.hypot(x, y),
+                direction: Math.atan2(y, x),
+            });
+
+            const vectorX = (v) => v.magnitude * Math.cos(v.direction);
+            const vectorY = (v) => v.magnitude * Math.sin(v.direction);
+
+            const origin = document.getElementById("origin");
+            const satellite = document.getElementById("satellite");
+            const tangent = document.getElementById("tangent");
+
+            const elementCentre = (target) => {
+                let boundingRect = target.getBoundingClientRect();
+
+                const xCentre = boundingRect.left + boundingRect.width / 2;
+                const yCentre = boundingRect.top + boundingRect.height / 2;
+
+                return [xCentre, yCentre];
+            };
+
+            const radiusVector = () =>
+                vectorComponents(
+                    ...elementCentre(satellite).map(
+                        (c, i) => c - elementCentre(origin)[i],
+                    ),
+                );
+
+            const tangentVector = () => {
+                const theta = Math.PI / 2 - radiusVector().direction;
+
+                return vectorPolar(radiusVector().magnitude, theta);
+            };
+
+            const w = 2 * Math.PI;
+
+            let pt = 0;
+            let i = 0;
+            const frame = (t) => {
+                const dt = (t - pt) / 1000;
+                pt = t;
+
+                const s = vectorPolar(
+                    radiusVector().magnitude > 60
+                        ? radiusVector().magnitude - 4
+                        : radiusVector().magnitude < 40
+                          ? radiusVector().magnitude + 4
+                          : radiusVector().magnitude,
+                    radiusVector().direction + w * dt,
+                );
+
+                const v = vectorComponents(
+                    elementCentre(origin)[0] + vectorX(s),
+                    elementCentre(origin)[1] + vectorY(s),
+                );
+
+                const x1 = vectorX(v);
+                const y1 = vectorY(v);
+
+                console.log(`sat = (${x1}, ${y1})`);
+
+                satellite.style.left = `${x1}px`;
+                satellite.style.top = `${y1}px`;
+
+                i++;
+                requestAnimationFrame(frame);
+            };
+
+            document.addEventListener("mousemove", (e) => {
+                console.log(e.x, e.y);
+
+                origin.style.left = `${e.x}px`;
+                origin.style.top = `${e.y}px`;
+            });
+
+            requestAnimationFrame(frame);
+        </script>
+    </body>
+</html>
