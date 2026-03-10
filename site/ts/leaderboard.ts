@@ -29,7 +29,7 @@ export const leaderboard = () =>
     }
 
     const ldbd = (dat.results as LeaderboardData[]).flatMap((entry) => {
-      if (!isValidNickname(entry.nickname)) {
+      if (!isValidNickname(entry.nickname) || entry.net_worth >= 1e100) {
         return [];
       }
 
