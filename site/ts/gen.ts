@@ -97,7 +97,7 @@ export const genocideLevel = new ImmutableBinding<GenocideLevel>({
       return GenocideLevel.Four;
     } else if (G >= 250 && G < 750) {
       return GenocideLevel.Five;
-    } else if (G >= 750) {
+    } else {
       return GenocideLevel.LIQUIDATE;
     }
   },
