@@ -42,7 +42,7 @@ const targets = [
  *
  * @returns The relative distance to retreat.
  */
-const runSpeedCurve = (d: number) => 0.4 - d;
+const runSpeedCurve = (d: number) => 0.3 - d;
 
 type Point = [number, number];
 
