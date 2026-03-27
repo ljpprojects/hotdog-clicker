@@ -765,3 +765,5 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 export const grv = crypto.getRandomValues;
+
+import "./gambling/deter";
