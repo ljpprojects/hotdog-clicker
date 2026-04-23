@@ -12,7 +12,7 @@ export enum NotificationDismissalMode {
   Manual
 }
 
-export const AUTOMATIC_DISMISSAL_TIMEOUT_MS = 7500;
+export const AUTOMATIC_DISMISSAL_TIMEOUT_MS = 6000;
 
 export type HDCNotification = {
   title?: string,
